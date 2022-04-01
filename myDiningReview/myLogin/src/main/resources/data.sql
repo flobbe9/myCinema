@@ -1,1 +1,0 @@
-INSERT INTO user_(id, user_Name, password, first_Name, last_Name, birthday, mail) VALUES(1, "flobbe9", "1234", "Florin", "Schikarski", "12.02.2001", "florin735@live.com");
