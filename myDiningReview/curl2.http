@@ -1,0 +1,8 @@
+cURL -X POST -u flobbe9:password "http://localhost:4001/myDiningReview/postReview" 
+    -d '{
+            "restaurantId": "1",
+            "peanutRating": "2",
+            "eggRating": "2",
+            "dairyRating": "2",
+            "commentary": "Shitty restaurant."
+            }' -H "Content-Type:application/json"
