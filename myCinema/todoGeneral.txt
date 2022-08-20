@@ -1,0 +1,7 @@
+-jasypt encryption?
+-ssl baldung (certificate?), look up myStudIp
+-Dockerfile?
+-javadoc comments
+-pretty email(JP?)
+-pretty login, logout
+-think about data structures(e.g. set or list...)

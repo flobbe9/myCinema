@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>myCinemaAdmin | updateTheatre</title>
+        <meta charset="utf-8">
+        
+        <style>
+            .status {
+                color: green;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h2>Update Theatre</h2>
+        <br>
+
+        <form method="post" action="" th:action="@{/admin/theatre/update}" th:object="${theatre}">
+            <label for="theatreNumber">Theatre number*: </label>
+            <input type="number" class="theatreNumber" name="theatreNumber" min="1" th:field="*{number}" required>
+            <br><br>
+            
+            <label for="threeD">3D: </label>
+            <input type="checkbox" id="threeD" name="threeD" th:field="*{threeD}">
+            <br><br>
+
+            <label for="rowsTotal">Rows total: </label>
+            <input type="number" id="rowsTotal" name="rowsTotal" th:field="*{rowsTotal}">
+            <br><br>
+
+            <input type="submit" id="submitUpdate" value="Update Theatre">
+            <br><br>
+
+            <span class="status" th:if="${httpStatus != null and httpStatus.name() == 'OK'}">Theatre updated!</span>
+        </form>
+        <br><br><br>
+
+        <h2>Delete Theatre</h2>
+
+        <form method="post" action="" th:action="@{/admin/theatre/delete}" th:object="${theatre}">
+            <label for="theatreNumber">Theatre number*: </label>
+            <input type="number" class="theatreNumber" name="theatreNumber" min="1" th:field="*{number}" required>
+            <br><br>
+
+            <input type="submit" id="submitDelete" value="Delete This Theatre">
+            <br><br>
+
+            <span class="status" th:if="${httpStatus != null and httpStatus.name() == 'GONE'}">
+                <p th:text="'Theatre with number ' + *{number} + ' was deleted.'"></p>
+            </span>
+        </form>
+    </body>
+</html>

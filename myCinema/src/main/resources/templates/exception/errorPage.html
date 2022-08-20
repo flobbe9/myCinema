@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            h1, h2, #exceptionMessage {
+                text-align: center;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <h1 >OOPS! </h1>
+
+        <h2 th:text="${httpStatus}"></h2>
+        <br>
+
+        <p id="exceptionMessage" th:text="'Message: ' + ${exception.getMessage()}"></p>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinemaAdmin | addMovie</title>
+
+        <style>
+            #status {
+                color: green;
+            }
+        </style>
+    </head>
+    
+
+    <body>
+        <h2>Add Movie</h2>
+        <br>
+
+        <form method="post" action="" th:action="@{/admin/movie/addNew}" th:object="${movie}">
+            <input type="text" id="title" name="title" placeholder="Title*" th:field="*{title}" required>
+            <br><br>
+
+            <input type="number" id="duration" name="duration" placeholder="Duration (minutes)*" th:field="*{duration}" required>
+            <br><br>
+
+            <label for="localReleaseDate">Local release date*: </label>
+            <input type="date" id="localReleaseDate" name="localReleaseDate" th:field="*{localReleaseDate}" required>
+            <br><br>
+
+            <label for="localFinishingDate">Local finishing date*: </label>
+            <input type="date" id="localFinishingDate" name="localFinishingDate" th:field="*{localFinishingDate}" required>
+            <br><br>
+
+            <!-- set size -->
+            <textarea id="synopsis" name="synopsis" placeholder="Synopsis*" th:field="*{synopsis}" required></textarea>
+            <br><br>
+
+            <select id="fsk" name="fsk">
+                <span th:each="fsk : ${movieWrapper.fsk}">
+                    <option th:text="${fsk}" th:value="${fsk}" th:field="*{fsk}"></option>
+                </span>
+            </select>
+            <br><br>
+
+            <select id="version" name="version">
+                <span th:each="version : ${movieWrapper.version}">
+                    <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>
+                </span>
+            </select>
+            <br><br>
+
+            <input type="number" id="price" name="price" placeholder="Price*" th:field="*{price}" required>
+            <br><br>
+
+            <input type="text" id="director" name="director" placeholder="Director*" th:field="*{director}" required>
+            <br><br>
+
+            <label for="cast">Cast*: </label>
+            <br>
+            <span th:each="member, iter : ${movieWrapper.cast}">
+                <span th:text="${iter.index + 1 + '. '}" ></span>
+                <input type="text" class="cast" name="cast" th:field="${movieWrapper.cast[__${iter.index}__]}" required>
+                <br>
+            </span>
+            <br>
+            
+            <label for="genres">Genres* (at least one): </label>
+            <br>
+            <span th:each="genre, iter : ${movieWrapper.genres}">
+                <input type="checkbox" class="genres" name="genres" th:text="${genre}" th:field="${movieWrapper.toggledGenres[__${iter.index}__]}">
+            </span>
+            <br><br>
+
+            <input type="text" id="trailerLink" name="trailerLink" placeholder="Trailer link*" th:field="*{trailerLink}" required>
+            <br><br>
+
+            <input type="submit" value="Add Movie">
+            <br><br>
+
+            <span id="status" th:if="${httpStatus != null and httpStatus.name() == 'CREATED'}">Movie created.</span>
+        </form>
+    </body>
+</html>
