@@ -31,7 +31,7 @@
             <button type="submit">Add Theatre</button>
             <br><br>
             
-            <span id="status" th:if="${httpStatus != null and httpStatus.name() == 'CREATED'}">Theatre created.</span>
+            <span id="status" th:if="${created}">Theatre created.</span>
         </form>
     </body>
 </html>

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    Optional<Movie> findByTitle(String title);
+    List<Movie> findByTitle(String title);
     Optional<Movie> findByTitleAndVersion(String title, MovieVersion version);
     List<Movie> findAllByOrderByLocalReleaseDateDesc();
 }

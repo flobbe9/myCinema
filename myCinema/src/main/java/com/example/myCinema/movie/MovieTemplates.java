@@ -1,7 +1,6 @@
 package com.example.myCinema.movie;
 
-import static org.springframework.http.HttpStatus.CREATED;
-
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,15 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.myCinema.exception.ExceptionService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequestMapping("/admin/movie")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MovieTemplates {
     private final MovieService movieService;
     private final ExceptionService exceptionService;
+
+    /** used for update method */
+    private Long appUserId;
 
 
 // addNew
@@ -33,27 +35,30 @@ public class MovieTemplates {
         model.addAttribute("movie", new Movie());
 
         // passing MovieWrapper to thymeleaf
-        MovieWrapper movieWrapper = new MovieWrapper();
-        model.addAttribute("movieWrapper", movieWrapper);
+        model.addAttribute("movieWrapper", new MovieWrapper());
 
         return "/admin/movie/addNew";
     }
 
 
-    // TODO: THYMELEAF: check wether at least one genre checkbox is toggled
     @PostMapping("/addNew")
     public String addNew(Movie movie, MovieWrapper movieWrapper, Model model) {
         try {
             // setting genres array with 'toggledGenres' property of MovieWrapper
-            movie.setCast(movieWrapper.getCast());
             movie.setGenres(iterateToggledGenres(movieWrapper));
-            
+
+            // setting cast and converting from array to Set
+            movie.setCast(new HashSet<String>(Arrays.asList(movieWrapper.getMovieCast())));
+
             // adding new movie
             movieService.addNew(movie);
             
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", CREATED);
-            
+            model.addAttribute("created", true);
+
+            // passing new movieWrapper to thymeleaf for new add
+            model.addAttribute("movieWrapper", new MovieWrapper());
+
         } catch (Exception e) {
             // passing exception to thymeleaf
             return exceptionService.passExceptionToThymeleaf(e, model);
@@ -63,39 +68,66 @@ public class MovieTemplates {
     }
     
     
-    // update
+// update
+
     
-    
-    // TODO: THYMELEAF: empty text is interpreted as '' instead of null, should send null on submit
     @GetMapping("/update")
     public String update(Model model) {
         // passing movie to thymeleaf
-        model.addAttribute("movie", new Movie());
+        model.addAttribute("movieContainer", new Movie());
 
-        // passing MovieWrapper to thymeleaf
-        MovieWrapper movieWrapper = new MovieWrapper();
-        model.addAttribute("movieWrapper", movieWrapper);
+        // passing movieWrapper to thymeleaf
+        model.addAttribute("movieWrapper", new MovieWrapper());
 
+        return "/admin/movie/update_getByTitleAndVersion";
+    }
+    
+
+    @PostMapping("/update_getByTitleAndVersion")
+    public String checkMovieExists(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
+        try {
+            // checking if movie exists and setting appUserId
+            appUserId = movieService.getByTitleAndVersion(movieContainer.getTitle(), movieContainer.getVersion()).getId();
+
+            // resetting title and version so they are not displayed in thymeleaf
+            movieContainer.setTitle(null);
+            movieContainer.setVersion(null);
+
+            // passing movie to thymeleaf
+            model.addAttribute("movieContainer", movieContainer);
+
+            // passing movieWrapper to thymeleaf
+            model.addAttribute("movieWrapper", new MovieWrapper());
+            
+        } catch (Exception e) {
+            // passing exception to thymeleaf
+            return exceptionService.passExceptionToThymeleaf(e, model);
+        }
+        
         return "/admin/movie/update";
     }
-
-
+    
+    
     @PostMapping("/update")
-    public String upadte(Movie movie, MovieWrapper movieWrapper, Model model) {
+    public String upadte(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
         try {
-            // setting movie id
-            Long id = movieService.getByTitleAndVersion(movie.getTitle(), movie.getVersion()).getId();
-            movie.setId(id);
+            // setting id
+            movieContainer.setId(appUserId);
 
             // setting genres array with 'toggledGenres' property of MovieWrapper
-            movie.setCast(movieWrapper.getCast());
-            movie.setGenres(iterateToggledGenres(movieWrapper));
+            movieContainer.setGenres(iterateToggledGenres(movieWrapper));
+
+            // setting cast and converting from array to set
+            movieContainer.setCast(new HashSet<String>(Arrays.asList(movieWrapper.getMovieCast())));
 
             // updating movie
-            movieService.update(movie);
+            movieService.update(movieContainer);
 
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", CREATED);
+            model.addAttribute("created", true);
+
+            // TODO: should work without it...
+            model.addAttribute("movieContainer", movieContainer);
 
         } catch (Exception e) {
             // passing exception to thymeleaf

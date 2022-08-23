@@ -36,14 +36,8 @@ public class MovieController {
 
 
     @GetMapping("/getMovieByTitle")
-    public Movie getByTitle(@RequestParam("title") String title) {
+    public List<Movie> getByTitle(@RequestParam("title") String title) {
         return movieService.getByTitle(title);
-    }
-
-
-    @GetMapping("/getTotalWeeksInCinema")
-    public Long geTotaltWeeksInCinema(@RequestParam("title") String title) {
-        return movieService.getTotalWeeksInCinema(title);
     }
 
 

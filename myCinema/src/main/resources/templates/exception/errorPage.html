@@ -15,6 +15,6 @@
         <h2 th:text="${httpStatus}"></h2>
         <br>
 
-        <p id="exceptionMessage" th:text="'Message: ' + ${exception.getMessage()}"></p>
+        <p id="exceptionMessage" th:text="${exception.getMessage()}"></p>
     </body>
 </html>

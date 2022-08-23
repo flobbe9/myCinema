@@ -3,7 +3,6 @@ package com.example.myCinema.user;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +32,7 @@ public class AppUserTemplates {
         model.addAttribute("appUser", new AppUser());
 
         // initialising permissions wrapper object
-        AppUserWrapper appUserWrapper = new AppUserWrapper();
-        model.addAttribute("appUserWrapper", appUserWrapper);
+        model.addAttribute("appUserWrapper", new AppUserWrapper());
 
         return "/admin/appUser/addNew";
     }
@@ -52,7 +50,7 @@ public class AppUserTemplates {
             appUserService.addNew(appUser); 
 
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", HttpStatus.CREATED);
+            model.addAttribute("created", true);
 
         } catch(Exception e) {
             // passing on exception
@@ -87,10 +85,10 @@ public class AppUserTemplates {
             appUserService.delete(appUser);
             
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", HttpStatus.GONE);
+            model.addAttribute("gone", true);
             
         } catch(Exception e) {
-            // passing exceptions and https status to thymeleaf
+            // passing exceptions and https  to thymeleaf
             return exceptionService.passExceptionToThymeleaf(e, model);
         }
 

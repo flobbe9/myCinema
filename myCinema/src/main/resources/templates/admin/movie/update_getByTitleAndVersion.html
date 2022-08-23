@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>myCinemaAdmin | updateTheatre</title>
+        <meta charset="utf-8">
+    </head>
+    
+    
+    <body>
+        <h2>Update Movie</h2>
+
+        <h4>Enter title and version of the movie you want to update:</h4>
+
+        <form method="post" action="" th:action="@{/admin/movie/update_getByTitleAndVersion}" th:object="${movieContainer}">
+            <input type="text" id="title" placeholder="Title*" th:field=*{title} required>
+            <br><br>
+            
+            <select id="version" name="version">
+                <option th:value="${null}" th:field="*{version}">Select...</option>
+                <span th:each="version : ${movieWrapper.version}">
+                    <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>
+                </span>
+            </select>
+            <br><br>
+
+            <button type="submit">Get Movie</button>
+            <br><br>
+        </form>
+    </body>
+</html>

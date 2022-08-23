@@ -75,7 +75,7 @@
             <input type="submit" id="saveNewUser" value="Add User">
             <br><br>
 
-            <span id="status" th:if="${httpStatus != null and httpStatus.name() == 'CREATED'}">User created.</span>
+            <span id="status" th:if="${created}">User created.</span>
         </form>
 
     </body>

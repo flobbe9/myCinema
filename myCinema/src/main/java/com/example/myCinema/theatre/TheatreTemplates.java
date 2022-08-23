@@ -1,9 +1,5 @@
 package com.example.myCinema.theatre;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.GONE;
-import static org.springframework.http.HttpStatus.OK;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +40,7 @@ public class TheatreTemplates {
             theatreService.addNew(theatre);
 
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", CREATED); 
+            model.addAttribute("created", true); 
             
         } catch(Exception e) {
             // passing exceptions and https status to thymeleaf
@@ -78,7 +74,7 @@ public class TheatreTemplates {
             theatreService.update(theatre);
 
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", OK);
+            model.addAttribute("ok", true);
 
         } catch (Exception e) {
             // passing exception to thymeleaf error page
@@ -98,7 +94,7 @@ public class TheatreTemplates {
             theatreService.delete(number);
 
             // telling thymeleaf it worked
-            model.addAttribute("httpStatus", GONE);
+            model.addAttribute("gone", true);
 
         } catch (Exception e) {
             // passing exception to thymeleaf

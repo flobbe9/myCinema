@@ -1,19 +1,25 @@
 package com.example.myCinema.movie;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MovieService {
     private final MovieRepository movieRepository;
+
+    interface Check {
+        Boolean check(Object obj);
+    }
 
 
     @Transactional
@@ -26,7 +32,8 @@ public class MovieService {
         return save(movie);
     }
     
-    
+
+    // TODO: check collections seperatly
     public Movie update(Movie movieData) {
         // checking if id is null
         if (movieData.getId() == null) {
@@ -38,7 +45,7 @@ public class MovieService {
         
         // updating not null values from movieData
         // title
-        if (movieData.getTitle() != null) updatedMovie.setTitle(movieData.getTitle());
+        if (movieData.getTitle() != null && !movieData.getTitle().equals("")) updatedMovie.setTitle(movieData.getTitle());
         // duration
         if (movieData.getDuration() != null) updatedMovie.setDuration(movieData.getDuration());
         // localReleaseDate
@@ -46,7 +53,7 @@ public class MovieService {
         // localFinishingDate
         if (movieData.getLocalFinishingDate() != null) updatedMovie.setLocalFinishingDate(movieData.getLocalFinishingDate());
         // synopsis
-        if (movieData.getSynopsis() != null) updatedMovie.setSynopsis(movieData.getSynopsis());
+        if (movieData.getSynopsis() != null && !movieData.getSynopsis().equals("")) updatedMovie.setSynopsis(movieData.getSynopsis());
         // fsk
         if (movieData.getFsk() != null) updatedMovie.setFsk(movieData.getFsk());
         // version
@@ -54,13 +61,13 @@ public class MovieService {
         // price
         if (movieData.getPrice() != null) updatedMovie.setPrice(movieData.getPrice());
         // director
-        if (movieData.getDirector() != null) updatedMovie.setDirector(movieData.getDirector());
-        // cast && cast not empty
-        if (movieData.getCast() != null && checkArrayNoNullValues(movieData.getCast())) updatedMovie.setCast(movieData.getCast());
+        if (movieData.getDirector() != null && !movieData.getDirector().equals("")) updatedMovie.setDirector(movieData.getDirector());
+        // cast
+        if (movieData.getCast() != null) updatedMovie.setCast(movieData.getCast());
         // genres && cast not empty
         if (movieData.getGenres() != null && !movieData.getGenres().isEmpty()) updatedMovie.setGenres(movieData.getGenres());
         // trailerLink
-        if (movieData.getTrailerLink() != null) updatedMovie.setTrailerLink(movieData.getTrailerLink());
+        if (movieData.getTrailerLink() != null && !movieData.getTrailerLink().equals("")) updatedMovie.setTrailerLink(movieData.getTrailerLink());
         
         // checking date chronology 
         if (!checkDateChronology(updatedMovie)) {
@@ -76,10 +83,13 @@ public class MovieService {
             new NoSuchElementException("Could not find movie with id \"" + id + "\"."));
     }
     
-    // TODO: should return iterable, because same title but different movie is possible
-    public Movie getByTitle(String title) {
-        return movieRepository.findByTitle(title).orElseThrow(() -> 
-            new NoSuchElementException("Could not find movie with title \"" + title + "\"."));
+    
+    public List<Movie> getByTitle(String title) {
+        List<Movie> list = movieRepository.findByTitle(title);
+
+        if (list.isEmpty()) throw new NoSuchElementException("Could not find movies with title \"" + title + "\".");
+
+        return list;
     }
     
     
@@ -95,9 +105,9 @@ public class MovieService {
     }
 
 
-    public Long getTotalWeeksInCinema(String title) {
+    public Long getTotalWeeksInCinema(String title, MovieVersion version) {
         // getting movie by title from repo
-        Movie movie = getByTitle(title);
+        Movie movie = getByTitleAndVersion(title, version);
 
         // calculating time between release and finish
         Long runtimeInMonths = movie.getLocalReleaseDate().until(movie.getLocalFinishingDate(), ChronoUnit.WEEKS);
@@ -138,9 +148,14 @@ public class MovieService {
     }
 
 
+    private <T> boolean checkCollection(Collection<T> collection) {
+        // TODO: implement
+        return true;
+    }
+
     private boolean checkNullValues(Movie movie) {
         // title
-        if (movie.getTitle() == null) return false;
+        if (movie.getTitle() == null || movie.getTitle().equals("")) return false;
         // duration
         if (movie.getDuration() == null) return false;
         // localReleaseDate
@@ -148,21 +163,21 @@ public class MovieService {
         // localFinishingDate
         if (movie.getLocalFinishingDate() == null) return false;
         // synopsis
-        if (movie.getSynopsis() == null) return false;
+        if (movie.getSynopsis() == null || movie.getSynopsis().equals("")) return false;
         // fsk
         if (movie.getFsk() == null) return false;
         // version
         if (movie.getVersion() == null) return false;
         // price
-        if (movie.getTitle() == null) return false;
+        if (movie.getPrice() == null) return false;
         // director
-        if (movie.getDirector() == null) return false;
-        // cast && cast not empty
-        if (movie.getCast() == null && !checkArrayNoNullValues(movie.getCast())) return false;
-        // genres && genres not empty
-        if (movie.getGenres() == null && movie.getGenres().isEmpty()) return false;
+        if (movie.getDirector() == null || movie.getDirector().equals("")) return false;
+        // cast
+        if (movie.getCast() == null || movie.getCast().contains(null) || movie.getCast().contains("")) return false;
+        // genres
+        if (movie.getGenres() == null || movie.getGenres().contains(null)) return false;
         // trailerLink
-        if (movie.getTrailerLink() == null) return false;
+        if (movie.getTrailerLink() == null || movie.getTrailerLink().equals("")) return false;
 
         return true;
     }
@@ -170,15 +185,5 @@ public class MovieService {
 
     private boolean checkDateChronology(Movie movie) {
         return movie.getLocalReleaseDate().isBefore(movie.getLocalFinishingDate());
-    }
-
-
-
-    private <T> boolean checkArrayNoNullValues(T[] array) {
-        for (T el : array) {
-            if (el == null) return false;
-        }
-
-        return true;
     }
 }

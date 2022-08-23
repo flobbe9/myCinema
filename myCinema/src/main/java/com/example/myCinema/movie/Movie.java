@@ -68,10 +68,9 @@ public class Movie {
     private String director;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @OrderColumn
     @Column(name = "castMember")
     @EqualsAndHashCode.Exclude
-    private String[] cast;
+    private Set<String> cast;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
@@ -93,7 +92,7 @@ public class Movie {
                  MovieVersion version, 
                  Double price, 
                  String director,
-                 String[] cast,
+                 Set<String> cast,
                  Set<Genre> genres,
                  String trailerLink) {
         this.title = title;
@@ -119,14 +118,15 @@ public class Movie {
 
 
 @Getter
+@Setter
 class MovieWrapper {
     private FSK[] fsk = FSK.values();
 
     private MovieVersion[] version = MovieVersion.values();
 
-    private String[] cast = new String[3];
-    
     private Genre[] genres = Genre.values();
 
     private boolean[] toggledGenres = new boolean[genres.length];
+
+    private String[] movieCast = {"", "", ""};
 }
