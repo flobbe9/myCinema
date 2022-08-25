@@ -16,7 +16,6 @@
         <h2>Add Movie</h2>
         <br>
 
-        <!-- not working correctly for some reason -->
         <form method="post" action="" th:action="@{/admin/movie/addNew}" th:object="${movie}">
             <input type="text" id="title" name="title" placeholder="Title*" th:field="*{title}" required>
             <br><br>

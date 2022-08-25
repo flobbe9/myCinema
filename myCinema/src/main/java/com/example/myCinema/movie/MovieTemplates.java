@@ -57,7 +57,6 @@ public class MovieTemplates {
             // telling thymeleaf it worked
             model.addAttribute("created", true);
 
-            // passing new movieWrapper to thymeleaf for new add
             model.addAttribute("movieWrapper", new MovieWrapper());
 
         } catch (Exception e) {
@@ -111,10 +110,10 @@ public class MovieTemplates {
             // setting id
             movieContainer.setId(appUserId);
 
-            // setting genres array with 'toggledGenres' property of MovieWrapper
+            // setting genres set with 'toggledGenres' property of MovieWrapper
             movieContainer.setGenres(iterateToggledGenres(movieWrapper));
 
-            // setting cast and converting from array to set
+            // setting cast and converting from array to list
             movieContainer.setCast(new ArrayList<String>(Arrays.asList(movieWrapper.getMovieCast())));
 
             // updating movie
@@ -123,8 +122,8 @@ public class MovieTemplates {
             // telling thymeleaf it worked
             model.addAttribute("created", true);
 
-            // TODO: should work without it...
-            model.addAttribute("movieContainer", movieContainer);
+            model.addAttribute("movieContainer", movieContainer);    
+            model.addAttribute("movieWrapper", new MovieWrapper());
 
         } catch (Exception e) {
             // passing exception to thymeleaf
