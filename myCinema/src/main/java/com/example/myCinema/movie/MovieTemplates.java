@@ -1,5 +1,6 @@
 package com.example.myCinema.movie;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class MovieTemplates {
             movie.setGenres(iterateToggledGenres(movieWrapper));
 
             // setting cast and converting from array to Set
-            movie.setCast(new HashSet<String>(Arrays.asList(movieWrapper.getMovieCast())));
+            movie.setCast(new ArrayList<String>(Arrays.asList(movieWrapper.getMovieCast())));
 
             // adding new movie
             movieService.addNew(movie);
@@ -89,10 +90,6 @@ public class MovieTemplates {
             // checking if movie exists and setting appUserId
             appUserId = movieService.getByTitleAndVersion(movieContainer.getTitle(), movieContainer.getVersion()).getId();
 
-            // resetting title and version so they are not displayed in thymeleaf
-            movieContainer.setTitle(null);
-            movieContainer.setVersion(null);
-
             // passing movie to thymeleaf
             model.addAttribute("movieContainer", movieContainer);
 
@@ -118,7 +115,7 @@ public class MovieTemplates {
             movieContainer.setGenres(iterateToggledGenres(movieWrapper));
 
             // setting cast and converting from array to set
-            movieContainer.setCast(new HashSet<String>(Arrays.asList(movieWrapper.getMovieCast())));
+            movieContainer.setCast(new ArrayList<String>(Arrays.asList(movieWrapper.getMovieCast())));
 
             // updating movie
             movieService.update(movieContainer);

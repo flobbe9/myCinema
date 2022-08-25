@@ -1,6 +1,7 @@
 package com.example.myCinema.movie;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OrderColumn;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -70,7 +70,7 @@ public class Movie {
     @ElementCollection(fetch = FetchType.LAZY)
     @Column(name = "castMember")
     @EqualsAndHashCode.Exclude
-    private Set<String> cast;
+    private List<String> cast;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
@@ -92,7 +92,7 @@ public class Movie {
                  MovieVersion version, 
                  Double price, 
                  String director,
-                 Set<String> cast,
+                 List<String> cast,
                  Set<Genre> genres,
                  String trailerLink) {
         this.title = title;
@@ -128,5 +128,5 @@ class MovieWrapper {
 
     private boolean[] toggledGenres = new boolean[genres.length];
 
-    private String[] movieCast = {"", "", ""};
+    private String[] movieCast = new String[3];
 }

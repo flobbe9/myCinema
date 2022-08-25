@@ -16,6 +16,7 @@
         <h2>Add Movie</h2>
         <br>
 
+        <!-- not working correctly for some reason -->
         <form method="post" action="" th:action="@{/admin/movie/addNew}" th:object="${movie}">
             <input type="text" id="title" name="title" placeholder="Title*" th:field="*{title}" required>
             <br><br>
@@ -31,8 +32,7 @@
             <input type="date" id="localFinishingDate" name="localFinishingDate" th:field="*{localFinishingDate}" required>
             <br><br>
 
-            <!-- set size -->
-            <textarea id="synopsis" name="synopsis" placeholder="Synopsis*" th:field="*{synopsis}" required></textarea>
+            <textarea id="synopsis" name="synopsis" rows="5" cols="50" placeholder="Synopsis*" th:field="*{synopsis}" required></textarea>
             <br><br>
 
             <select id="fsk" name="fsk">
@@ -57,9 +57,9 @@
 
             <label for="cast">Cast*: </label>
             <br>
-            <span th:each="member, iter : ${movieWrapper.cast}">
+            <span th:each="member, iter : ${movieWrapper.movieCast}">
                 <span th:text="${iter.index + 1 + '. '}" ></span>
-                <input type="text" class="cast" name="cast" th:field="${movieWrapper.cast[__${iter.index}__]}" required>
+                <input type="text" class="cast" name="cast" th:field="${movieWrapper.movieCast[__${iter.index}__]}">
                 <br>
             </span>
             <br>

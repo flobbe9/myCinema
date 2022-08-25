@@ -134,7 +134,7 @@ public class TicketService {
     
     
     private boolean movieExists(Ticket ticket) {
-        return movieService.exists(ticket.getMovieTitle(), ticket.getMovieVersion());        
+        return movieService.exists(ticket.getMovieTitle(), ticket.getMovieVersion());
     }
 
 

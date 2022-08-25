@@ -51,4 +51,10 @@ public class MovieController {
     public void delete(@RequestParam("title") String title, @RequestParam("version") MovieVersion version) {
         movieService.delete(title, version);
     }
+
+
+    @DeleteMapping("/deleteAll")
+    public void deleteAll() {
+        movieService.deleteAll();
+    }
 }

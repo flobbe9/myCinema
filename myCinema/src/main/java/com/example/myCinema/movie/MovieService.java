@@ -1,80 +1,75 @@
 package com.example.myCinema.movie;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.myCinema.CheckEntity;
 
 import lombok.RequiredArgsConstructor;
 
 
 @Service
 @RequiredArgsConstructor
-public class MovieService {
+public class MovieService extends CheckEntity {
     private final MovieRepository movieRepository;
-
-    interface Check {
-        Boolean check(Object obj);
-    }
 
 
     @Transactional
     public Movie addNew(Movie movie) {
         // checking movie data
-        if (!check(movie) || exists(movie.getTitle(), movie.getVersion())) {
-            throw new IllegalStateException("Something wrong with movie input data.");
-        }
+        movieDataValid(movie);
+        
+        // checking if movie already exists
+        if (exists(movie.getTitle(), movie.getVersion())) 
+            throw new IllegalStateException("Movie with title \"" + movie.getTitle() + "\" in version \"" + movie.getVersion() + "\" does already exists.");
         
         return save(movie);
     }
     
 
-    // TODO: check collections seperatly
-    public Movie update(Movie movieData) {
+    public Movie update(Movie movieContainer) {
         // checking if id is null
-        if (movieData.getId() == null) {
-            throw new IllegalStateException("Id of movieData must not be null.");
+        if (movieContainer.getId() == null) {
+            throw new IllegalStateException("Id of movieContainer must not be null.");
         }
         
         // getting movie with given id from repo
-        Movie updatedMovie = getById(movieData.getId());
+        Movie movieToUpdate = getById(movieContainer.getId());
         
-        // updating not null values from movieData
+        // updating not null values from movieContainer
         // title
-        if (movieData.getTitle() != null && !movieData.getTitle().equals("")) updatedMovie.setTitle(movieData.getTitle());
+        if (!objectNullOrEmpty(movieContainer.getTitle())) movieToUpdate.setTitle(movieContainer.getTitle());
         // duration
-        if (movieData.getDuration() != null) updatedMovie.setDuration(movieData.getDuration());
+        if (!objectNullOrEmpty(movieContainer.getDuration())) movieToUpdate.setDuration(movieContainer.getDuration());
         // localReleaseDate
-        if (movieData.getLocalReleaseDate() != null) updatedMovie.setLocalReleaseDate(movieData.getLocalReleaseDate());
+        if (!objectNullOrEmpty(movieContainer.getLocalReleaseDate())) movieToUpdate.setLocalReleaseDate(movieContainer.getLocalReleaseDate());
         // localFinishingDate
-        if (movieData.getLocalFinishingDate() != null) updatedMovie.setLocalFinishingDate(movieData.getLocalFinishingDate());
+        if (!objectNullOrEmpty(movieContainer.getLocalFinishingDate())) movieToUpdate.setLocalFinishingDate(movieContainer.getLocalFinishingDate());
         // synopsis
-        if (movieData.getSynopsis() != null && !movieData.getSynopsis().equals("")) updatedMovie.setSynopsis(movieData.getSynopsis());
+        if (!objectNullOrEmpty(movieContainer.getSynopsis())) movieToUpdate.setSynopsis(movieContainer.getSynopsis());
         // fsk
-        if (movieData.getFsk() != null) updatedMovie.setFsk(movieData.getFsk());
+        if (!objectNullOrEmpty(movieContainer.getFsk())) movieToUpdate.setFsk(movieContainer.getFsk());
         // version
-        if (movieData.getVersion() != null) updatedMovie.setVersion(movieData.getVersion());
+        if (!objectNullOrEmpty(movieContainer.getVersion())) movieToUpdate.setVersion(movieContainer.getVersion());
         // price
-        if (movieData.getPrice() != null) updatedMovie.setPrice(movieData.getPrice());
+        if (!objectNullOrEmpty(movieContainer.getPrice())) movieToUpdate.setPrice(movieContainer.getPrice());
         // director
-        if (movieData.getDirector() != null && !movieData.getDirector().equals("")) updatedMovie.setDirector(movieData.getDirector());
+        if (!objectNullOrEmpty(movieContainer.getDirector())) movieToUpdate.setDirector(movieContainer.getDirector());
         // cast
-        if (movieData.getCast() != null) updatedMovie.setCast(movieData.getCast());
-        // genres && cast not empty
-        if (movieData.getGenres() != null && !movieData.getGenres().isEmpty()) updatedMovie.setGenres(movieData.getGenres());
+        if (!iterableNullOrEmpty(movieContainer.getCast())) movieToUpdate.setCast(movieContainer.getCast());
+        // genres
+        if (!iterableNullOrEmpty(movieContainer.getGenres())) movieToUpdate.setGenres(movieContainer.getGenres());
         // trailerLink
-        if (movieData.getTrailerLink() != null && !movieData.getTrailerLink().equals("")) updatedMovie.setTrailerLink(movieData.getTrailerLink());
+        if (!objectNullOrEmpty(movieContainer.getTrailerLink())) movieToUpdate.setTrailerLink(movieContainer.getTrailerLink());
         
         // checking date chronology 
-        if (!checkDateChronology(updatedMovie)) {
-            throw new IllegalStateException("Something wrong with chronology of dates of updatedMovie.");
-        }
+        checkReleaseAndFinishingDates(movieToUpdate);
 
-        return save(updatedMovie);
+        return save(movieToUpdate);
     }
 
 
@@ -86,7 +81,6 @@ public class MovieService {
     
     public List<Movie> getByTitle(String title) {
         List<Movie> list = movieRepository.findByTitle(title);
-
         if (list.isEmpty()) throw new NoSuchElementException("Could not find movies with title \"" + title + "\".");
 
         return list;
@@ -100,7 +94,6 @@ public class MovieService {
     
     
     public List<Movie> getAll() {
-        // order by release date, from latest to oldest
         return movieRepository.findAllByOrderByLocalReleaseDateDesc();
     }
 
@@ -124,11 +117,15 @@ public class MovieService {
     }
 
 
+    public void deleteAll() {
+        movieRepository.deleteAll();
+    }
+
+
     public boolean exists(String title, MovieVersion version) {
         return movieRepository.findByTitleAndVersion(title, version).isPresent();
     }
-    
-    
+
 //// helper functions
     
     
@@ -137,53 +134,65 @@ public class MovieService {
     }
     
     
-    private boolean check(Movie movie) {
-        // checking for null fields
-        if (!checkNullValues(movie)) return false;
-        
-        // checking date chronology
-        if (!checkDateChronology(movie)) return false;
+    private boolean movieDataValid(Movie movie) {
+        return 
+            // null or empty strings
+            !hasNullValue(movie) &&
 
-        return true;
+            // dates in order
+            checkReleaseAndFinishingDates(movie);
     }
 
 
-    private <T> boolean checkCollection(Collection<T> collection) {
-        // TODO: implement
-        return true;
+    /**
+     * Checks for illegal values: 
+     * -null
+     * -is an empty string ""
+     * -iterable empty
+     * -iterable contains null
+     * -iterable contains emtpy string ""
+     * 
+     * @param movie the movie to check.
+     * @return true if at least one of the movies fields has an illegal value.
+     */
+    private boolean hasNullValue(Movie movie) {
+        if (
+            // title
+            objectNullOrEmpty(movie.getTitle()) ||
+            // duration
+            objectNullOrEmpty(movie.getDuration()) ||
+            // localReleaseDate
+            objectNullOrEmpty(movie.getLocalReleaseDate()) ||
+            // localFinishingDate
+            objectNullOrEmpty(movie.getLocalFinishingDate()) ||
+            // synopsis
+            objectNullOrEmpty(movie.getSynopsis()) ||
+            // fsk
+            objectNullOrEmpty(movie.getFsk()) ||
+            // version
+            objectNullOrEmpty(movie.getVersion()) ||
+            // price
+            objectNullOrEmpty(movie.getPrice()) ||
+            // director
+            objectNullOrEmpty(movie.getDirector()) ||
+            // cast
+            iterableNullOrEmpty(movie.getCast()) ||
+            // genres
+            iterableNullOrEmpty(movie.getGenres()) ||
+            // trailerLink
+            objectNullOrEmpty(movie.getTrailerLink()))
+            {
+                throw new IllegalStateException("Movie data contains null values or empty strings ('').");
+            }
+
+        return false;
     }
 
-    private boolean checkNullValues(Movie movie) {
-        // title
-        if (movie.getTitle() == null || movie.getTitle().equals("")) return false;
-        // duration
-        if (movie.getDuration() == null) return false;
-        // localReleaseDate
-        if (movie.getLocalReleaseDate() == null) return false;
-        // localFinishingDate
-        if (movie.getLocalFinishingDate() == null) return false;
-        // synopsis
-        if (movie.getSynopsis() == null || movie.getSynopsis().equals("")) return false;
-        // fsk
-        if (movie.getFsk() == null) return false;
-        // version
-        if (movie.getVersion() == null) return false;
-        // price
-        if (movie.getPrice() == null) return false;
-        // director
-        if (movie.getDirector() == null || movie.getDirector().equals("")) return false;
-        // cast
-        if (movie.getCast() == null || movie.getCast().contains(null) || movie.getCast().contains("")) return false;
-        // genres
-        if (movie.getGenres() == null || movie.getGenres().contains(null)) return false;
-        // trailerLink
-        if (movie.getTrailerLink() == null || movie.getTrailerLink().equals("")) return false;
+
+    private boolean checkReleaseAndFinishingDates(Movie movie) {
+        if (movie.getLocalReleaseDate().isAfter(movie.getLocalFinishingDate())) 
+            throw new IllegalStateException("Local release date cannot be after local finishing date.");
 
         return true;
-    }
-
-
-    private boolean checkDateChronology(Movie movie) {
-        return movie.getLocalReleaseDate().isBefore(movie.getLocalFinishingDate());
     }
 }
