@@ -60,7 +60,7 @@ public class MovieService extends CheckEntity {
         // director
         if (!objectNullOrEmpty(movieContainer.getDirector())) movieToUpdate.setDirector(movieContainer.getDirector());
         // cast
-        if (!iterableNullOrEmpty(movieContainer.getCast())) movieToUpdate.setCast(movieContainer.getCast());
+        updateCast(movieContainer, movieToUpdate);
         // genres
         if (!iterableNullOrEmpty(movieContainer.getGenres())) movieToUpdate.setGenres(movieContainer.getGenres());
         // trailerLink
@@ -194,5 +194,16 @@ public class MovieService extends CheckEntity {
             throw new IllegalStateException("Local release date cannot be after local finishing date.");
 
         return true;
+    }
+
+
+    private void updateCast(Movie movieContainer, Movie movieToUpdate) {
+        for (int i = 0; i <  movieToUpdate.getCast().size(); i++) {
+            // if there's a new value in container
+            if (!objectNullOrEmpty(movieContainer.getCast().get(i))) {
+                // replace member in movieToUpdate with member in movieContainer
+                movieToUpdate.getCast().set(i, movieContainer.getCast().get(i));
+            }
+        }
     }
 }
