@@ -5,3 +5,4 @@
 -pretty email(JP?)
 -pretty login, logout
 -think about data structures(e.g. set or list...)
+-think about athorization

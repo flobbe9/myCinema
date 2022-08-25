@@ -78,7 +78,9 @@ public class AppUserTemplates {
         // getting email from temp appUser
         String email = temp.getEmail();
         
+        System.out.println("outside");
         try {
+            System.out.println("inside");
             // finding by email
             AppUser appUser = appUserService.getByUserName(email);
             

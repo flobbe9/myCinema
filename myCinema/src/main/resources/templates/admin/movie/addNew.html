@@ -23,18 +23,17 @@
             <input type="number" id="duration" name="duration" placeholder="Duration (minutes)*" th:field="*{duration}" required>
             <br><br>
 
-            <label for="localReleaseDate">Local release date*: </label>
-            <input type="date" id="localReleaseDate" name="localReleaseDate" th:field="*{localReleaseDate}" required>
+            <input type="text" id="localReleaseDate" name="localReleaseDate" placeholder="Local release date*" onfocus="(this.type = 'date')" th:field="*{localReleaseDate}" required>
             <br><br>
 
-            <label for="localFinishingDate">Local finishing date*: </label>
-            <input type="date" id="localFinishingDate" name="localFinishingDate" th:field="*{localFinishingDate}" required>
+            <input type="text" id="localFinishingDate" name="localFinishingDate" placeholder="Local finishing date*" onfocus="(this.type = 'date')" th:field="*{localFinishingDate}" required>
             <br><br>
 
             <textarea id="synopsis" name="synopsis" rows="5" cols="50" placeholder="Synopsis*" th:field="*{synopsis}" required></textarea>
             <br><br>
 
             <select id="fsk" name="fsk">
+                <option th:value="null">Select FSK...</option>
                 <span th:each="fsk : ${movieWrapper.fsk}">
                     <option th:text="${fsk}" th:value="${fsk}" th:field="*{fsk}"></option>
                 </span>
@@ -42,6 +41,7 @@
             <br><br>
 
             <select id="version" name="version">
+                <option th:value="null">Select Version...</option>
                 <span th:each="version : ${movieWrapper.version}">
                     <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>
                 </span>
@@ -54,11 +54,8 @@
             <input type="text" id="director" name="director" placeholder="Director*" th:field="*{director}" required>
             <br><br>
 
-            <label for="cast">Cast*: </label>
-            <br>
             <span th:each="member, iter : ${movieWrapper.movieCast}">
-                <span th:text="${iter.index + 1 + '. '}" ></span>
-                <input type="text" class="cast" name="cast" th:field="${movieWrapper.movieCast[__${iter.index}__]}">
+                <input type="text" class="cast" name="cast" th:placeholder="${iter.index + 1 + '. Cast member*'}" th:field="${movieWrapper.movieCast[__${iter.index}__]}">
                 <br>
             </span>
             <br>

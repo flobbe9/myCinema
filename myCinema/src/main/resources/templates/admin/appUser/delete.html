@@ -14,10 +14,9 @@
     <body>
         <h2>Delete User</h2>
 
-        <form id="formDelete" method="post" action="" th:action="@{/admin/deleteAppUser}" th:object="${appUser}">
-            <label for="userName">Username*: </label>
-            <input id="userName" name="userName" type="text" th:field="${appUser.email}" required>
-            <br><br><br>
+        <form id="formDelete" method="post" action="" th:action="@{/admin/appUser/delete}" th:object="${appUser}">
+            <input id="userName" name="userName" type="text" placeholder="Username*" th:field="${appUser.email}" required>
+            <br><br>
             
             <input type="submit" value="Delete User">
         </form>
