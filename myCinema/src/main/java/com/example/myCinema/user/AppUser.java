@@ -30,7 +30,7 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AppUser implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_appUser_id_sequence")
+    @GeneratedValue(generator = "_appUser_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_appUser_id_sequence", allocationSize = 1)
     private Long id;
 

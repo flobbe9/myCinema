@@ -30,7 +30,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Seat {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_seat_id_sequence")
+    @GeneratedValue(generator = "_seat_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_seat_id_sequence", allocationSize = 1)
     @EqualsAndHashCode.Exclude
     private Long id;

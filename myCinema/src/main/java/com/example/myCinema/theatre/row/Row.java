@@ -44,7 +44,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Row {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_row_id_sequence")
+    @GeneratedValue(generator = "_row_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_row_id_sequence", allocationSize = 1)
     @EqualsAndHashCode.Exclude
     private Long id;
@@ -85,11 +85,11 @@ public class Row {
         this.frontRow = frontRow;
 
         // generating seats
-        this.seats = generateseats();
+        this.seats = generateSeats();
     }
 
 
-    private List<Seat> generateseats() {
+    private List<Seat> generateSeats() {
         // parquet row
         if (rowRank == PARQUET) {
             generateParquetRow(seats);

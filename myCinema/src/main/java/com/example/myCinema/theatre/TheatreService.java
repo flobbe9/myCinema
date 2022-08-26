@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.myCinema.CheckEntity;
 import com.example.myCinema.theatre.row.Row;
 import com.example.myCinema.theatre.row.RowRepository;
 import com.example.myCinema.theatre.seat.Seat;
@@ -18,7 +19,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class TheatreService {
+public class TheatreService extends CheckEntity {
     private final TheatreRepository theatreRepository;
     private final RowRepository rowRepository;
     private final SeatRepository seatRepository;
@@ -26,9 +27,12 @@ public class TheatreService {
 
     public Theatre addNew(Theatre theatre) {
         // checking theatre data
-        if (!check(theatre) || exists(theatre.getNumber())) {
-            throwIllegalState("Something wrong with theatre input data.");
-        }
+        theatreValid(theatre);
+
+        // checking if theatre does already exists
+        if (exists(theatre.getNumber())) 
+            throw new IllegalStateException("Theatre with number \"" + theatre.getNumber() + "\" does already exist.");
+
 
         // setting up rows, seats ect.
         theatre.setFieldVariables();
@@ -50,20 +54,18 @@ public class TheatreService {
     @Transactional
     public Theatre update(Theatre theatreData) {
         // checking wether id is null
-        if (theatreData.getId() == null) {
-            throwIllegalState("Id of theatreData must not be null.");
-        }
+        if (theatreData.getId() == null) 
+            throw new IllegalStateException("Id of theatreData must not be null.");
 
         // getting theatre to update from repo
         Theatre updatedTheatre = getById(theatreData.getId());
 
-        // updating not null values from theatreData
         // number
-        if (theatreData.getNumber() != null) updatedTheatre.setNumber(theatreData.getNumber());
+        if (!objectNullOrEmpty(theatreData.getNumber())) updatedTheatre.setNumber(theatreData.getNumber());
         // threeD
-        if (theatreData.getThreeD() != null) updatedTheatre.setThreeD(theatreData.getThreeD());
+        if (!objectNullOrEmpty(theatreData.getThreeD())) updatedTheatre.setThreeD(theatreData.getThreeD());
         // rowsTotal
-        if (theatreData.getRowsTotal() != null) updatedTheatre.setRowsTotal(theatreData.getRowsTotal());
+        if (!objectNullOrEmpty(theatreData.getRowsTotal())) updatedTheatre.setRowsTotal(theatreData.getRowsTotal());
         
         // removing rows from db 
         deleteAllRows(updatedTheatre);
@@ -88,7 +90,7 @@ public class TheatreService {
     
     
     public List<Theatre> getAll() {
-        // order by number of theatre
+        // order by number of theatre, ascending
         return theatreRepository.findAllByOrderByNumberAsc();
     }
 
@@ -121,7 +123,6 @@ public class TheatreService {
     
     
     public boolean exists(int number) {
-        // getting theatre by number
         return theatreRepository.findByNumber(number).isPresent();
     }
 
@@ -141,35 +142,34 @@ public class TheatreService {
     }
     
     
-    private boolean check(Theatre theatre) {
-        // checking for null fields
-        if (!checkNullValues(theatre)) return false;
-
+    private boolean theatreValid(Theatre theatre) {
         // totalRows cannot be over 26
-        if (theatre.getRowsTotal() > NUM_ROWS_FOR_BIG_CINEMA) return false;
-        
+        if (theatre.getRowsTotal() > NUM_ROWS_FOR_BIG_CINEMA)
+            throw new IllegalStateException("Number of rows cannot be over " + NUM_ROWS_FOR_BIG_CINEMA + ".");
+
+        // null values
+        hasNullValue(theatre);
+
         return true;
     }
     
     
-    private boolean checkNullValues(Theatre theatre) {
-        // number
-        if (theatre.getNumber() == null) return false;
-        // threeD
-        if (theatre.getThreeD() == null) return false;
-        // rowsTotal
-        if (theatre.getRowsTotal() == null)  return false;
+    private boolean hasNullValue(Theatre theatre) {
+        if (
+            // number
+            objectNullOrEmpty(theatre.getNumber()) ||
+            // threeD
+            objectNullOrEmpty(theatre.getThreeD()) ||
+            // rowsTotal
+            objectNullOrEmpty(theatre.getRowsTotal()))
+            
+                throw new IllegalStateException("Theatre data contains null value or empty strings ('').");
 
-        return true;
+        return false;
     }
 
 
     private void deleteAllRows(Theatre theatre) {
         rowRepository.deleteByTheatre(theatre);
-    }
-
-
-    private void throwIllegalState(String message) {
-        throw new IllegalStateException(message);
     }
 }

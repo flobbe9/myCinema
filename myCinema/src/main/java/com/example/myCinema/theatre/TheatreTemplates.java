@@ -14,9 +14,8 @@ import lombok.AllArgsConstructor;
 @Controller
 @RequestMapping("/admin/theatre")
 @AllArgsConstructor
-public class TheatreTemplates {
+public class TheatreTemplates extends ExceptionService {
     private final TheatreService theatreService;
-    private final ExceptionService exceptionService;
 
 
 // addTheatre
@@ -44,7 +43,7 @@ public class TheatreTemplates {
             
         } catch(Exception e) {
             // passing exceptions and https status to thymeleaf
-            return exceptionService.passExceptionToThymeleaf(e, model);
+            return passExceptionToThymeleaf(e, model);
         }
 
         return "admin/theatre/addNew";
@@ -78,7 +77,7 @@ public class TheatreTemplates {
 
         } catch (Exception e) {
             // passing exception to thymeleaf error page
-            return exceptionService.passExceptionToThymeleaf(e, model);
+            return passExceptionToThymeleaf(e, model);
         }
         return "admin/theatre/update";
     }
@@ -98,7 +97,7 @@ public class TheatreTemplates {
 
         } catch (Exception e) {
             // passing exception to thymeleaf
-            return exceptionService.passExceptionToThymeleaf(e, model);
+            return passExceptionToThymeleaf(e, model);
         }
 
         return "admin/theatre/update";

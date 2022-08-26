@@ -27,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ConfirmationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_confiramtionToken_id_sequence")
+    @GeneratedValue(generator = "_confiramtionToken_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_confirmationToken_id_sequence", allocationSize = 1)
     private Long id;
 

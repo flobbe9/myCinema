@@ -1,6 +1,5 @@
 package com.example.myCinema.cinemaInformation;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +14,6 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping
-@CrossOrigin("http://localhost:4001")
 @AllArgsConstructor
 public class CinemaInformationController {
     private final CinemaInformationService cinemaInformationService;

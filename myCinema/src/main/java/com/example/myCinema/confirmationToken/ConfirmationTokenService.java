@@ -33,9 +33,7 @@ public class ConfirmationTokenService {
     
     public AppUser confirm(ConfirmationToken confirmationToken) {
         // checking confirmationToken
-        if (!check(confirmationToken)) {
-            throw new IllegalStateException("Something wrong with confirmation token.");
-        }
+        confirmationTokenValid(confirmationToken);
         
         // set confirmedAt
         confirmationToken.setConfirmedAt(LocalDateTime.now()); 
@@ -58,7 +56,7 @@ public class ConfirmationTokenService {
 
     public ConfirmationToken getByAppUser(AppUser appUser) {
         return confirmationTokenRepository.findByAppUser(appUser).orElseThrow(() -> 
-            new NoSuchElementException("Could not find appUser."));
+            new NoSuchElementException("Could not find appUser with user name \"" + appUser.getEmail() + "\"."));
     }
 
 
@@ -75,18 +73,15 @@ public class ConfirmationTokenService {
     }
 
 
-    private boolean exists(String token) {
-        return confirmationTokenRepository.findByToken(token).isPresent();
-    }
+    private boolean confirmationTokenValid(ConfirmationToken confirmationToken) {
+        if (   
+            // confirmedAt
+            confirmationToken.getConfirmedAt() != null ||
+            // expiredAt
+            confirmationToken.getExpiresAt().isBefore(LocalDateTime.now()))
 
+                throw new IllegalStateException("Confirmation either already confirmed or expired.");
 
-    private boolean check(ConfirmationToken confirmationToken) {
-        // exists
-        if (!exists(confirmationToken.getToken())) return false; 
-        // confirmedAt
-        if (confirmationToken.getConfirmedAt() != null) return false;
-        // expiredAt
-        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) return false;
 
         return true;
     }

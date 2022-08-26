@@ -33,7 +33,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Theatre {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_theatre_id_sequence")
+    @GeneratedValue(generator = "_theatre_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_theatre_id_sequence", allocationSize = 1)
     @EqualsAndHashCode.Exclude
     private Long id;
@@ -80,6 +80,9 @@ public class Theatre {
         this.number = number;
         this.threeD = threeD;
         this.rowsTotal = rowsTotal;
+
+        // setting other fields
+        setFieldVariables();
     }
 
 

@@ -30,7 +30,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class Movie {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_movie_id_sequence")
+    @GeneratedValue(generator = "_movie_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_movie_id_sequence", allocationSize = 1) 
     @EqualsAndHashCode.Exclude
     private Long id;

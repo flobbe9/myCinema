@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.myCinema.CheckEntity;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MovieService extends CheckEntity {
     private final MovieRepository movieRepository;
 
@@ -21,7 +21,7 @@ public class MovieService extends CheckEntity {
     @Transactional
     public Movie addNew(Movie movie) {
         // checking movie data
-        movieDataValid(movie);
+        movieValid(movie);
         
         // checking if movie already exists
         if (exists(movie.getTitle(), movie.getVersion())) 
@@ -33,9 +33,9 @@ public class MovieService extends CheckEntity {
 
     public Movie update(Movie movieContainer) {
         // checking if id is null
-        if (movieContainer.getId() == null) {
+        if (movieContainer.getId() == null) 
             throw new IllegalStateException("Id of movieContainer must not be null.");
-        }
+        
         
         // getting movie with given id from repo
         Movie movieToUpdate = getById(movieContainer.getId());
@@ -134,7 +134,7 @@ public class MovieService extends CheckEntity {
     }
     
     
-    private boolean movieDataValid(Movie movie) {
+    private boolean movieValid(Movie movie) {
         return 
             // null or empty strings
             !hasNullValue(movie) &&
@@ -181,9 +181,9 @@ public class MovieService extends CheckEntity {
             iterableNullOrEmpty(movie.getGenres()) ||
             // trailerLink
             objectNullOrEmpty(movie.getTrailerLink()))
-            {
+            
                 throw new IllegalStateException("Movie data contains null values or empty strings ('').");
-            }
+            
 
         return false;
     }

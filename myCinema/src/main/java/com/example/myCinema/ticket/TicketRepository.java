@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-    Optional<Ticket> findByTheatreNumberAndRowLetterAndSeatNumber(int theatreNumber,
-                                                                  char rowLetter,
-                                                                  int seatNumber);
+    Optional<Ticket> findByTheatreNumberAndRowLetterAndSeatNumber(int theatreNumber, char rowLetter, int seatNumber);
     List<Ticket> findAllByUserName(String userName);
     
 }

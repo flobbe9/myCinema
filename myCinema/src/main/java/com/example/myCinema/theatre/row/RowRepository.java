@@ -11,5 +11,5 @@ import com.example.myCinema.theatre.Theatre;
 @Repository
 public interface RowRepository extends JpaRepository<Row, Long> {
     Optional<Row> findByTheatreAndRowLetter(Theatre theatre, char rowLetter);
-    Long deleteByTheatre(Theatre theatre);
+    Optional<Long> deleteByTheatre(Theatre theatre);
 }

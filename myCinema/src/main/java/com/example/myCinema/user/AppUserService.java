@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.myCinema.CheckEntity;
 import com.example.myCinema.confirmationToken.ConfirmationToken;
 import com.example.myCinema.confirmationToken.ConfirmationTokenService;
 import com.example.myCinema.mail.EmailValidator;
@@ -20,7 +21,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class AppUserService implements UserDetailsService {
+public class AppUserService extends CheckEntity implements UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final MailService mailService;
@@ -28,16 +29,18 @@ public class AppUserService implements UserDetailsService {
     
     
     public AppUser addNew(AppUser appUser) {
-        // checking appUser data
-        if (!check(appUser) || exists(appUser.getEmail())) {
-            throw new IllegalStateException("Someting wrong with appUser input data.");
-        }
+        // checking appUser
+        appUserValid(appUser);
+        
+        // checking if appUser does already exist
+        if (exists(appUser.getEmail())) 
+            throw new IllegalStateException("App user with username \"" + appUser.getEmail() + "\" does already exist.");
         
         // setting age
         setAge(appUser);
 
         // encoding password
-        setAndEncodePassword(appUser);
+        setAndEncodePassword(appUser, appUser.getPassword());
 
         // creating confirmation token
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
@@ -51,36 +54,37 @@ public class AppUserService implements UserDetailsService {
     }
     
     
-    public AppUser update(AppUser appUserData) {
+    public AppUser update(AppUser appUserContainer) {
         // checking if id is null
-        if (appUserData.getId() == null) {
-            throw new IllegalStateException("Id of appUserData must not be null.");
-        }
+        if (appUserContainer.getId() == null) 
+            throw new IllegalStateException("Id of appUserContainer must not be null.");
         
         // getting appUser with given id from repo
-        AppUser updatedAppUser = getById(appUserData.getId());
+        AppUser appUserToUpdate = getById(appUserContainer.getId());
 
-        // updating not null values from appUserData
         // firstName
-        if (appUserData.getFirstName() != null) updatedAppUser.setFirstName(appUserData.getFirstName());
+        if (!objectNullOrEmpty(appUserContainer.getFirstName())) appUserToUpdate.setFirstName(appUserContainer.getFirstName());
         // lastName
-        if (appUserData.getLastName() != null) updatedAppUser.setLastName(appUserData.getLastName());
+        if (!objectNullOrEmpty(appUserContainer.getLastName())) appUserToUpdate.setLastName(appUserContainer.getLastName());
         // email/userName
-        if (appUserData.getEmail() != null) updatedAppUser.setEmail(appUserData.getEmail());
+        if (!objectNullOrEmpty(appUserContainer.getEmail())) appUserToUpdate.setEmail(appUserContainer.getEmail());
+        // password
+        if (!objectNullOrEmpty(appUserContainer.getPassword())) setAndEncodePassword(appUserToUpdate, appUserContainer.getPassword());
         // adress
-        if (appUserData.getAdress() != null) updatedAppUser.setAdress(appUserData.getAdress());
+        if (!objectNullOrEmpty(appUserContainer.getAdress())) appUserToUpdate.setAdress(appUserContainer.getAdress());
         // zipCode
-        if (appUserData.getZipCode() != null) updatedAppUser.setZipCode(appUserData.getZipCode());
+        if (!objectNullOrEmpty(appUserContainer.getZipCode())) appUserToUpdate.setZipCode(appUserContainer.getZipCode());
         // city
-        if (appUserData.getCity() != null) updatedAppUser.setCity(appUserData.getCity());
-        // birthday
-        if (appUserData.getBirthday() != null) {
-            updatedAppUser.setBirthday(appUserData.getBirthday());
-        // age
-            updatedAppUser.setAge(updatedAppUser.calculateAge(appUserData.getBirthday()));
+        if (!objectNullOrEmpty(appUserContainer.getCity())) appUserToUpdate.setCity(appUserContainer.getCity());
+
+        if (!objectNullOrEmpty(appUserContainer.getBirthday())) {
+            // birthday
+            appUserToUpdate.setBirthday(appUserContainer.getBirthday());
+            // age
+            appUserToUpdate.setAge(appUserToUpdate.calculateAge(appUserContainer.getBirthday()));
         }
         
-        return save(updatedAppUser);
+        return save(appUserToUpdate);
     }
 
 
@@ -126,42 +130,46 @@ public class AppUserService implements UserDetailsService {
 //// helper functions:
 
 
-    private boolean check(AppUser appUser) {
-        // checking for null values
-        if (!checkNullValues(appUser)) return false;
-        
+    private boolean appUserValid(AppUser appUser) {
         // validate email
         EmailValidator emailValidator = new EmailValidator();
         emailValidator.validate(appUser.getEmail());
 
+        // checking for null values
+        hasNullValue(appUser);
+
         // check birthday
-        if (!checkBirthday(appUser.getBirthday())) return false;
+        if (!checkBirthday(appUser.getBirthday())) 
+            throw new IllegalStateException("Birthday cannot be in the future.");
 
         return true;
     }
     
     
-    private boolean checkNullValues(AppUser appUser) {
-        // firstName
-        if (appUser.getFirstName() == null) return false;
-        // lastName
-        if (appUser.getLastName() == null) return false;
-        // email
-        if (appUser.getEmail() == null) return false;
-        // password
-        if (appUser.getPassword() == null) return false;
-        // adress
-        if (appUser.getAdress() == null) return false;
-        // zipCode
-        if (appUser.getZipCode() == null) return false;
-        // city
-        if (appUser.getCity() == null) return false;
-        // birthday
-        if (appUser.getBirthday() == null) return false;
-        // role
-        if (appUser.getRole() == null) return false;
+    private boolean hasNullValue(AppUser appUser) {
+        if (
+            // firstName
+            appUser.getFirstName() == null ||
+            // lastName
+            appUser.getLastName() == null ||
+            // email
+            appUser.getEmail() == null ||
+            // password
+            appUser.getPassword() == null ||
+            // adress
+            appUser.getAdress() == null ||
+            // zipCode
+            appUser.getZipCode() == null ||
+            // city
+            appUser.getCity() == null ||
+            // birthday
+            appUser.getBirthday() == null ||
+            // role
+            appUser.getRole() == null)
 
-        return true;
+                throw new IllegalStateException("AppUser data contains null value or empty strings ('').");
+
+        return false;
     }
 
 
@@ -178,7 +186,8 @@ public class AppUserService implements UserDetailsService {
     }
 
 
-    private void setAndEncodePassword(AppUser appUser) {
-        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+    // TODO: does not make much sense
+    private void setAndEncodePassword(AppUser appUser, String password) {
+        appUser.setPassword(passwordEncoder.encode(password));
     }
 }

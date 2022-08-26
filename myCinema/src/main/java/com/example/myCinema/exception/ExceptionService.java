@@ -32,15 +32,15 @@ public class ExceptionService {
 
     private HttpStatus decideHttpStatus(Exception e) {
         // 401 unauthorized
-        if (e.getClass().equals(IllegalAccessException.class)) {
+        if (e instanceof IllegalAccessException) {
 
             return UNAUTHORIZED;
         }
 
         // 404 not found
-        if (e.getClass().equals(UsernameNotFoundException.class) ||
-            e.getClass().equals(NoSuchElementException.class) ||
-            e.getClass().equals(FileNotFoundException.class)) {
+        if (e instanceof UsernameNotFoundException ||
+            e instanceof NoSuchElementException ||
+            e instanceof FileNotFoundException) {
                 
             return NOT_FOUND;
         }

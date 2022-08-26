@@ -18,10 +18,9 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/admin/appUser")
 @AllArgsConstructor
 public class AppUserTemplates {
-    private final AppUserService appUserService;        
+    private final AppUserService appUserService;    
     private final ExceptionService exceptionService;
 
-    // TODO: faster? more efficient?
 
 // addAppUser
 
@@ -96,8 +95,8 @@ public class AppUserTemplates {
 
         return "/admin/appUser/delete";
     }
-    
-    
+
+
 //// helper functions
 
 

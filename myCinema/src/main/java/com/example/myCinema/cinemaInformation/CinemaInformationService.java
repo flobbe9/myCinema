@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 
+import com.example.myCinema.CheckEntity;
 import com.example.myCinema.mail.EmailValidator;
 
 import lombok.AllArgsConstructor;
@@ -11,44 +12,45 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class CinemaInformationService {
+public class CinemaInformationService extends CheckEntity {
     private final CinemaInformationRepository cinemaInformationRepository;
-
-
+    
+    
     public CinemaInformation addNew(CinemaInformation cinemaInformation) {
         // checking cinemaInformation
-        if (!check(cinemaInformation) || exists(cinemaInformation.getName(), cinemaInformation.getCity())) {
-            throw new IllegalStateException("Something wrong with cinemaInformation.");
-        }
+        cinemaInformationValid(cinemaInformation);
 
+        // checking if cinema already exists
+        if (exists(cinemaInformation.getName(), cinemaInformation.getCity())) 
+            throw new IllegalStateException("Cinema with name \"" + cinemaInformation.getName() + "\" in city \"" + cinemaInformation.getCity() + "\" does already exists.");
+        
         return save(cinemaInformation);
     }
-
-
-    public CinemaInformation update(CinemaInformation cinemaInformationData) {
+    
+    
+    public CinemaInformation update(CinemaInformation cinemaInformationContainer) {
+        EmailValidator emailValidator = new EmailValidator();
         // checking if id is null
-        if (cinemaInformationData.getId() == null) {
-            throw new IllegalStateException("Id of cinemaInformationData must not be null.");
-        }
-
+        if (cinemaInformationContainer.getId() == null) 
+            throw new IllegalStateException("Id of cinemaInformationContainer must not be null.");
+        
         // creating cinemaInformation with given id
-        CinemaInformation updatedCinemaInformation = getById(cinemaInformationData.getId());
+        CinemaInformation cinemaInformationToUpdate = getById(cinemaInformationContainer.getId());
 
-        // updating notNull values from cinemaInformationData
         // name
-        if (cinemaInformationData.getName() != null) updatedCinemaInformation.setName(cinemaInformationData.getName());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getName())) cinemaInformationToUpdate.setName(cinemaInformationContainer.getName());
         // city
-        if (cinemaInformationData.getCity() != null) updatedCinemaInformation.setCity(cinemaInformationData.getCity());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getCity())) cinemaInformationToUpdate.setCity(cinemaInformationContainer.getCity());
         // zipCode
-        if (cinemaInformationData.getZipCode() != null) updatedCinemaInformation.setZipCode(cinemaInformationData.getZipCode());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getZipCode())) cinemaInformationToUpdate.setZipCode(cinemaInformationContainer.getZipCode());
         // adress
-        if (cinemaInformationData.getAdress() != null) updatedCinemaInformation.setAdress(cinemaInformationData.getAdress());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getAdress())) cinemaInformationToUpdate.setAdress(cinemaInformationContainer.getAdress());
         // email 
-        if (cinemaInformationData.getEmail() != null) updatedCinemaInformation.setEmail(cinemaInformationData.getEmail());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getEmail()) && emailValidator.validate(cinemaInformationContainer.getEmail())) cinemaInformationToUpdate.setEmail(cinemaInformationContainer.getEmail());
         // phoneNumber
-        if (cinemaInformationData.getPhoneNumber() != null) updatedCinemaInformation.setPhoneNumber(cinemaInformationData.getPhoneNumber());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getPhoneNumber())) cinemaInformationToUpdate.setPhoneNumber(cinemaInformationContainer.getPhoneNumber());
 
-        return save(updatedCinemaInformation);
+        return save(cinemaInformationToUpdate);
     }
 
 
@@ -86,32 +88,36 @@ public class CinemaInformationService {
     }
     
 
-    private boolean check(CinemaInformation cinemaInformation) {
-        // checking for null values
-        if (!checkNullValues(cinemaInformation)) return false;
-
-        // checking for valid email
+    private boolean cinemaInformationValid(CinemaInformation cinemaInformation) {
         EmailValidator emailValidator = new EmailValidator();
-        if (!emailValidator.validate(cinemaInformation.getEmail())) return false;
-        
-        return true;
+
+        return 
+            // checking for null values
+            !hasNullValue(cinemaInformation) && 
+
+            // checking for valid email
+            emailValidator.validate(cinemaInformation.getEmail());
     }
     
     
-    private boolean checkNullValues(CinemaInformation cinemaInformation) {
-        // name
-        if (cinemaInformation.getName() == null) return false;
-        // city
-        if (cinemaInformation.getCity() == null) return false;
-        // zipCode
-        if (cinemaInformation.getZipCode() == null) return false;
-        // adress
-        if (cinemaInformation.getAdress() == null) return false;
-        // email
-        if (cinemaInformation.getEmail() == null) return false;
-        // phoneNumber
-        if (cinemaInformation.getPhoneNumber() == null) return false;
+    private boolean hasNullValue(CinemaInformation cinemaInformation) {
+        if (
+            // name
+            objectNullOrEmpty(cinemaInformation.getName()) ||
+            // city
+            objectNullOrEmpty(cinemaInformation.getCity()) ||
+            // zipCode
+            objectNullOrEmpty(cinemaInformation.getZipCode()) ||
+            // adress
+            objectNullOrEmpty(cinemaInformation.getAdress()) ||
+            // email
+            objectNullOrEmpty(cinemaInformation.getEmail()) ||
+            // phoneNumber
+            objectNullOrEmpty(cinemaInformation.getPhoneNumber()))
+        {
+            throw new IllegalStateException("Cinema information contains null values or empty strings ('').");
+        }
 
-        return true;
+        return false;
     }
 }
