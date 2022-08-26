@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.myCinema.exception.ExceptionService;
-
 import lombok.AllArgsConstructor;
 
 
@@ -18,8 +16,8 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/admin/appUser")
 @AllArgsConstructor
 public class AppUserTemplates {
-    private final AppUserService appUserService;    
-    private final ExceptionService exceptionService;
+    
+    private final AppUserService appUserService;
 
 
 // addAppUser
@@ -39,22 +37,16 @@ public class AppUserTemplates {
     
     @PostMapping("/addNew") 
     public String addNew(AppUser appUser, AppUserWrapper appUserWrapper, Model model) {
-        try {
-            // setting permissions if toggled
-            if (checkToggledPermissions(appUserWrapper.getGranted())) {
-                appUser.getRole().setGrantedAuthorities(setAppUserPermissions(appUserWrapper));
-            }
-            
-            // adding appUser
-            appUserService.addNew(appUser); 
-
-            // telling thymeleaf it worked
-            model.addAttribute("created", true);
-
-        } catch(Exception e) {
-            // passing on exception
-            return exceptionService.passExceptionToThymeleaf(e, model);
+        // setting permissions if toggled
+        if (checkToggledPermissions(appUserWrapper.getGranted())) {
+            appUser.getRole().setGrantedAuthorities(setAppUserPermissions(appUserWrapper));
         }
+        
+        // adding appUser
+        appUserService.addNew(appUser); 
+
+        // telling thymeleaf it worked
+        model.addAttribute("created", true);
 
         return "/admin/appUser/addNew";
     }
@@ -77,22 +69,14 @@ public class AppUserTemplates {
         // getting email from temp appUser
         String email = temp.getEmail();
         
-        System.out.println("outside");
-        try {
-            System.out.println("inside");
-            // finding by email
-            AppUser appUser = appUserService.getByUserName(email);
+        // finding by email
+        AppUser appUser = appUserService.getByUserName(email);
+        
+        appUserService.delete(appUser);
+        
+        // telling thymeleaf it worked
+        model.addAttribute("gone", true);
             
-            appUserService.delete(appUser);
-            
-            // telling thymeleaf it worked
-            model.addAttribute("gone", true);
-            
-        } catch(Exception e) {
-            // passing exceptions and https  to thymeleaf
-            return exceptionService.passExceptionToThymeleaf(e, model);
-        }
-
         return "/admin/appUser/delete";
     }
 

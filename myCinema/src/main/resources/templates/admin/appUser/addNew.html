@@ -51,11 +51,7 @@
             </select>       
             <br><br>
 
-            or
-
-            <br><br>
-
-            <label for="permissions">Permissions: </label>
+            <label for="permissions">Permissions (optional): </label>
             <br>
             <span id="permissions" name="permissions" th:each="permission, iter : ${appUserWrapper.permissions}">
                 <input type="checkbox" th:text="${permission}" th:field="${appUserWrapper.granted[__${iter.index}__]}">

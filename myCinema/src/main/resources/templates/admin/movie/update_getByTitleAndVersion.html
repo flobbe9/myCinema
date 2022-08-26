@@ -15,7 +15,7 @@
             <input type="text" id="title" placeholder="Title*" th:field=*{title} required>
             <br><br>
             
-            <select id="version" name="version">
+            <select id="version" name="version" required>
                 <option th:value="${null}" th:field="*{version}">Select...</option>
                 <span th:each="version : ${movieWrapper.version}">
                     <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>

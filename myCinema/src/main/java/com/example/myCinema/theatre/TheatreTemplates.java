@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/admin/theatre")
 @AllArgsConstructor
 public class TheatreTemplates extends ExceptionService {
+    
     private final TheatreService theatreService;
 
 
@@ -34,18 +35,12 @@ public class TheatreTemplates extends ExceptionService {
     @PostMapping("/addNew")
     // @PreAuthorize("hasRole('ROLE_USER')")
     public String addTheatre(Theatre theatre, Model model) {
-        try {
-            // adding new theatre
-            theatreService.addNew(theatre);
+        // adding new theatre
+        theatreService.addNew(theatre);
 
-            // telling thymeleaf it worked
-            model.addAttribute("created", true); 
+        // telling thymeleaf it worked
+        model.addAttribute("created", true); 
             
-        } catch(Exception e) {
-            // passing exceptions and https status to thymeleaf
-            return passExceptionToThymeleaf(e, model);
-        }
-
         return "admin/theatre/addNew";
     }  
 
@@ -64,41 +59,30 @@ public class TheatreTemplates extends ExceptionService {
 
     @PostMapping("/update")
     public String update(Theatre theatre, Model model) {
-        try {
-            // setting id of theatre
-            Theatre existingTheatre = theatreService.getByNumber(theatre.getNumber());
-            theatre.setId(existingTheatre.getId());
+        // setting id of theatre
+        Theatre existingTheatre = theatreService.getByNumber(theatre.getNumber());
+        theatre.setId(existingTheatre.getId());
 
-            // updating theatre
-            theatreService.update(theatre);
+        // updating theatre
+        theatreService.update(theatre);
 
-            // telling thymeleaf it worked
-            model.addAttribute("ok", true);
+        // telling thymeleaf it worked
+        model.addAttribute("ok", true);
 
-        } catch (Exception e) {
-            // passing exception to thymeleaf error page
-            return passExceptionToThymeleaf(e, model);
-        }
         return "admin/theatre/update";
     }
 
 
     @PostMapping("/delete")
     public String delete(Theatre theatre, Model model) {
-        try {
-            // getting theatre number from theatre 
-            int number = theatre.getNumber();
+        // getting theatre number from theatre 
+        int number = theatre.getNumber();
 
-            // deleting theatre
-            theatreService.delete(number);
+        // deleting theatre
+        theatreService.delete(number);
 
-            // telling thymeleaf it worked
-            model.addAttribute("gone", true);
-
-        } catch (Exception e) {
-            // passing exception to thymeleaf
-            return passExceptionToThymeleaf(e, model);
-        }
+        // telling thymeleaf it worked
+        model.addAttribute("gone", true);
 
         return "admin/theatre/update";
     }
