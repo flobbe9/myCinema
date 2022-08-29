@@ -19,6 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class CinemaInformation {
+    
     @Id
     @GeneratedValue(generator = "_cinema_information_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_cinema_information_id_sequence", allocationSize = 1)

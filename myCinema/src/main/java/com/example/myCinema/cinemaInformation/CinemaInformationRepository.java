@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CinemaInformationRepository extends JpaRepository<CinemaInformation, Long> {
+    
     Optional<CinemaInformation> findByNameAndCity(String name, String city);
 }

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class CinemaInformationService extends CheckEntity {
+    
     private final CinemaInformationRepository cinemaInformationRepository;
     
     

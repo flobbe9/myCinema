@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping
 @AllArgsConstructor
 public class CinemaInformationController {
+    
     private final CinemaInformationService cinemaInformationService;
 
 

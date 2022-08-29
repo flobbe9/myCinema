@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 @CrossOrigin
 @AllArgsConstructor
 public class MovieController {
+    
     private final MovieService movieService;
     
     

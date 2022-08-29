@@ -12,11 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
 @ControllerAdvice
-public class ExceptionService extends ResponseEntityExceptionHandler {
+public class ExceptionService {
 
     @ExceptionHandler(Throwable.class)
     public String passExceptionToThymeleaf(Exception e, Model model) {
@@ -26,6 +25,18 @@ public class ExceptionService extends ResponseEntityExceptionHandler {
         // passing thymeleaf the httpStatus and the exception
         model.addAttribute("httpStatus", httpStatus);
         model.addAttribute("exception", e);
+
+        return "/exception/errorPage";
+    }
+
+
+    public String passExceptionToThymeleaf(HttpStatus status, Model model) {
+        // getting appropriate error message
+        String message = decideErrorMessage(status, model);
+
+        // passing thymeleaf the httpStatus and the exception
+        model.addAttribute("httpStatus", status);
+        model.addAttribute("exception", new Exception(message));
 
         return "/exception/errorPage";
     }
@@ -48,5 +59,29 @@ public class ExceptionService extends ResponseEntityExceptionHandler {
         
         
         return INTERNAL_SERVER_ERROR;
+    }
+
+
+    private String decideErrorMessage(HttpStatus status, Model model) {
+        // getting status code 
+        int statusCode = status.value();
+        
+        // exception cases
+        switch (statusCode) {
+            case 400:
+                return "Bad Request";
+                
+            case 401:
+                return "Not authorized.";
+
+            case 403:
+                return "You have no permission for this action.";
+
+            case 404:
+                return "This page does not exists.";
+
+            default: 
+                return "An error has occured. Status code not available.";
+        }
     }
 }
