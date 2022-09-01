@@ -80,7 +80,7 @@ public class ExceptionService {
                 return "You have no permission for this action.";
 
             case 404:
-                return "This page does not exists.";
+                return "This url does not exists.";
 
             default: 
                 return "An error has occured. Status code not available.";

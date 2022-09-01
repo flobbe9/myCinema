@@ -23,18 +23,21 @@ public class GeneralTemplates implements ErrorController {
     
     @GetMapping("/")
     public String getIndexPage() {
+
         return "index";
     }
 
 
     @GetMapping("/start") 
     public String getStartPage() {
+
         return "start";
     }
 
 
     @GetMapping("/error")
     public String getErrorPage(HttpServletRequest request, Model model) {
+        
         // object with error
         Object obj = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         

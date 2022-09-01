@@ -2,7 +2,9 @@ package com.example.myCinema;
 
 
 public class CheckEntity {
+
     public boolean objectNullOrEmpty(Object obj) {
+
         // null
         if (obj == null) return true;
 
@@ -14,11 +16,12 @@ public class CheckEntity {
 
 
     public boolean iterableNullOrEmpty(Iterable<?> iterable) {
+
         // null
         if (iterable == null) return true;
 
-        // making a wrapper for counts, so they can be altered in different scope
-        var countWrapper = new Object(){int count1 = 0; int count2 = 0;};
+        // making a wrapper object for counts, so they can be altered in different scope
+        var countWrapper = new Object() { int count1 = 0; int count2 = 0; };
 
         // checking single elements
         iterable.forEach(element -> {

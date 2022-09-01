@@ -63,9 +63,9 @@ public class AppUserTemplates {
 
 // confirm token
 
-    // TODO: add return statement here, for template
+
     @GetMapping("/confirmToken") 
-    public void confirmToken(@RequestParam("token") String token) {
+    public String confirmToken(@RequestParam("token") String token) {
 
         // creating confirmationToken with token parameter 
         ConfirmationToken confirmationToken = confirmationTokenService.getByToken(token);
@@ -75,6 +75,8 @@ public class AppUserTemplates {
     
         // saving changes made to appUser
         appUserService.save(appUser);
+
+        return "/start";
     }
 
 

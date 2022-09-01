@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.myCinema.confirmationToken.ConfirmationToken;
+import com.example.myCinema.confirmationToken.ConfirmationTokenService;
+
 import lombok.AllArgsConstructor;
 
 
@@ -18,6 +21,7 @@ import lombok.AllArgsConstructor;
 public class AppUserController {
 
     private final AppUserService appUserService;
+    private final ConfirmationTokenService confirmationTokenService;
 
 
 //// testing
@@ -37,6 +41,20 @@ public class AppUserController {
     }
 
 
+    @GetMapping("/confirmToken") 
+    public void confirmToken(@RequestParam("token") String token) {
+
+        // creating confirmationToken with token parameter 
+        ConfirmationToken confirmationToken = confirmationTokenService.getByToken(token);
+    
+        // confirming confirmationToken
+        AppUser appUser = confirmationTokenService.confirm(confirmationToken);
+    
+        // saving changes made to appUser
+        appUserService.save(appUser);
+    }
+
+
     @GetMapping("/getByUserName")
     public AppUser getByEmail(@RequestParam("userName") String email) {
 
@@ -45,8 +63,10 @@ public class AppUserController {
 
 
     @DeleteMapping("/delete")
-    public void delete(@RequestParam("userName") String email) {
+    public String delete(@RequestParam("userName") String email) {
 
         appUserService.delete(email);
+
+        return "Deleted user with userName " + email + ".";
     }
 }
