@@ -2,7 +2,6 @@ package com.example.myCinema.movie;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,46 +15,54 @@ import lombok.AllArgsConstructor;
 
 
 @RestController
-@RequestMapping
-@CrossOrigin
+@RequestMapping("/test/movie")
 @AllArgsConstructor
 public class MovieController {
-    
+
     private final MovieService movieService;
+
+
+//// testing
     
     
-    @PostMapping("/addMovie")
+    @PostMapping("/addNew")
     public Movie addNew(@RequestBody Movie movie) {
+
         return movieService.addNew(movie);
     }
 
 
-    @PutMapping("/updateMovie")
+    @PutMapping("/update")
     public Movie update(@RequestBody Movie updatedMovie) {
+
         return movieService.update(updatedMovie);
     }
 
 
-    @GetMapping("/getMovieByTitle")
+    @GetMapping("/getByTitle")
     public List<Movie> getByTitle(@RequestParam("title") String title) {
+
         return movieService.getByTitle(title);
     }
 
 
-    @GetMapping("/getAllMovies")
+    @GetMapping("/getAll")
     public List<Movie> getAll() {
+
         return movieService.getAll();
     }
 
 
-    @DeleteMapping("/deleteMovie") 
+    @DeleteMapping("/delete") 
     public void delete(@RequestParam("title") String title, @RequestParam("version") MovieVersion version) {
+
         movieService.delete(title, version);
     }
 
 
     @DeleteMapping("/deleteAll")
     public void deleteAll() {
+        
         movieService.deleteAll();
     }
 }

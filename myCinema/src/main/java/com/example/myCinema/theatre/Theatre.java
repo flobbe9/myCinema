@@ -32,6 +32,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Theatre {
+
     @Id
     @GeneratedValue(generator = "_theatre_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_theatre_id_sequence", allocationSize = 1)
@@ -77,6 +78,7 @@ public class Theatre {
     public Theatre(Integer number, 
                    boolean threeD, 
                    Integer rowsTotal) {
+
         this.number = number;
         this.threeD = threeD;
         this.rowsTotal = rowsTotal;
@@ -87,6 +89,7 @@ public class Theatre {
 
 
     public void setFieldVariables() {
+
         this.seatsPerRow = calculateSeatsPerRow();
         this.seatsTotal = rowsTotal * seatsPerRow;
         this.hasLoveSeats = rowsTotal >= NUM_ROWS_FOR_BIG_CINEMA;
@@ -96,6 +99,7 @@ public class Theatre {
 
     @Override 
     public String toString() {
+
         return "Theatre " + getNumber();
     }
 
@@ -104,6 +108,7 @@ public class Theatre {
 
 
     private List<Row> generateAllRows(int rowsTotal) {
+
         List <Row> rows = new LinkedList<Row>();
 
         for (int i = 0; i < rowsTotal; i++) {
@@ -139,6 +144,7 @@ public class Theatre {
 
 
     private int calculateSeatsPerRow() {
+
         return (rowsTotal < NUM_ROWS_FOR_BIG_CINEMA) ? NUM_SEATS_PER_ROW_NORMAL_CINEMA : NUM_SEATS_PER_ROW_BIG_CINEMA;
     }
 }

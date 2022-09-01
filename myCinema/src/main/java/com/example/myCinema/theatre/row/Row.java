@@ -43,6 +43,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Row {
+
     @Id
     @GeneratedValue(generator = "_row_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_row_id_sequence", allocationSize = 1)
@@ -79,6 +80,7 @@ public class Row {
                RowRank rowRank, 
                Integer seatsPerRow, 
                Boolean frontRow) {
+
         this.rowLetter = rowLetter;
         this.rowRank = rowRank;
         this.seatsPerRow = seatsPerRow;
@@ -90,6 +92,7 @@ public class Row {
 
 
     private List<Seat> generateSeats() {
+
         // parquet row
         if (rowRank == PARQUET) {
             generateParquetRow(seats);
@@ -103,6 +106,7 @@ public class Row {
     
     
     private void generateParquetRow(List<Seat> seats) {
+        
         for (int i = 0; i < seatsPerRow; i++) {
 
             // front row
@@ -130,6 +134,7 @@ public class Row {
     
     
     private void generateBoxRow(List<Seat> seats) {
+
         for (int i = 0; i < seatsPerRow; i++) {
 
             // two last seats are love seats
@@ -146,6 +151,7 @@ public class Row {
     
     @Override
     public String toString() {
+        
         return "Row " + this.rowLetter;
     }
 }

@@ -18,11 +18,13 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class MailService {
+
     private final JavaMailSender javaMailSender;
 
     
     @Async
     public void send(String to, String email) {
+
         try {
             // creating mimeMessage to send with javaMailSender
             MimeMessage mailMessage = javaMailSender.createMimeMessage();
@@ -39,6 +41,7 @@ public class MailService {
 
             // send mail
             javaMailSender.send(mailMessage);
+
         } catch(MessagingException e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -46,9 +49,11 @@ public class MailService {
 
 
     public String createEmail(Path emailPath, String name, String endpoint) {
+
         try {
             // reading mail content from html file from emailPath
             return Files.readString(emailPath).formatted(name, endpoint);
+            
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());
         }

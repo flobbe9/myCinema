@@ -5,19 +5,26 @@ import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.myCinema.confirmationToken.ConfirmationToken;
+import com.example.myCinema.confirmationToken.ConfirmationTokenService;
 
 import lombok.AllArgsConstructor;
 
 
 @Controller
 @RequestMapping("/admin/appUser")
+@CrossOrigin("http://localhost:1080")
 @AllArgsConstructor
 public class AppUserTemplates {
     
     private final AppUserService appUserService;
+    private final ConfirmationTokenService confirmationTokenService;
 
 
 // addAppUser
@@ -25,6 +32,7 @@ public class AppUserTemplates {
 
     @GetMapping("/addNew")
     public String addNew(Model model) {
+
         // adding appUser for thymeleaf
         model.addAttribute("appUser", new AppUser());
 
@@ -37,6 +45,7 @@ public class AppUserTemplates {
     
     @PostMapping("/addNew") 
     public String addNew(AppUser appUser, AppUserWrapper appUserWrapper, Model model) {
+
         // setting permissions if toggled
         if (checkToggledPermissions(appUserWrapper.getGranted())) {
             appUser.getRole().setGrantedAuthorities(setAppUserPermissions(appUserWrapper));
@@ -52,11 +61,29 @@ public class AppUserTemplates {
     }
 
 
+// confirm token
+
+    // TODO: add return statement here, for template
+    @GetMapping("/confirmToken") 
+    public void confirmToken(@RequestParam("token") String token) {
+
+        // creating confirmationToken with token parameter 
+        ConfirmationToken confirmationToken = confirmationTokenService.getByToken(token);
+    
+        // confirming confirmationToken
+        AppUser appUser = confirmationTokenService.confirm(confirmationToken);
+    
+        // saving changes made to appUser
+        appUserService.save(appUser);
+    }
+
+
 // deleteAppuser
     
 
     @GetMapping("/delete")
     public String delete(Model model) {
+
         // adding appUser for thymeleaf
         model.addAttribute("appUser", new AppUser());
 
@@ -66,13 +93,12 @@ public class AppUserTemplates {
 
     @PostMapping("/delete")
     public String delete(AppUser temp, Model model) {
+
         // getting email from temp appUser
         String email = temp.getEmail();
         
-        // finding by email
-        AppUser appUser = appUserService.getByUserName(email);
-        
-        appUserService.delete(appUser);
+        // deleting appUser
+        appUserService.delete(email);
         
         // telling thymeleaf it worked
         model.addAttribute("gone", true);
@@ -85,6 +111,7 @@ public class AppUserTemplates {
 
 
     private Set<AppUserPermission> setAppUserPermissions(AppUserWrapper appUserWrapper) {
+
         // array with all permissions
         AppUserPermission[] permissionsArr = appUserWrapper.getPermissions();
         // array, telling if permission at indx is granted or not
@@ -104,6 +131,7 @@ public class AppUserTemplates {
 
 
     private boolean checkToggledPermissions(boolean[] array) {
+
         for (boolean bool : array) {
             if (bool) return true;
         }

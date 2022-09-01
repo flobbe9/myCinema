@@ -19,14 +19,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AppUserRole {
+
     USER(Sets.newHashSet(USER_READ, USER_WRITE)),
     ADMIN(Sets.newHashSet(USER_READ, USER_WRITE, ADMIN_READ, ADMIN_WRITE));
-
 
     private Set<AppUserPermission> permissions;
 
 
     public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+        
         // adding permissions and making them simpleGrantedAuthorities
         Set<SimpleGrantedAuthority> permissions = getPermissions()
             .stream()
@@ -41,8 +42,7 @@ public enum AppUserRole {
 
 
     public void setGrantedAuthorities(Set<AppUserPermission> permissions) {
+
         this.permissions = permissions;
     }
-
-
 }

@@ -10,6 +10,8 @@ import com.example.myCinema.user.AppUser;
 
 @Repository
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, Long> {
+    
     Optional<ConfirmationToken> findByToken(String token);
+    
     Optional<ConfirmationToken> findByAppUser(AppUser appUser);
 }

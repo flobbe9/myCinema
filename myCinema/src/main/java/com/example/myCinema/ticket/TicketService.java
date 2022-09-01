@@ -26,6 +26,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class TicketService extends CheckEntity {
+    
     private final TicketRepository ticketRepository;
     private final AppUserService appUserService;
     private final TheatreService theatreService;
@@ -33,6 +34,7 @@ public class TicketService extends CheckEntity {
     
 
     public Ticket addNew(Ticket ticket) {
+
         // check ticket data
         ticketValid(ticket);
 
@@ -52,23 +54,34 @@ public class TicketService extends CheckEntity {
 
 
     public Ticket getById(Long id) {
+
         return ticketRepository.findById(id).orElseThrow(() -> 
             new NoSuchElementException("Could not find ticket with id \"" + id + "\"."));
     }
 
 
-    public List<Ticket> getByUserName(String userName) {
-        return ticketRepository.findAllByUserName(userName);
+    public List<Ticket> getByEmail(String email) {
+
+        return ticketRepository.findAllByEmail(email);
     }
 
 
     public Ticket getBySeat(int theatreNumber, char rowLetter, int seatNumber) {
+
         return ticketRepository.findByTheatreNumberAndRowLetterAndSeatNumber(theatreNumber, rowLetter, seatNumber).orElseThrow(() -> 
-            new NoSuchElementException("Could not find ticket with theatreNumber \"" + theatreNumber + "\", rowLetter \"" + rowLetter + "\" and seatNumber \"" + seatNumber + "\"."));
+            new NoSuchElementException("Could not find ticket with theatre number \"" + theatreNumber + "\", row letter \"" + rowLetter + "\" and seat number \"" + seatNumber + "\"."));
     }
 
 
-    public void delete(Ticket ticket) {
+    public void delete(int theatreNumber, char rowLetter, int seatNumber) {
+        
+        // checking if ticket exists
+        Ticket ticket = getBySeat(theatreNumber, rowLetter, seatNumber);
+
+        // setting seat back to untaken
+        Seat seat = theatreService.getSeat(theatreNumber, rowLetter, seatNumber);
+        seat.setTaken(false);
+
         ticketRepository.delete(ticket);
     }
 
@@ -77,6 +90,7 @@ public class TicketService extends CheckEntity {
 
 
     private boolean ticketValid(Ticket ticket) {
+
         // checking if seat is taken
         Seat seat = theatreService.getSeat(ticket.getTheatreNumber(),
                                            ticket.getRowLetter(),
@@ -87,7 +101,7 @@ public class TicketService extends CheckEntity {
             throw new IllegalStateException("Seat " + seat.getSeatNumber() + " in row " + seat.getRowLetter() + " already taken.");
 
         // checking if appUser exists 
-        appUserService.getByUserName(ticket.getUserName());
+        appUserService.getByEmail(ticket.getEmail());
 
         // checking if movie exists
         movieService.getByTitle(ticket.getMovieTitle());
@@ -100,9 +114,9 @@ public class TicketService extends CheckEntity {
 
 
     private boolean hasNullValue(Ticket ticket) {
-        if (
-            // userName
-            objectNullOrEmpty(ticket.getUserName()) || 
+
+        if (// email
+            objectNullOrEmpty(ticket.getEmail()) || 
             // movieTitle
             objectNullOrEmpty(ticket.getMovieTitle()) ||
             // movieVersion
@@ -127,6 +141,7 @@ public class TicketService extends CheckEntity {
 
 
     private void setTicketData(Ticket ticket) {
+
         // getting seat and row objects with ticket data
         int theatreNumber = ticket.getTheatreNumber();
         char rowLetter = ticket.getRowLetter();
@@ -150,11 +165,13 @@ public class TicketService extends CheckEntity {
 
 
     private void setFSK(Ticket ticket, Movie movie) {
+
         ticket.setFsk(movie.getFsk());
     }
 
 
     private void setRowRank(Ticket ticket, Row row) {
+
         ticket.setRowRank(row.getRowRank());
     }
 
@@ -168,6 +185,7 @@ public class TicketService extends CheckEntity {
      * @param ticket whick needs a price.
      */
     private void setPrice(Ticket ticket, Row row, Seat seat) {
+
         // setting basic price
         double price = BASIC_PRICE;
 

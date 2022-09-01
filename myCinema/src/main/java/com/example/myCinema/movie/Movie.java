@@ -29,6 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Movie {
+    
     @Id
     @GeneratedValue(generator = "_movie_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_movie_id_sequence", allocationSize = 1) 
@@ -95,6 +96,7 @@ public class Movie {
                  List<String> cast,
                  Set<Genre> genres,
                  String trailerLink) {
+
         this.title = title;
         this.duration = duration;
         this.localReleaseDate = localReleaseDate;
@@ -112,6 +114,7 @@ public class Movie {
 
     @Override
     public String toString() {
+
         return this.title + " " + this.version.toString();
     }
 }
@@ -120,6 +123,7 @@ public class Movie {
 @Getter
 @Setter
 class MovieWrapper {
+    
     private FSK[] fsk = FSK.values();
 
     private MovieVersion[] version = MovieVersion.values();

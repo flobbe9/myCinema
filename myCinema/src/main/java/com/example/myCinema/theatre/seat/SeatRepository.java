@@ -10,5 +10,6 @@ import com.example.myCinema.theatre.row.Row;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat, Long> {
+    
     Optional<Seat> findByRowAndSeatNumber(Row row, int seatNumber);
 }

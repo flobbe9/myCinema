@@ -18,6 +18,7 @@ public class CinemaInformationService extends CheckEntity {
     
     
     public CinemaInformation addNew(CinemaInformation cinemaInformation) {
+
         // checking cinemaInformation
         cinemaInformationValid(cinemaInformation);
 
@@ -30,6 +31,7 @@ public class CinemaInformationService extends CheckEntity {
     
     
     public CinemaInformation update(CinemaInformation cinemaInformationContainer) {
+        
         EmailValidator emailValidator = new EmailValidator();
         // checking if id is null
         if (cinemaInformationContainer.getId() == null) 
@@ -47,7 +49,8 @@ public class CinemaInformationService extends CheckEntity {
         // adress
         if (!objectNullOrEmpty(cinemaInformationContainer.getAdress())) cinemaInformationToUpdate.setAdress(cinemaInformationContainer.getAdress());
         // email 
-        if (!objectNullOrEmpty(cinemaInformationContainer.getEmail()) && emailValidator.validate(cinemaInformationContainer.getEmail())) cinemaInformationToUpdate.setEmail(cinemaInformationContainer.getEmail());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getEmail()) && emailValidator.validate(cinemaInformationContainer.getEmail())) 
+            cinemaInformationToUpdate.setEmail(cinemaInformationContainer.getEmail());
         // phoneNumber
         if (!objectNullOrEmpty(cinemaInformationContainer.getPhoneNumber())) cinemaInformationToUpdate.setPhoneNumber(cinemaInformationContainer.getPhoneNumber());
 
@@ -56,18 +59,21 @@ public class CinemaInformationService extends CheckEntity {
 
 
     public CinemaInformation getById(Long id) {
+
         return cinemaInformationRepository.findById(id).orElseThrow(() ->   
             new NoSuchElementException("Could not find cinemaInformation with id \"" + id + "\"."));
     }
 
 
     public CinemaInformation getByNameAndCity(String name, String city) {
+
         return cinemaInformationRepository.findByNameAndCity(name, city).orElseThrow(() -> 
             new NoSuchElementException("Could not find cinema with name \"" + name + "\" and city \"" + city + "\"."));
     }
 
 
     public void delete(String name, String city) {
+
         // getting cinemaInformation by name and city
         CinemaInformation cinemaInformation = getByNameAndCity(name, city);
         
@@ -79,17 +85,20 @@ public class CinemaInformationService extends CheckEntity {
 
 
     private CinemaInformation save(CinemaInformation cinemaInformation) {
+
         return cinemaInformationRepository.save(cinemaInformation);
     }
     
     
     private boolean exists(String name, String city) {
+
         // finding by name and city
         return cinemaInformationRepository.findByNameAndCity(name, city).isPresent();
     }
     
 
     private boolean cinemaInformationValid(CinemaInformation cinemaInformation) {
+
         EmailValidator emailValidator = new EmailValidator();
 
         return 
@@ -102,8 +111,8 @@ public class CinemaInformationService extends CheckEntity {
     
     
     private boolean hasNullValue(CinemaInformation cinemaInformation) {
-        if (
-            // name
+
+        if (// name
             objectNullOrEmpty(cinemaInformation.getName()) ||
             // city
             objectNullOrEmpty(cinemaInformation.getCity()) ||
@@ -115,9 +124,8 @@ public class CinemaInformationService extends CheckEntity {
             objectNullOrEmpty(cinemaInformation.getEmail()) ||
             // phoneNumber
             objectNullOrEmpty(cinemaInformation.getPhoneNumber()))
-        {
-            throw new IllegalStateException("Cinema information contains null values or empty strings ('').");
-        }
+
+                throw new IllegalStateException("Cinema information contains null values or empty strings ('').");
 
         return false;
     }

@@ -14,10 +14,12 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class ConfirmationTokenService {
+
     private final ConfirmationTokenRepository confirmationTokenRepository;
     
     
     public ConfirmationToken create(AppUser appUser) {
+
         // creating random string as token
         String token = UUID.randomUUID().toString();
         
@@ -32,6 +34,7 @@ public class ConfirmationTokenService {
     
     
     public AppUser confirm(ConfirmationToken confirmationToken) {
+
         // checking confirmationToken
         confirmationTokenValid(confirmationToken);
         
@@ -48,6 +51,7 @@ public class ConfirmationTokenService {
     
     
     public ConfirmationToken getByToken(String token) {
+
         return confirmationTokenRepository.findByToken(token).orElseThrow(() -> 
             new NoSuchElementException("Could not find this confirmation token.")
         );
@@ -55,12 +59,14 @@ public class ConfirmationTokenService {
     
 
     public ConfirmationToken getByAppUser(AppUser appUser) {
+
         return confirmationTokenRepository.findByAppUser(appUser).orElseThrow(() -> 
             new NoSuchElementException("Could not find appUser with user name \"" + appUser.getEmail() + "\"."));
     }
 
 
     public void delete(ConfirmationToken confirmationToken) {
+
         confirmationTokenRepository.delete(confirmationToken);
     }
 
@@ -69,19 +75,19 @@ public class ConfirmationTokenService {
 
 
     private ConfirmationToken save(ConfirmationToken confirmationToken) {
+
         return confirmationTokenRepository.save(confirmationToken);
     }
 
 
     private boolean confirmationTokenValid(ConfirmationToken confirmationToken) {
-        if (   
-            // confirmedAt
+
+        if (// confirmedAt
             confirmationToken.getConfirmedAt() != null ||
             // expiredAt
             confirmationToken.getExpiresAt().isBefore(LocalDateTime.now()))
 
                 throw new IllegalStateException("Confirmation either already confirmed or expired.");
-
 
         return true;
     }

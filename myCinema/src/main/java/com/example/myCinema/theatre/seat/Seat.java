@@ -29,6 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Seat {
+
     @Id
     @GeneratedValue(generator = "_seat_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_seat_id_sequence", allocationSize = 1)
@@ -57,6 +58,7 @@ public class Seat {
     public Seat(Character rowLetter, 
                 Integer seatNumber, 
                 SeatType seatType) {
+
         this.rowLetter = rowLetter;
         this.seatNumber = seatNumber;
         this.seatType = seatType;
@@ -65,6 +67,7 @@ public class Seat {
 
     @Override
     public String toString() {
+        
         return "Seat " + this.seatNumber;
     }
 }

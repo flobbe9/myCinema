@@ -13,33 +13,40 @@ import lombok.AllArgsConstructor;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("/test/cinemaInformation")
 @AllArgsConstructor
 public class CinemaInformationController {
     
     private final CinemaInformationService cinemaInformationService;
 
 
-    @PostMapping("/addCinema") 
+//// testing
+
+
+    @PostMapping("/addNew") 
     public CinemaInformation addNew(@RequestBody CinemaInformation cinemaInformation) {
+
         return cinemaInformationService.addNew(cinemaInformation);
     }
 
 
-    @PutMapping("/updateCinema")
+    @PutMapping("/update")
     public CinemaInformation update(@RequestBody CinemaInformation cinemaInformationData) {
+
         return cinemaInformationService.update(cinemaInformationData);
     }
 
 
-    @GetMapping("/getCinemaByNameAndCity")
+    @GetMapping("/getByNameAndCity")
     public CinemaInformation getByNameAndCity(@RequestParam("name") String name, @RequestParam("city") String city) {
+
         return cinemaInformationService.getByNameAndCity(name, city);
     }
 
 
-    @DeleteMapping("/deleteCinema")
+    @DeleteMapping("/delete")
     public void delete(@RequestParam("name") String name, @RequestParam("city") String city) {
+
         cinemaInformationService.delete(name, city);
     }
 }

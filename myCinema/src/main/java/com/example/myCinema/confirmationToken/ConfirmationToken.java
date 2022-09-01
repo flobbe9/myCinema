@@ -26,6 +26,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ConfirmationToken {
+
     @Id
     @GeneratedValue(generator = "_confiramtionToken_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_confirmationToken_id_sequence", allocationSize = 1)
@@ -54,6 +55,7 @@ public class ConfirmationToken {
                              AppUser appUser, 
                              LocalDateTime createdAt, 
                              LocalDateTime expiresAt) {
+                                
         this.token = token;
         this.appUser = appUser;
         this.createdAt = createdAt;

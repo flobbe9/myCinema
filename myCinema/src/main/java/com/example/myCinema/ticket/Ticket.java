@@ -30,6 +30,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Ticket {
+    
     @Id
     @GeneratedValue(generator = "_ticket_id_sequnce", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_ticket_id_sequence", allocationSize = 1)
@@ -37,7 +38,7 @@ public class Ticket {
     private Long id;
     
     @Column(nullable = false)
-    private String userName;
+    private String email;
 
     @Column(nullable = false)
     private String movieTitle;
@@ -79,7 +80,7 @@ public class Ticket {
     private LocalTime startingTime;
 
 
-    public Ticket(String userName, 
+    public Ticket(String email, 
                   String movieTitle, 
                   MovieVersion movieVersion, 
                   FSK fsk, 
@@ -90,7 +91,8 @@ public class Ticket {
                   Discount discount, 
                   LocalDate date,
                   LocalTime startingTime) {
-        this.userName = userName;
+
+        this.email = email;
         this.movieTitle = movieTitle;
         this.movieVersion = movieVersion;
         this.fsk = fsk;
@@ -106,6 +108,7 @@ public class Ticket {
 
     @Override
     public String toString() {
+
         return "Ticket for: " + this.movieTitle + "(" + this.movieVersion + ")";
     }
 }

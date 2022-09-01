@@ -1,6 +1,6 @@
 package com.example.myCinema.theatre;
 
-import static com.example.myCinema.theatre.Theatre.NUM_ROWS_FOR_BIG_CINEMA;
+import static com.example.myCinema.theatre.Theatre.MAX_ROWS;
 
 import java.util.List;
 
@@ -20,12 +20,14 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class TheatreService extends CheckEntity {
+
     private final TheatreRepository theatreRepository;
     private final RowRepository rowRepository;
     private final SeatRepository seatRepository;
     
 
     public Theatre addNew(Theatre theatre) {
+
         // checking theatre data
         theatreValid(theatre);
 
@@ -42,17 +44,20 @@ public class TheatreService extends CheckEntity {
 
 
     public Row saveRow(Row row) {
+
         return rowRepository.save(row); 
     }
     
 
     public Seat saveSeat(Seat seat) {
+
         return seatRepository.save(seat);
     }
 
     
     @Transactional
     public Theatre update(Theatre theatreData) {
+
         // checking wether id is null
         if (theatreData.getId() == null) 
             throw new IllegalStateException("Id of theatreData must not be null.");
@@ -78,43 +83,49 @@ public class TheatreService extends CheckEntity {
     
     
     public Theatre getById(long id) {
+
         return theatreRepository.findById(id).orElseThrow(() -> 
-            new IllegalStateException("Could not find theatre with id " + id + "."));
+            new IllegalStateException("Could not find theatre with id \"" + id + "\"."));
     }
     
     
     public Theatre getByNumber(int number) {
+
         return theatreRepository.findByNumber(number).orElseThrow(() ->
-            new IllegalStateException("Could not find theatre with number " + number + "."));
+            new IllegalStateException("Could not find theatre with number \"" + number + "\"."));
     }
     
     
     public List<Theatre> getAll() {
+
         // order by number of theatre, ascending
         return theatreRepository.findAllByOrderByNumberAsc();
     }
 
 
     public Row getRow(int theatreNumber, char rowLetter) {
+
         // getting theatre
         Theatre theatre = getByNumber(theatreNumber); 
 
         return rowRepository.findByTheatreAndRowLetter(theatre, rowLetter).orElseThrow(() -> 
-            new IllegalStateException("Could not find row with theatre number " + theatreNumber + " and rowLetter " + rowLetter + "."));            
+            new IllegalStateException("Could not find row with theatre number \"" + theatreNumber + "\" and row letter \"" + rowLetter + "\"."));            
 
     }
 
 
     public Seat getSeat(int theatreNumber, char rowLetter, int seatNumber) {
+
         // getting row
         Row row = getRow(theatreNumber, rowLetter);
 
         return seatRepository.findByRowAndSeatNumber(row, seatNumber).orElseThrow(() ->
-            new IllegalStateException("Could not find seat with theatreNumber " + theatreNumber + ", rowLetter " + rowLetter + " and seatNumber" + seatNumber + "."));
+            new IllegalStateException("Could not find seat with theatre number \"" + theatreNumber + "\", row letter \"" + rowLetter + "\" and seat number \"" + seatNumber + "\"."));
     }
     
     
     public void delete(int number) {
+
         // get theatre by number
         Theatre theatre = getByNumber(number);
 
@@ -123,11 +134,13 @@ public class TheatreService extends CheckEntity {
     
     
     public boolean exists(int number) {
+
         return theatreRepository.findByNumber(number).isPresent();
     }
 
 
     public void setSeatTaken(Seat seat, boolean taken) {
+
         seat.setTaken(taken);
 
         saveSeat(seat);
@@ -138,14 +151,16 @@ public class TheatreService extends CheckEntity {
 
 
     private Theatre save(Theatre theatre) {
+
         return theatreRepository.save(theatre);
     }
     
     
     private boolean theatreValid(Theatre theatre) {
+
         // totalRows cannot be over 26
-        if (theatre.getRowsTotal() > NUM_ROWS_FOR_BIG_CINEMA)
-            throw new IllegalStateException("Number of rows cannot be over " + NUM_ROWS_FOR_BIG_CINEMA + ".");
+        if (theatre.getRowsTotal() > MAX_ROWS)
+            throw new IllegalStateException("Number of rows cannot be over " + MAX_ROWS + ".");
 
         // null values
         hasNullValue(theatre);
@@ -155,8 +170,8 @@ public class TheatreService extends CheckEntity {
     
     
     private boolean hasNullValue(Theatre theatre) {
-        if (
-            // number
+
+        if (// number
             objectNullOrEmpty(theatre.getNumber()) ||
             // threeD
             objectNullOrEmpty(theatre.getThreeD()) ||
@@ -170,6 +185,7 @@ public class TheatreService extends CheckEntity {
 
 
     private void deleteAllRows(Theatre theatre) {
+
         rowRepository.deleteByTheatre(theatre);
     }
 }

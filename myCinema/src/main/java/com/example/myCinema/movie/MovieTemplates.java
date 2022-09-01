@@ -30,6 +30,7 @@ public class MovieTemplates {
 
     @GetMapping("/addNew")
     public String addNew(Model model) {
+
         // passing movie to thymeleaf
         model.addAttribute("movie", new Movie());
 
@@ -42,6 +43,7 @@ public class MovieTemplates {
 
     @PostMapping("/addNew")
     public String addNew(Movie movie, MovieWrapper movieWrapper, Model model) {
+
         // setting genres array with 'toggledGenres' property of MovieWrapper
         movie.setGenres(iterateToggledGenres(movieWrapper));
 
@@ -65,6 +67,7 @@ public class MovieTemplates {
     
     @GetMapping("/update")
     public String update(Model model) {
+
         // passing movie to thymeleaf
         model.addAttribute("movieContainer", new Movie());
 
@@ -77,6 +80,7 @@ public class MovieTemplates {
 
     @PostMapping("/update_getByTitleAndVersion")
     public String checkMovieExists(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
+
         // checking if movie exists and setting appUserId
         appUserId = movieService.getByTitleAndVersion(movieContainer.getTitle(), movieContainer.getVersion()).getId();
 
@@ -92,6 +96,7 @@ public class MovieTemplates {
     
     @PostMapping("/update")
     public String upadte(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
+
         // setting id
         movieContainer.setId(appUserId);
 
@@ -118,6 +123,7 @@ public class MovieTemplates {
 
 
     private Set<Genre> iterateToggledGenres(MovieWrapper movieWrapper) {
+
         Genre[] genresArr = movieWrapper.getGenres();
         boolean[] toggledGenres = movieWrapper.getToggledGenres();
 

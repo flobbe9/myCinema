@@ -23,8 +23,8 @@ public class TheatreTemplates extends ExceptionService {
 
 
     @GetMapping("/addNew")
-    // @PreAuthorize("hasRole('ROLE_USER')")
     public String addNew(Model model) {
+
         // passing thymeleaf the theatre
         model.addAttribute("theatre", new Theatre());
 
@@ -33,8 +33,8 @@ public class TheatreTemplates extends ExceptionService {
 
 
     @PostMapping("/addNew")
-    // @PreAuthorize("hasRole('ROLE_USER')")
     public String addTheatre(Theatre theatre, Model model) {
+
         // adding new theatre
         theatreService.addNew(theatre);
 
@@ -50,6 +50,7 @@ public class TheatreTemplates extends ExceptionService {
 
     @GetMapping("/update")
     public String update(Model model) {
+
         // passing thymeleaf the theatre
         model.addAttribute("theatre", new Theatre());
 
@@ -59,6 +60,7 @@ public class TheatreTemplates extends ExceptionService {
 
     @PostMapping("/update")
     public String update(Theatre theatre, Model model) {
+
         // setting id of theatre
         Theatre existingTheatre = theatreService.getByNumber(theatre.getNumber());
         theatre.setId(existingTheatre.getId());
@@ -75,6 +77,7 @@ public class TheatreTemplates extends ExceptionService {
 
     @PostMapping("/delete")
     public String delete(Theatre theatre, Model model) {
+        
         // getting theatre number from theatre 
         int number = theatre.getNumber();
 

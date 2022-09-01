@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class AppUserService extends CheckEntity implements UserDetailsService {
+
     private final AppUserRepository appUserRepository;
     private final ConfirmationTokenService confirmationTokenService;
     private final MailService mailService;
@@ -29,6 +30,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     
     
     public AppUser addNew(AppUser appUser) {
+
         // checking appUser
         appUserValid(appUser);
         
@@ -46,7 +48,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
 
         // sending confirmation email
-        String endpoint = "http://localhost:4001/addUser/confirmToken?token=" + confirmationToken.getToken();
+        String endpoint = "http://localhost:4001/admin/appUser/confirmToken?token=" + confirmationToken.getToken();
         String email = mailService.createEmail(Path.of("./src/main/resources/static/html/email.html"), appUser.getFirstName(), endpoint);
         // mailService.send(appUser.getEmail(), email);
 
@@ -55,6 +57,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     
     
     public AppUser update(AppUser appUserContainer) {
+
         // checking if id is null
         if (appUserContainer.getId() == null) 
             throw new IllegalStateException("Id of appUserContainer must not be null.");
@@ -66,7 +69,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         if (!objectNullOrEmpty(appUserContainer.getFirstName())) appUserToUpdate.setFirstName(appUserContainer.getFirstName());
         // lastName
         if (!objectNullOrEmpty(appUserContainer.getLastName())) appUserToUpdate.setLastName(appUserContainer.getLastName());
-        // email/userName
+        // email
         if (!objectNullOrEmpty(appUserContainer.getEmail())) appUserToUpdate.setEmail(appUserContainer.getEmail());
         // password
         if (!objectNullOrEmpty(appUserContainer.getPassword())) setAndEncodePassword(appUserToUpdate, appUserContainer.getPassword());
@@ -89,25 +92,32 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
 
 
     public AppUser getById(Long id) {
+
         return appUserRepository.findById(id).orElseThrow(() -> 
             new NoSuchElementException("Could not find user with id \"" + id + "\"."));
     }
     
     
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return appUserRepository.findByEmail(username).orElseThrow(() -> 
-            new UsernameNotFoundException("Could not find user with username \"" + username + "\"."));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        return appUserRepository.findByEmail(email).orElseThrow(() -> 
+            new UsernameNotFoundException("Could not find user with username \"" + email + "\"."));
     }
     
     
-    public AppUser getByUserName(String email) {
+    public AppUser getByEmail(String email) {
+
         return appUserRepository.findByEmail(email).orElseThrow(() ->
             new UsernameNotFoundException("Could not find user with username \"" + email + "\"."));
     }
 
 
-    public void delete(AppUser appUser) {
+    public void delete(String email) {
+
+        // getting appUser by email
+        AppUser appUser = getByEmail(email);
+
         // deleting confirmationToken
         ConfirmationToken confirmationToken = confirmationTokenService.getByAppUser(appUser);
         confirmationTokenService.delete(confirmationToken);
@@ -117,11 +127,13 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     
 
     public AppUser save(AppUser appUser) {
+
         return appUserRepository.save(appUser);
     }
 
 
     public boolean exists(String email) {
+
         // checking by email 
         return appUserRepository.findByEmail(email).isPresent();
     }
@@ -131,6 +143,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
 
 
     private boolean appUserValid(AppUser appUser) {
+
         // validate email
         EmailValidator emailValidator = new EmailValidator();
         emailValidator.validate(appUser.getEmail());
@@ -147,8 +160,8 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     
     
     private boolean hasNullValue(AppUser appUser) {
-        if (
-            // firstName
+
+        if (// firstName
             appUser.getFirstName() == null ||
             // lastName
             appUser.getLastName() == null ||
@@ -174,11 +187,13 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
 
 
     private boolean checkBirthday(LocalDate birthday) {
+
         return birthday.isBefore(LocalDate.now());
     }
     
     
     private void setAge(AppUser appUser) {
+
         // calculating age
         Long age = appUser.calculateAge(appUser.getBirthday());
 
@@ -186,8 +201,8 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     }
 
 
-    // TODO: does not make much sense
     private void setAndEncodePassword(AppUser appUser, String password) {
+
         appUser.setPassword(passwordEncoder.encode(password));
     }
 }

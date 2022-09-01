@@ -19,6 +19,7 @@ public class ExceptionService {
 
     @ExceptionHandler(Throwable.class)
     public String passExceptionToThymeleaf(Exception e, Model model) {
+
         // getting correct http status code for exception
         HttpStatus httpStatus = decideHttpStatus(e);
 
@@ -31,6 +32,7 @@ public class ExceptionService {
 
 
     public String passExceptionToThymeleaf(HttpStatus status, Model model) {
+
         // getting appropriate error message
         String message = decideErrorMessage(status, model);
 
@@ -46,9 +48,9 @@ public class ExceptionService {
 
 
     private HttpStatus decideHttpStatus(Exception e) {
+
         // 401 unauthorized
         if (e instanceof IllegalAccessException) return UNAUTHORIZED;
-        
 
         // 404 not found
         if (e instanceof UsernameNotFoundException ||
@@ -57,12 +59,12 @@ public class ExceptionService {
             
                 return NOT_FOUND;
         
-        
         return INTERNAL_SERVER_ERROR;
     }
 
 
     private String decideErrorMessage(HttpStatus status, Model model) {
+
         // getting status code 
         int statusCode = status.value();
         

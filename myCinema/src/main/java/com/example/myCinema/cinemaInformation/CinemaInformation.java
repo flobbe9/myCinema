@@ -51,6 +51,7 @@ public class CinemaInformation {
                              String adress, 
                              String email, 
                              String phoneNumber) {
+
         this.name = name;
         this.city = city;
         this.zipCode = zipCode;
@@ -62,6 +63,7 @@ public class CinemaInformation {
 
     @Override
     public String toString() {
+        
         return this.name + " " + this.city;
     }
 }

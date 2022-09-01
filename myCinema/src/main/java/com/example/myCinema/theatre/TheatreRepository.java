@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface TheatreRepository extends JpaRepository <Theatre, Long>{
+public interface TheatreRepository extends JpaRepository <Theatre, Long> {
+
     Optional<Theatre> findByNumber(int number);
+
     List<Theatre> findAllByOrderByNumberAsc();
 }

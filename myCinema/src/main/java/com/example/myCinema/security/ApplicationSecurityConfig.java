@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public void configure(HttpSecurity http) throws Exception {
+        
         http
             .csrf().disable()
             .authorizeRequests()

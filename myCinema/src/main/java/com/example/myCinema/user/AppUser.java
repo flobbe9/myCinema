@@ -29,6 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AppUser implements UserDetails {
+
     @Id
     @GeneratedValue(generator = "_appUser_id_sequence", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "_appUser_id_sequence", allocationSize = 1)
@@ -83,6 +84,7 @@ public class AppUser implements UserDetails {
                    String city, 
                    LocalDate birthday,
                    AppUserRole role) {
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -96,48 +98,56 @@ public class AppUser implements UserDetails {
     
     
     public Long calculateAge(LocalDate birthDay) {
+
         return birthDay.until(LocalDate.now(), ChronoUnit.YEARS);
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         return role.getGrantedAuthorities();
     }
 
 
     @Override
     public String getUsername() {
+
         return this.email;
     }
 
 
     @Override
     public boolean isAccountNonExpired() {
+
         return !this.isExpired;
     }
 
 
     @Override
     public boolean isAccountNonLocked() {
+
         return !this.isLocked;
     }
 
 
     @Override
     public boolean isCredentialsNonExpired() {
+
         return true;
     }
 
 
     @Override
     public boolean isEnabled() {
+
         return this.isEnabled;
     }
 
 
     @Override
     public String toString() {
+
         return this.firstName + " " + this.lastName + ", " + this.email;
     }
 }
@@ -145,6 +155,7 @@ public class AppUser implements UserDetails {
 
 @Getter
 class AppUserWrapper {
+    
     private AppUserPermission[] permissions = AppUserPermission.values();
 
     private boolean[] granted = new boolean[permissions.length];

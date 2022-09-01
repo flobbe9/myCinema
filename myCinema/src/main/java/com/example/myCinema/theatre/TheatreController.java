@@ -2,7 +2,6 @@ package com.example.myCinema.theatre;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,44 +13,49 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 
-/**
- * For testing purposes, doesn't direct user to html pages.
- * No authorization needed.
- */
+
 @RestController
-@RequestMapping
-@CrossOrigin
+@RequestMapping("/test/theatre")
 @AllArgsConstructor
 public class TheatreController {
+
     private final TheatreService theatreService;
 
 
-    @PostMapping("/addTheatre")
-    public Theatre addTheatre(@RequestBody Theatre theatre) {
+//// testing
+
+
+    @PostMapping("/addNew")
+    public Theatre addNew(@RequestBody Theatre theatre) {
+
         return theatreService.addNew(theatre);
     }
 
 
-    @PutMapping("/updateTheatre")
+    @PutMapping("/update")
     public Theatre update(@RequestBody Theatre theatreData) {
+
         return theatreService.update(theatreData);
     }
 
 
-    @GetMapping("/getTheatreByNumber")
+    @GetMapping("/getByNumber")
     public Theatre getByNumber(@RequestParam("number") int number) {
+
         return theatreService.getByNumber(number);
     }
 
 
-    @GetMapping("/getAllTheatres")
+    @GetMapping("/getAll")
     public List<Theatre> getAll() {
+
         return theatreService.getAll();
     }
 
 
-    @DeleteMapping("/deleteTheatre")
+    @DeleteMapping("/delete")
     public void delete(@RequestParam("number") int number) {
+
         theatreService.delete(number);
     }
 }
