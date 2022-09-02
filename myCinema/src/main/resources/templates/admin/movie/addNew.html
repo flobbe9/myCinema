@@ -3,19 +3,19 @@
     <head>
         <meta charset="utf-8">
         <title>myCinemaAdmin | addMovie</title>
-
-        <style>
-            #status {
-                color: green;
-            }
-        </style>
     </head>
     
 
     <body>
         <h2>Add Movie</h2>
-        <br>
 
+        <span id="successfullStatus" th:if="${created}" style="color: green;">Movie created.</span>
+        <br th:if="${created}"><br th:if="${created}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+        
+        
         <form method="post" action="" th:action="@{/admin/movie/addNew}" th:object="${movie}">
             <input type="text" id="title" name="title" placeholder="Title*" th:field="*{title}" required>
             <br><br>
@@ -32,7 +32,7 @@
             <textarea id="synopsis" name="synopsis" rows="5" cols="50" placeholder="Synopsis*" th:field="*{synopsis}" required></textarea>
             <br><br>
 
-            <select id="fsk" name="fsk">
+            <select id="fsk" name="fsk" required>
                 <option th:value="null">Select FSK...</option>
                 <span th:each="fsk : ${movieWrapper.fsk}">
                     <option th:text="${fsk}" th:value="${fsk}" th:field="*{fsk}"></option>
@@ -40,7 +40,7 @@
             </select>
             <br><br>
 
-            <select id="version" name="version">
+            <select id="version" name="version" required>
                 <option th:value="null">Select Version...</option>
                 <span th:each="version : ${movieWrapper.version}">
                     <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>
@@ -55,7 +55,7 @@
             <br><br>
 
             <span th:each="member, iter : ${movieWrapper.movieCast}">
-                <input type="text" class="cast" name="cast" th:placeholder="${iter.index + 1 + '. Cast member*'}" th:field="${movieWrapper.movieCast[__${iter.index}__]}">
+                <input type="text" class="cast" name="cast" th:placeholder="${iter.index + 1 + '. Cast member*'}" th:field="${movieWrapper.movieCast[__${iter.index}__]}" required>
                 <br>
             </span>
             <br>
@@ -72,8 +72,6 @@
 
             <input type="submit" value="Add Movie">
             <br><br>
-
-            <span id="status" th:if="${created}">Movie created.</span>
         </form>
     </body>
 </html>

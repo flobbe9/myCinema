@@ -8,15 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.myCinema.exception.ExceptionService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequestMapping("/admin/theatre")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TheatreTemplates extends ExceptionService {
     
     private final TheatreService theatreService;
+    private Long theatreId;
 
 
 // addTheatre
@@ -35,11 +36,17 @@ public class TheatreTemplates extends ExceptionService {
     @PostMapping("/addNew")
     public String addTheatre(Theatre theatre, Model model) {
 
-        // adding new theatre
-        theatreService.addNew(theatre);
+        try {
+            // adding new theatre
+            theatreService.addNew(theatre);
 
-        // telling thymeleaf it worked
-        model.addAttribute("created", true); 
+            // telling thymeleaf it worked
+            model.addAttribute("created", true);
+
+        } catch (Exception e) {
+            // passing exception to thymeleaf
+            model.addAttribute("errorMessage", e.getMessage());
+        }
             
         return "admin/theatre/addNew";
     }  
@@ -54,39 +61,87 @@ public class TheatreTemplates extends ExceptionService {
         // passing thymeleaf the theatre
         model.addAttribute("theatre", new Theatre());
 
-        return "admin/theatre/update";
+        return "/admin/theatre/update_getByNumber";
+    }
+
+
+    @GetMapping("/update_getByNumber")
+    public String udpate(Theatre theatreContainer, Model model) {
+
+        try {
+            // checking if theatre exists
+            Theatre theatre = theatreService.getByNumber(theatreContainer.getNumber());
+
+            // setting theatreId
+            theatreId = theatre.getId();
+
+            // passing theatreContainer to thymeleaf
+            model.addAttribute("theatre", theatreContainer);
+
+        } catch (Exception e) {
+            // passing error message to thymeleaf
+            model.addAttribute("errorMessage", e.getMessage());
+
+            return "/admin/theatre/update_getByNumber";
+        }
+
+        return "/admin/theatre/update";
     }
 
 
     @PostMapping("/update")
     public String update(Theatre theatre, Model model) {
 
-        // setting id of theatre
-        Theatre existingTheatre = theatreService.getByNumber(theatre.getNumber());
-        theatre.setId(existingTheatre.getId());
+        try {
+            // setting id of theatre
+            theatre.setId(theatreId);
 
-        // updating theatre
-        theatreService.update(theatre);
+            // updating theatre
+            theatreService.update(theatre);
 
-        // telling thymeleaf it worked
-        model.addAttribute("ok", true);
+            // telling thymeleaf it worked
+            model.addAttribute("ok", true);
+
+        } catch (Exception e) {
+            // passing error message to thymeleaf
+            model.addAttribute("errorMessage", e.getMessage());
+        }
 
         return "admin/theatre/update";
     }
 
 
+// delete
+
+
+    @GetMapping("/delete")
+    public String delete(Model model) {
+        
+        // passing theatre to thymeleaf
+        model.addAttribute("theatre", new Theatre());
+
+        return "/admin/theatre/delete";
+    }
+
+
     @PostMapping("/delete")
     public String delete(Theatre theatre, Model model) {
-        
-        // getting theatre number from theatre 
-        int number = theatre.getNumber();
 
-        // deleting theatre
-        theatreService.delete(number);
+        try {
+            // getting theatre number from theatre 
+            int number = theatre.getNumber();
 
-        // telling thymeleaf it worked
-        model.addAttribute("gone", true);
+            // deleting theatre
+            theatreService.delete(number);
 
-        return "admin/theatre/update";
+            // telling thymeleaf it worked
+            model.addAttribute("gone", true);
+            
+        } catch (Exception e) {
+            // passing error message to thymeleaf
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        return "admin/theatre/delete";
     }
 }

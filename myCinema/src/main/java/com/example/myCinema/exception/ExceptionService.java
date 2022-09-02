@@ -11,13 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 @ControllerAdvice
 public class ExceptionService {
 
-    @ExceptionHandler(Throwable.class)
     public String passExceptionToThymeleaf(Exception e, Model model) {
 
         // getting correct http status code for exception
@@ -71,10 +69,10 @@ public class ExceptionService {
         // exception cases
         switch (statusCode) {
             case 400:
-                return "Bad Request";
+                return "Something wrong with this url or the request.";
                 
             case 401:
-                return "Not authorized.";
+                return "You're not authorized to access this content.";
 
             case 403:
                 return "You have no permission for this action.";
@@ -83,7 +81,7 @@ public class ExceptionService {
                 return "This url does not exists.";
 
             default: 
-                return "An error has occured. Status code not available.";
+                return "An error has occured.";
         }
     }
 }

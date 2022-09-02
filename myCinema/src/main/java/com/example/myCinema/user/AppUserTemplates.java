@@ -3,6 +3,7 @@ package com.example.myCinema.user;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.myCinema.confirmationToken.ConfirmationToken;
 import com.example.myCinema.confirmationToken.ConfirmationTokenService;
+import com.example.myCinema.exception.ExceptionService;
 
 import lombok.AllArgsConstructor;
 
@@ -25,12 +27,14 @@ public class AppUserTemplates {
     
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ExceptionService exceptionService;
 
 
 // addAppUser
 
 
     @GetMapping("/addNew")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addNew(Model model) {
 
         // adding appUser for thymeleaf
@@ -46,16 +50,22 @@ public class AppUserTemplates {
     @PostMapping("/addNew") 
     public String addNew(AppUser appUser, AppUserWrapper appUserWrapper, Model model) {
 
-        // setting permissions if toggled
-        if (checkToggledPermissions(appUserWrapper.getGranted())) {
-            appUser.getRole().setGrantedAuthorities(setAppUserPermissions(appUserWrapper));
-        }
-        
-        // adding appUser
-        appUserService.addNew(appUser); 
+        try {
+            // setting permissions if toggled
+            if (checkToggledPermissions(appUserWrapper.getGranted())) {
+                appUser.getRole().setGrantedAuthorities(setAppUserPermissions(appUserWrapper));
+            }
+            
+            // adding appUser
+            appUserService.addNew(appUser); 
 
-        // telling thymeleaf it worked
-        model.addAttribute("created", true);
+            // telling thymeleaf it worked
+            model.addAttribute("created", true);
+
+        } catch (Exception e) {
+            // passing error message to thymeleaf
+            model.addAttribute("errorMessage", e.getMessage());
+        }
 
         return "/admin/appUser/addNew";
     }
@@ -65,16 +75,22 @@ public class AppUserTemplates {
 
 
     @GetMapping("/confirmToken") 
-    public String confirmToken(@RequestParam("token") String token) {
+    public String confirmToken(@RequestParam("token") String token, Model model) {
 
-        // creating confirmationToken with token parameter 
-        ConfirmationToken confirmationToken = confirmationTokenService.getByToken(token);
-    
-        // confirming confirmationToken
-        AppUser appUser = confirmationTokenService.confirm(confirmationToken);
-    
-        // saving changes made to appUser
-        appUserService.save(appUser);
+        try {
+            // creating confirmationToken with token parameter 
+            ConfirmationToken confirmationToken = confirmationTokenService.getByToken(token);
+        
+            // confirming confirmationToken
+            AppUser appUser = confirmationTokenService.confirm(confirmationToken);
+        
+            // saving changes made to appUser
+            appUserService.save(appUser);
+
+        } catch (Exception e) {
+            // passing error message to thymeleaf
+            return exceptionService.passExceptionToThymeleaf(e, model);
+        }
 
         return "/start";
     }
@@ -96,14 +112,20 @@ public class AppUserTemplates {
     @PostMapping("/delete")
     public String delete(AppUser temp, Model model) {
 
-        // getting email from temp appUser
-        String email = temp.getEmail();
-        
-        // deleting appUser
-        appUserService.delete(email);
-        
-        // telling thymeleaf it worked
-        model.addAttribute("gone", true);
+        try {
+            // getting email from temp appUser
+            String email = temp.getEmail();
+            
+            // deleting appUser
+            appUserService.delete(email);
+            
+            // telling thymeleaf it worked
+            model.addAttribute("gone", true);
+
+        } catch (Exception e) {
+            // passing error message to thymeleaf
+            model.addAttribute("errorMessage", e.getMessage());
+        }
             
         return "/admin/appUser/delete";
     }

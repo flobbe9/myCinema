@@ -3,12 +3,6 @@
     <head>
         <title>myCinemaAdmin | updateMovie</title>
         <meta charset="utf-8">
-
-        <style>
-            .status {
-                color: green;
-            }
-        </style>
     </head>
     
     
@@ -16,6 +10,13 @@
         <h2 th:text="'Update: ' + ${movieContainer.title}"></h2>
         
         <h4>Enter data you want to change:</h4>
+
+        <span class="successfullStatus" th:if="${ok}" style="color: green;">Movie updated.</span>
+        <br th:if="${ok}"><br th:if="${ok}">
+
+        <span th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+        
         
         <form method="post" action="" th:action="@{/admin/movie/update}" th:object="${movieContainer}">
             <input type="text" id="title" name="title" placeholder="New Title" th:field="*{title}">
@@ -71,8 +72,6 @@
 
             <input type="submit" value="Update Movie">
             <br><br>
-
-            <span class="status" th:if="${created}">Movie updated.</span>
         </form>
     </body>
 </html>

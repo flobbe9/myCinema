@@ -162,6 +162,10 @@ public class TheatreService extends CheckEntity {
         if (theatre.getRowsTotal() > MAX_ROWS)
             throw new IllegalStateException("Number of rows cannot be over " + MAX_ROWS + ".");
 
+        // totalRows cannot be lower than 1
+        if (theatre.getRowsTotal() < 1) 
+            throw new IllegalStateException("Number of rows cannot be lower than 1.");
+
         // null values
         hasNullValue(theatre);
 

@@ -14,12 +14,10 @@
         <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
         <br th:if="${errorMessage}"><br th:if="${errorMessage}">
 
-        <form method="post" action="" th:action="@{/admin/theatre/update}" th:object="${theatre}">
-            <label for="threeD">3D: </label>
-            <input type="checkbox" id="threeD" name="threeD" th:field="*{threeD}">
-            <br><br>
 
-            <input type="number" id="rowsTotal" name="rowsTotal" placeholder="Rows total" th:field="*{rowsTotal}">
+        <form action="" th:action="@{/admin/theatre/update_getByNumber}" th:object="${theatre}">
+
+            <input type="number" id="theatreNumber" name="theatreNumber" min="1" placeholder="Theatre number*" th:field="*{number}" required>
             <br><br>
 
             <input type="submit" id="submitUpdate" value="Update Theatre">

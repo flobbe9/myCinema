@@ -1,5 +1,7 @@
 package com.example.myCinema;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,7 +40,7 @@ public class GeneralTemplates implements ErrorController {
     @GetMapping("/error")
     public String getErrorPage(HttpServletRequest request, Model model) {
         
-        // object with error
+        // object with the error
         Object obj = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         
         if (obj != null) {
@@ -51,9 +53,6 @@ public class GeneralTemplates implements ErrorController {
             return exceptionService.passExceptionToThymeleaf(status, model);
         }
 
-        // creating default exception
-        Exception e = new IllegalStateException("An error has occured.");
-
-        return exceptionService.passExceptionToThymeleaf(e, model);
+        return exceptionService.passExceptionToThymeleaf(INTERNAL_SERVER_ERROR, model);
     }
 }

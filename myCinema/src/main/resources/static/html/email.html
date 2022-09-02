@@ -34,7 +34,7 @@
                         const textResponse = await response.text();
 
                         if (response.ok) {
-                            output.innerHTML += '\nstatus: ' + response.status;
+                            output.innerHTML += 'status: ' + response.status;
                         } else {
                             output.innerHTML += 'response not ok: ' + textResponse;
                         }

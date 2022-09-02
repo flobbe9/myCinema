@@ -3,17 +3,17 @@
     <head>
         <meta charset="utf-8">
         <title>myCinemaAdmin | addAppUser</title>
-
-        <style>
-            #status {
-                color: green;
-            }
-        </style>
     </head>
-
-
+    
+    
     <body>
         <h2>Add new User</h2>
+
+        <span id="successfullStatus" th:if="${created}" style="color: green;">User created.</span>
+        <br th:if="${created}"><br th:if="${created}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
 
         <form id="formAddNew" method="post" action="" th:action="@{/admin/appUser/addNew}" th:object="${appUser}" onsubmit="checkPasswordMatch(event);">
             <input type="text" id="firstName" name="firstName" placeholder="First name*" th:field="*{firstName}" required>
@@ -62,7 +62,6 @@
             <input type="submit" id="saveNewUser" value="Add User">
             <br><br>
 
-            <span id="status" th:if="${created}">User created.</span>
         </form>
 
     </body>
@@ -72,7 +71,7 @@
     // if passwords don't match
         const password = document.getElementById('password');
         const confirmPassword = document.getElementById('confirmPassword');
-        const status = document.getElementById('status');
+        const status = document.getElementById('errorStatus');
         
         // Writes a message if 'password' field and 'confirmPassord' field are not the same. 
         function checkPasswordMatch(event) {

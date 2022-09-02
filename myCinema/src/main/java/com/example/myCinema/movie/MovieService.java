@@ -27,7 +27,7 @@ public class MovieService extends CheckEntity {
         
         // checking if movie already exists
         if (exists(movie.getTitle(), movie.getVersion())) 
-            throw new IllegalStateException("Movie with title \"" + movie.getTitle() + "\" in version \"" + movie.getVersion() + "\" does already exists.");
+            throw new IllegalStateException("Movie with title \"" + movie.getTitle() + "\" in version \"" + movie.getVersion() + "\" does already exist.");
         
         return save(movie);
     }

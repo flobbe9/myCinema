@@ -3,35 +3,32 @@
     <head>
         <meta charset="utf-8">
         <title>myCinemaAdmin | addTheatre</title>
-
-        <style>
-            #status {
-                color: green;
-            }
-        </style>
     </head>
 
 
     <body>
         <h2>Add Theatre</h2>
 
+        <span id="successfullStatus" th:if="${created}" style="color: green;">Theatre created.</span>
+        <br th:if="${created}"><br th:if="${created}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
         <form method="post" action="" th:action="@{/admin/theatre/addNew}" th:object="${theatre}">
-            <label for="theatreNumber">Theatre number*: </label>
-            <input id="theatreNumber" type="number" name="theatreNumber" th:field="*{number}" required>
+            <input id="theatreNumber" type="number" name="theatreNumber" placeholder="Theatre number*" th:field="*{number}" required>
             <br><br>
             
             <label for="threeD">3D: </label>
             <input id="threeD" type="checkbox" name="threeD" th:field="*{threeD}">
             <br><br>
 
-            <label for="rowsTotal">Rows total*: </label>
-            <input id="threeD" type="number" name="rowsTotal" th:field="*{rowsTotal}" required>
+            <input id="threeD" type="number" name="rowsTotal" placeholder="Rows total*" th:field="*{rowsTotal}" required>
             <br><br><br>
             
             <button type="submit">Add Theatre</button>
             <br><br>
             
-            <span id="status" th:if="${created}">Theatre created.</span>
         </form>
     </body>
 </html>
