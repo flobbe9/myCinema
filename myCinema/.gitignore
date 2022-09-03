@@ -35,7 +35,7 @@ build/
 
 ### Vscode ###
 .vscode/
-.mvn/
+.mvn/**
 
 ### curl files for requests ###
 .http
