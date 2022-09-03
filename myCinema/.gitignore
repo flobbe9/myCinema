@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 mvnw
 mvnw.*
+todo.txt
 
 ### STS ###
 .apt_generated
@@ -30,6 +31,10 @@ mvnw.*
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+### Vscode ###
+**/.vscode/
+**/.mvn/
 
 ### curl files for requests ###
 .http
