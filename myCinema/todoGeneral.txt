@@ -1,4 +1,0 @@
--Dockerfile
--javadoc comments
--think about data structures(e.g. set or list...)
--think about athorization
