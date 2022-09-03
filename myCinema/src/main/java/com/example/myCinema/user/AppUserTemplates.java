@@ -3,14 +3,13 @@ package com.example.myCinema.user;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.myCinema.confirmationToken.ConfirmationToken;
 import com.example.myCinema.confirmationToken.ConfirmationTokenService;
@@ -34,7 +33,6 @@ public class AppUserTemplates {
 
 
     @GetMapping("/addNew")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addNew(Model model) {
 
         // adding appUser for thymeleaf
@@ -74,8 +72,8 @@ public class AppUserTemplates {
 // confirm token
 
 
-    @GetMapping("/confirmToken") 
-    public String confirmToken(@RequestParam("token") String token, Model model) {
+    @GetMapping("/confirmToken/{token}") 
+    public String confirmToken(@PathVariable("token") String token, Model model) {
 
         try {
             // creating confirmationToken with token parameter 

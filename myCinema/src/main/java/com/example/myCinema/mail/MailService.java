@@ -48,11 +48,11 @@ public class MailService {
     }
 
 
-    public String createEmail(Path emailPath, String name, String endpoint) {
+    public String createEmail(Path emailPath, String name, String token) {
 
         try {
             // reading mail content from html file from emailPath
-            return Files.readString(emailPath).formatted(name, endpoint);
+            return Files.readString(emailPath).formatted(name, token);
             
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage());

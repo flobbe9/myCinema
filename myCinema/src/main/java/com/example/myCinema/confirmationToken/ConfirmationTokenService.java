@@ -87,7 +87,7 @@ public class ConfirmationTokenService {
             // expiredAt
             confirmationToken.getExpiresAt().isBefore(LocalDateTime.now()))
 
-                throw new IllegalStateException("Confirmation either already confirmed or expired.");
+                throw new IllegalStateException("Confirmation token either already confirmed or expired.");
 
         return true;
     }

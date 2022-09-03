@@ -48,8 +48,8 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
 
         // sending confirmation email
-        String endpoint = "http://localhost:4001/admin/appUser/confirmToken?token=" + confirmationToken.getToken();
-        String email = mailService.createEmail(Path.of("./src/main/resources/static/html/email.html"), appUser.getFirstName(), endpoint);
+        String token = confirmationToken.getToken();
+        String email = mailService.createEmail(Path.of("./src/main/resources/templates/admin/appUser/email.html"), appUser.getFirstName(), token);
         mailService.send(appUser.getEmail(), email);
 
         return save(appUser);
