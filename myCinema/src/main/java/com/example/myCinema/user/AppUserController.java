@@ -1,5 +1,6 @@
 package com.example.myCinema.user;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/test/appUser")
+// @PreAuthorize("hasRole('ROLE_ADMIN')")
 @AllArgsConstructor
 public class AppUserController {
 

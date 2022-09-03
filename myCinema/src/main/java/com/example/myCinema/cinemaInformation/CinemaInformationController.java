@@ -1,5 +1,6 @@
 package com.example.myCinema.cinemaInformation;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/test/cinemaInformation")
+// @PreAuthorize("hasRole('ROLE_ADMIN')")
 @AllArgsConstructor
 public class CinemaInformationController {
     
