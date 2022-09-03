@@ -50,7 +50,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         // sending confirmation email
         String token = confirmationToken.getToken();
         String email = mailService.createEmail(Path.of("./src/main/resources/templates/admin/appUser/email.html"), appUser.getFirstName(), token);
-        mailService.send(appUser.getEmail(), email);
+        // mailService.send(appUser.getEmail(), email);
 
         return save(appUser);
     }

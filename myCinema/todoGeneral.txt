@@ -1,4 +1,3 @@
--ssl baldung (certificate?), look up myStudIp
 -Dockerfile
 -javadoc comments
 -think about data structures(e.g. set or list...)
