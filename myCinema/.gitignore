@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-mvnw
+
 mvnw.*
 todo.txt
 
@@ -34,7 +34,7 @@ build/
 
 ### Vscode ###
 **/.vscode/
-**/.mvn/
+**/.mvn/**
 
 ### curl files for requests ###
 .http
