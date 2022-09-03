@@ -90,7 +90,7 @@ public class AppUserTemplates {
             return exceptionService.passExceptionToThymeleaf(e, model);
         }
 
-        return "/start";
+        return "/login";
     }
 
 

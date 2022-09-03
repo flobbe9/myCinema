@@ -37,6 +37,13 @@ public class GeneralTemplates implements ErrorController {
     }
 
 
+    @GetMapping("/login")
+    public String getLoginPage() {
+        
+        return "login";
+    }
+
+
     @GetMapping("/error")
     public String getErrorPage(HttpServletRequest request, Model model) {
         
