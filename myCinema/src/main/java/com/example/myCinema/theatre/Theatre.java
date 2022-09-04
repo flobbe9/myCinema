@@ -112,34 +112,55 @@ public class Theatre {
         List <Row> rows = new LinkedList<Row>();
 
         for (int i = 0; i < rowsTotal; i++) {
-            boolean frontRow = i == rowsTotal - 1;
+            // row with highest index is front row
+            boolean frontRow = (i == rowsTotal - 1);
 
             // small theatre
             if (rowsTotal < NUM_ROWS_FOR_BIG_CINEMA) { 
-                if (i < rowsTotal / 2) { 
-                    // box back
-                    rows.add(new Row((char) (65 + i), BOX, seatsPerRow, frontRow));
-                } else {   
-                    // parquet front          
-                    rows.add(new Row((char) (65 + i), PARQUET, seatsPerRow, frontRow));
-                }
+                generateRowsSmallTheatre(i, frontRow, rows);
 
             // big theatre
-            } else {              
-                if (i < rowsTotal / 3) {
-                    // parquet back
-                    rows.add(new Row((char) (65 + i), PARQUET, seatsPerRow, frontRow));
-                } else if (i < (int) (rowsTotal * (2.0 / 3))) {
-                    // box middle
-                    rows.add(new Row((char) (65 + i), BOX, seatsPerRow, frontRow));
-                } else {
-                    // parquet front
-                    rows.add(new Row((char) (65 + i), PARQUET, seatsPerRow, frontRow));
-                }
+            } else {    
+                generateRowsBigTheatre(i, frontRow, rows);          
             }
         }
         
         return rows;
+    }
+
+
+    private void generateRowsSmallTheatre(int i, boolean frontRow, List<Row> rows) {
+        
+        // lower row numbers
+        if (i < rowsTotal / 2) { 
+            // box rows in the back
+            rows.add(new Row((char) (65 + i), BOX, seatsPerRow, frontRow));
+
+        // higher row numbers are parquet rows
+        } else {   
+            // parquet rows in the front      
+            rows.add(new Row((char) (65 + i), PARQUET, seatsPerRow, frontRow));
+        }
+    }
+
+
+    private void generateRowsBigTheatre(int i, boolean frontRow, List<Row> rows) {
+
+        // highest row numbers
+        if (i < rowsTotal / 3) {
+            // parquet rows in the back
+            rows.add(new Row((char) (65 + i), PARQUET, seatsPerRow, frontRow));
+        
+        // middle row numbers
+        } else if (i < (int) (rowsTotal * (2.0 / 3))) {
+            // box rows in the middle
+            rows.add(new Row((char) (65 + i), BOX, seatsPerRow, frontRow));
+
+        // lowest row numbers
+        } else {
+            // parquet rows in the front
+            rows.add(new Row((char) (65 + i), PARQUET, seatsPerRow, frontRow));
+        }
     }
 
 

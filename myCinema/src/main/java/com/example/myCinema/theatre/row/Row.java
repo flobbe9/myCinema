@@ -96,6 +96,7 @@ public class Row {
         // parquet row
         if (rowRank == PARQUET) {
             generateParquetRow(seats);
+
         // box row
         } else {
             generateBoxRow(seats);
@@ -111,21 +112,24 @@ public class Row {
 
             // front row
             if (frontRow) {
-                // first seat of row
+                // first seat of row is disabled seat
                 if (i == 0) {
                     seats.add(new Seat(rowLetter, i + 1, DISABLED));
-                // last seat of row
+
+                // last seat of row is also disabled seat
                 } else if (i == seatsPerRow - 1) {
                     seats.add(new Seat(rowLetter, i + 1, DISABLED));
-                // next-to-last seat of row in case of bigCinema
+
+                // next-to-last seat of row in case of bigCinema is also disabled
                 } else if (seatsPerRow > NUM_SEATS_PER_ROW_NORMAL_CINEMA && i == seatsPerRow - 2) {
                     seats.add(new Seat(rowLetter, i + 1, DISABLED));
-                // any other seat
+
+                // any other seat is normal
                 } else {
                     seats.add(new Seat(rowLetter, i + 1, NORMAL));
                 }
 
-            // normal row
+            // normal row not in front
             } else {
                 seats.add(new Seat(rowLetter, i + 1, NORMAL));
             }
