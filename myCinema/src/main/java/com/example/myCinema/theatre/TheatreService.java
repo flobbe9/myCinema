@@ -17,6 +17,11 @@ import com.example.myCinema.theatre.seat.SeatRepository;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains methods to use endpoints and persist the theatre entity.
+ * 
+ * <p>Extends CheckEntity for checking objects and collections.
+ */
 @Service
 @AllArgsConstructor
 public class TheatreService extends CheckEntity {
@@ -26,15 +31,23 @@ public class TheatreService extends CheckEntity {
     private final SeatRepository seatRepository;
     
 
+    /**
+     * Saves new theatre to the db if it's valid and one with the same number doesn't already exist.
+     * 
+     * @param theatre to add.
+     * @return saved theatre.
+     */
     public Theatre addNew(Theatre theatre) {
 
         // checking theatre data
         theatreValid(theatre);
+                
+        // null values
+        hasNullValue(theatre);
 
         // checking if theatre does already exists
         if (exists(theatre.getNumber())) 
             throw new IllegalStateException("Theatre with number \"" + theatre.getNumber() + "\" does already exist.");
-
 
         // setting up rows, seats ect.
         theatre.setFieldVariables();
@@ -55,30 +68,40 @@ public class TheatreService extends CheckEntity {
     }
 
     
+    /**
+     * Tries to update theatre if fields in theatreContainer are not null and valid.
+     * Needs id to get original theatre from db.
+     * 
+     * @param theatreContainer contains new fields that should replace the old ones.
+     * @return updated theatre.
+     */
     @Transactional
-    public Theatre update(Theatre theatreData) {
+    public Theatre update(Theatre theatreContainer) {
 
         // checking wether id is null
-        if (theatreData.getId() == null) 
-            throw new IllegalStateException("Id of theatreData must not be null.");
+        if (theatreContainer.getId() == null) 
+            throw new IllegalStateException("Id of theatreContainer must not be null.");
 
         // getting theatre to update from repo
-        Theatre updatedTheatre = getById(theatreData.getId());
-
+        Theatre theatreToUpdate = getById(theatreContainer.getId());
+        
         // number
-        if (!objectNullOrEmpty(theatreData.getNumber())) updatedTheatre.setNumber(theatreData.getNumber());
+        if (!objectNullOrEmpty(theatreContainer.getNumber())) theatreToUpdate.setNumber(theatreContainer.getNumber());
         // threeD
-        if (!objectNullOrEmpty(theatreData.getThreeD())) updatedTheatre.setThreeD(theatreData.getThreeD());
+        if (!objectNullOrEmpty(theatreContainer.getThreeD())) theatreToUpdate.setThreeD(theatreContainer.getThreeD());
         // rowsTotal
-        if (!objectNullOrEmpty(theatreData.getRowsTotal())) updatedTheatre.setRowsTotal(theatreData.getRowsTotal());
+        if (!objectNullOrEmpty(theatreContainer.getRowsTotal())) theatreToUpdate.setRowsTotal(theatreContainer.getRowsTotal());
+        
+        // checking theatre data
+        theatreValid(theatreToUpdate);
         
         // removing rows from db 
-        deleteAllRows(updatedTheatre);
-
+        deleteAllRows(theatreToUpdate);
+        
         // setting up new rows and seats ect.
-        updatedTheatre.setFieldVariables();
+        theatreToUpdate.setFieldVariables();
 
-        return save(updatedTheatre);
+        return save(theatreToUpdate);
     }
     
     
@@ -156,6 +179,12 @@ public class TheatreService extends CheckEntity {
     }
     
     
+    /**
+     * Checks several fields of theatre. Throws exception if one check was unsuccessful.
+     * 
+     * @param theatre to check.
+     * @return true if all checks were successfull.
+     */
     private boolean theatreValid(Theatre theatre) {
 
         // totalRows cannot be over 26
@@ -166,13 +195,17 @@ public class TheatreService extends CheckEntity {
         if (theatre.getRowsTotal() < 1) 
             throw new IllegalStateException("Number of rows cannot be lower than 1.");
 
-        // null values
-        hasNullValue(theatre);
-
         return true;
     }
     
     
+    /**
+     * Checks all fields that are not auto generated for null values and empty strings.
+     * Throws exception if falsy value is found.
+     * 
+     * @param theatre to check.
+     * @return false if no null value or empty string was found.
+     */
     private boolean hasNullValue(Theatre theatre) {
 
         if (// number

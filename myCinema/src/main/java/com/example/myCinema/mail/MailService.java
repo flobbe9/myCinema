@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains email sending method with html file as email.
+ */
 @Service
 @AllArgsConstructor
 public class MailService {
@@ -22,6 +25,12 @@ public class MailService {
     private final JavaMailSender javaMailSender;
 
     
+    /**
+     * Sets subject sender, target adress and text of email. Sends actual email.
+     * 
+     * @param to target email adress.
+     * @param email text in html form.
+     */
     @Async
     public void send(String to, String email) {
 
@@ -35,7 +44,7 @@ public class MailService {
             // setting subject
             mimeMessageHelper.setSubject("myCinema | Confirm your account.");
             // setting mail adress from sender
-            mimeMessageHelper.setFrom("schikarski98@gmail.com");
+            mimeMessageHelper.setFrom("example@domain.com");
             // setting actual content
             mimeMessageHelper.setText(email, true);
 
@@ -48,7 +57,14 @@ public class MailService {
     }
 
 
-    public String createEmail(Path emailPath, String name, String token) {
+    /**
+     * Reads email text form html file. Adds username and confirmation token.
+     * 
+     * @param emailPath from which the html file comes from.
+     * @param name of appUser.
+     * @param token confirmation token of appUser to confirm.
+     */
+    public String createConfirmTokenEmail(Path emailPath, String name, String token) {
 
         try {
             // reading mail content from html file from emailPath

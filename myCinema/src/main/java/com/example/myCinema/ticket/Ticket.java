@@ -24,6 +24,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Contains ticket information that is important for the customer and would be printed on a ticket. Includes user email.
+ */
 @Entity
 @Getter
 @Setter

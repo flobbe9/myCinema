@@ -19,6 +19,12 @@ import com.example.myCinema.mail.MailService;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains methods to use endpoints and persist the appUser entity.
+ * 
+ * <p>Extends CheckEntity for checking objects and collections.
+ * <p>Implements UserDetailsService.
+ */
 @Service
 @AllArgsConstructor
 public class AppUserService extends CheckEntity implements UserDetailsService {
@@ -29,10 +35,20 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     
     
+    /**
+     * Tries to add new appUser, checks fields and creates confirmationToken for appUser.
+     * Sends confirmation email including the token.
+     * 
+     * @param appUser to add.
+     * @return saved appUser.
+     */
     public AppUser addNew(AppUser appUser) {
 
         // checking appUser
         appUserValid(appUser);
+
+        // checking for null values
+        hasNullValue(appUser);
         
         // checking if appUser does already exist
         if (exists(appUser.getEmail())) 
@@ -49,13 +65,20 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
 
         // sending confirmation email
         String token = confirmationToken.getToken();
-        String email = mailService.createEmail(Path.of("./src/main/resources/templates/admin/appUser/email.html"), appUser.getFirstName(), token);
+        String email = mailService.createConfirmTokenEmail(Path.of("./src/main/resources/templates/admin/appUser/email.html"), appUser.getFirstName(), token);
         // mailService.send(appUser.getEmail(), email);
 
         return save(appUser);
     }
     
     
+    /**
+     * Tries to update appUser, using not null fields of appUserContainer. Throws exception if check unsuccessfull or
+     * id of appUserContainer is null.
+     * 
+     * @param appUserContainer with new values and id.
+     * @return updated appUser.
+     */
     public AppUser update(AppUser appUserContainer) {
 
         // checking if id is null
@@ -86,6 +109,9 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
             // age
             appUserToUpdate.setAge(appUserToUpdate.calculateAge(appUserContainer.getBirthday()));
         }
+
+        // checking updatedAppUser
+        appUserValid(appUserToUpdate);
         
         return save(appUserToUpdate);
     }
@@ -142,14 +168,17 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
 //// helper functions:
 
 
+    /**
+     * Checking appUsers fields. Throws and exception if check unsuccessful.
+     * 
+     * @param appUser to check.
+     * @return true if nothing wrong with fields.
+     */
     private boolean appUserValid(AppUser appUser) {
 
         // validate email
         EmailValidator emailValidator = new EmailValidator();
         emailValidator.validate(appUser.getEmail());
-
-        // checking for null values
-        hasNullValue(appUser);
 
         // check birthday
         if (!checkBirthday(appUser.getBirthday())) 
@@ -159,6 +188,12 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     }
     
     
+    /**
+     * Checking for null values and empty strings. Throws exception if one is found.
+     * 
+     * @param appUser to check.
+     * @return false if no null value or empty string is present.
+     */
     private boolean hasNullValue(AppUser appUser) {
 
         if (// firstName

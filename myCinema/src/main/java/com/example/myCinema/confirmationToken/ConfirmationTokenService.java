@@ -11,6 +11,9 @@ import com.example.myCinema.user.AppUser;
 import lombok.AllArgsConstructor;
 
 
+ /** 
+  * Contains methods to use endpoints and persist confirmationTokens.
+  */
 @Service
 @AllArgsConstructor
 public class ConfirmationTokenService {
@@ -18,6 +21,13 @@ public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     
     
+    /**
+     * Create confirmationToken with random token, expiresAt time, createdAt time and the corresponding appUser.
+     * Saves it to db.
+     * 
+     * @param appUser who the token is for.
+     * @return saved confirmationToken
+     */
     public ConfirmationToken create(AppUser appUser) {
 
         // creating random string as token
@@ -33,6 +43,14 @@ public class ConfirmationTokenService {
     }
     
     
+    /**
+     * Confirms token if it is valid and sets confirmedAt time.
+     * Enables appUsers account.
+     * Saves changes only for confirmationToken.
+     * 
+     * @param confirmationToken to confirm.
+     * @return appUser whos account was enabled.
+     */
     public AppUser confirm(ConfirmationToken confirmationToken) {
 
         // checking confirmationToken
@@ -80,6 +98,16 @@ public class ConfirmationTokenService {
     }
 
 
+    /**
+     * Checks confirmationToken. Throws Exception if one check is unsuccessful.
+     * 
+     * <p>Should not be confirmed already.
+     * <p>Should not be expired already.
+     * 
+     * 
+     * @param confirmationToken to validate.
+     * @return true if all checks were successfull.
+     */
     private boolean confirmationTokenValid(ConfirmationToken confirmationToken) {
 
         if (// confirmedAt

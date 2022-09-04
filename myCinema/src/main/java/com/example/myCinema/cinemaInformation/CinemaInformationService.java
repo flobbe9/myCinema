@@ -10,17 +10,31 @@ import com.example.myCinema.mail.EmailValidator;
 import lombok.AllArgsConstructor;
 
 
+/** 
+ * Contains methods to use endpoints and persist CinemaInformation.
+ * 
+ * <p>Extends CheckEntity for checking objects and collections.
+ */
 @Service
 @AllArgsConstructor
 public class CinemaInformationService extends CheckEntity {
     
     private final CinemaInformationRepository cinemaInformationRepository;
     
-    
+    /**
+     * Validates new cinemaInformation and checks whether this cinema does already exist.
+     * If no exceptions are thrown the new cinema is saved in db.
+     * 
+     * @param cinemaInformation to add.
+     * @return saved cinemaInformation.
+     */
     public CinemaInformation addNew(CinemaInformation cinemaInformation) {
 
         // checking cinemaInformation
         cinemaInformationValid(cinemaInformation);
+
+        // checking for null values
+        hasNullValue(cinemaInformation);
 
         // checking if cinema already exists
         if (exists(cinemaInformation.getName(), cinemaInformation.getCity())) 
@@ -30,9 +44,23 @@ public class CinemaInformationService extends CheckEntity {
     }
     
     
+    /**
+     * Updates cinemaInformation beeing able to change all fields except the id.
+     * Takes a cinemaInformation object and checks every field of it for new values.
+     * This object has to contain the id of the cinema to be updated, so it can be found in the db.
+     * 
+     * <p>Checks fields for null values and emnpty strings. Validates email.
+     * 
+     * <p>Throws exception if validation is unsuccessful or id is null.
+     * 
+     * @param cinemaInformationContainer contains new fields of cinema.
+     * @return updated cinema.
+     */
     public CinemaInformation update(CinemaInformation cinemaInformationContainer) {
         
-        EmailValidator emailValidator = new EmailValidator();
+        // checking cinemaInformation
+        cinemaInformationValid(cinemaInformationContainer);
+
         // checking if id is null
         if (cinemaInformationContainer.getId() == null) 
             throw new IllegalStateException("Id of cinemaInformationContainer must not be null.");
@@ -49,8 +77,7 @@ public class CinemaInformationService extends CheckEntity {
         // adress
         if (!objectNullOrEmpty(cinemaInformationContainer.getAdress())) cinemaInformationToUpdate.setAdress(cinemaInformationContainer.getAdress());
         // email 
-        if (!objectNullOrEmpty(cinemaInformationContainer.getEmail()) && emailValidator.validate(cinemaInformationContainer.getEmail())) 
-            cinemaInformationToUpdate.setEmail(cinemaInformationContainer.getEmail());
+        if (!objectNullOrEmpty(cinemaInformationContainer.getEmail())) cinemaInformationToUpdate.setEmail(cinemaInformationContainer.getEmail());
         // phoneNumber
         if (!objectNullOrEmpty(cinemaInformationContainer.getPhoneNumber())) cinemaInformationToUpdate.setPhoneNumber(cinemaInformationContainer.getPhoneNumber());
 
@@ -97,19 +124,29 @@ public class CinemaInformationService extends CheckEntity {
     }
     
 
+    /**
+     * Validate fields of cinemaInformation.
+     * 
+     * @param cinemaInformation to check.
+     * @return true if all checks were successfull.
+     */
     private boolean cinemaInformationValid(CinemaInformation cinemaInformation) {
 
         EmailValidator emailValidator = new EmailValidator();
 
-        return 
-            // checking for null values
-            !hasNullValue(cinemaInformation) && 
-
-            // checking for valid email
-            emailValidator.validate(cinemaInformation.getEmail());
+        // checking for valid email
+        return emailValidator.validate(cinemaInformation.getEmail());
     }
     
     
+    /**
+     * Checks every field for null values or empty strings. 
+     * 
+     * <p> Throws exception if one is found.
+     * 
+     * @param cinemaInformation to check.
+     * @return false if cinemaInformation has no null value or empty strings.
+     */
     private boolean hasNullValue(CinemaInformation cinemaInformation) {
 
         if (// name

@@ -16,6 +16,10 @@ import com.example.myCinema.confirmationToken.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains enpoint mappings for the appUser entity. For testing purposes.
+ * Can only be used by a User with role 'ADMIN'.
+ */
 @RestController
 @RequestMapping("/test/appUser")
 // @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -43,6 +47,11 @@ public class AppUserController {
     }
 
 
+    /**
+     * Checking and confirming token and enabling appUser.
+     * 
+     * @param token of appUser to confirm.
+     */
     @GetMapping("/confirmToken") 
     public void confirmToken(@RequestParam("token") String token) {
 

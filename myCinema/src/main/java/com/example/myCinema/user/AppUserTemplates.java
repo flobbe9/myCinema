@@ -19,6 +19,12 @@ import com.example.myCinema.exception.ExceptionService;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Controller for admins. Contains endpoints to alter appUsers, delete or add one. Methods work with thymeleaf templates.
+ * Can only be accessed by user with role 'ADMIN'. 
+ * 
+ * <p>{@code @CrossOrigin} allows the mail server to access this controller.
+ */
 @Controller
 @RequestMapping("/admin/appUser")
 @CrossOrigin("http://localhost:1080")
@@ -47,6 +53,15 @@ public class AppUserTemplates {
     }
     
     
+    /**
+     * Tries to add new appUser. Sets permissions if some were selected and passes confirm boolean to 
+     * thymeleaf or, if an exception is thrown, the errorMessage.
+     * 
+     * @param appUser to add.
+     * @param movieWrapper for helping the html page.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/addNew") 
     public String addNew(AppUser appUser, AppUserWrapper appUserWrapper, Model model) {
 
@@ -74,6 +89,14 @@ public class AppUserTemplates {
 // confirm token
 
 
+    /**
+     * Directs user to login page if successful or to errorPage if not. Confirms token that is 
+     * passed through pathvariable and enables appUser.
+     * 
+     * @param token to confirm.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @GetMapping("/confirmToken/{token}") 
     public String confirmToken(@PathVariable("token") String token, Model model) {
 
@@ -109,12 +132,20 @@ public class AppUserTemplates {
     }
 
 
+    /**
+     * Tries to delete appUser. Stays at delete page if successful and displays errorMessage on same page
+     * if not.
+     * 
+     * @param appUser to delete.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/delete")
-    public String delete(AppUser temp, Model model) {
+    public String delete(AppUser appUser, Model model) {
 
         try {
             // getting email from temp appUser
-            String email = temp.getEmail();
+            String email = appUser.getEmail();
             
             // deleting appUser
             appUserService.delete(email);
@@ -134,6 +165,13 @@ public class AppUserTemplates {
 //// helper functions
 
 
+    /**
+     * Getting array with booleans for each selected permission and adding permissions with true 
+     * value to set.
+     * 
+     * @param appUserWrapper contains granted permissions array.
+     * @return set with AppUserPermissions.
+     */
     private Set<AppUserPermission> setAppUserPermissions(AppUserWrapper appUserWrapper) {
 
         // array with all permissions
@@ -154,9 +192,15 @@ public class AppUserTemplates {
     }
 
 
-    private boolean checkToggledPermissions(boolean[] array) {
+    /**
+     * Checking if any permissions have been selected on html page.
+     * 
+     * @param granted array with booleans representing each permission.
+     * @return true if array contains at least one true value, false otherwise.
+     */
+    private boolean checkToggledPermissions(boolean[] granted) {
 
-        for (boolean bool : array) {
+        for (boolean bool : granted) {
             if (bool) return true;
         }
 

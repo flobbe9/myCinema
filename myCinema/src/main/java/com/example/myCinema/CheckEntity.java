@@ -1,8 +1,17 @@
 package com.example.myCinema;
 
 
+/**
+ * Contains several check methods for objects as well as iterables.
+ */
 public class CheckEntity {
 
+    /**
+     * Checks if object is null or, if the object is a string, whether the string is empty ("").
+     * 
+     * @param obj to check.
+     * @return false if object is not null and is not an empty string.
+     */
     public boolean objectNullOrEmpty(Object obj) {
 
         // null
@@ -15,6 +24,13 @@ public class CheckEntity {
     }
 
 
+    /**
+     * Uses the {@link #objectNullOrEmpty(Object)} method on every object in the iterable.
+     * Also checks if iterable itself is null.
+     * 
+     * @param iterable iterable to check.
+     * @return false if no null value or empty string was found.
+     */
     public boolean iterableNullOrEmpty(Iterable<?> iterable) {
 
         // null

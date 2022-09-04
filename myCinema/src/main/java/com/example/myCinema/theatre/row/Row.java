@@ -1,6 +1,6 @@
 package com.example.myCinema.theatre.row;
 
-import static com.example.myCinema.theatre.Theatre.NUM_SEATS_PER_ROW_NORMAL_CINEMA;
+import static com.example.myCinema.theatre.Theatre.NUM_SEATS_PER_ROW_NORMAL_THEATRE;
 import static com.example.myCinema.theatre.row.RowRank.PARQUET;
 import static com.example.myCinema.theatre.seat.SeatType.DISABLED;
 import static com.example.myCinema.theatre.seat.SeatType.FOOTREST;
@@ -36,6 +36,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Contains row data, a list of seats and the corresponding theatre.
+ */
 @Entity
 @Table(name = "theatre_rows")
 @Getter
@@ -106,6 +109,12 @@ public class Row {
     }
     
     
+    /**
+     * Parquet rows have NORMAL seats only with the exception of the front row, where
+     * DISABLED seats are placed (two or three depending on the theatre size).
+     *  
+     * @param seats list to be filled with seat objects.
+     */
     private void generateParquetRow(List<Seat> seats) {
         
         for (int i = 0; i < seatsPerRow; i++) {
@@ -121,7 +130,7 @@ public class Row {
                     seats.add(new Seat(rowLetter, i + 1, DISABLED));
 
                 // next-to-last seat of row in case of bigCinema is also disabled
-                } else if (seatsPerRow > NUM_SEATS_PER_ROW_NORMAL_CINEMA && i == seatsPerRow - 2) {
+                } else if (seatsPerRow > NUM_SEATS_PER_ROW_NORMAL_THEATRE && i == seatsPerRow - 2) {
                     seats.add(new Seat(rowLetter, i + 1, DISABLED));
 
                 // any other seat is normal
@@ -137,12 +146,17 @@ public class Row {
     }
     
     
+    /**
+     * Box rows all have FOOTREST seats and the two last seats in each row are LOVE_SEATS.
+     * 
+     * @param seats list to be filled with seat objects.
+     */
     private void generateBoxRow(List<Seat> seats) {
 
         for (int i = 0; i < seatsPerRow; i++) {
 
             // two last seats are love seats
-            if (seatsPerRow > NUM_SEATS_PER_ROW_NORMAL_CINEMA && (i == seatsPerRow - 1 || i == seatsPerRow - 2)) {
+            if (seatsPerRow > NUM_SEATS_PER_ROW_NORMAL_THEATRE && (i == seatsPerRow - 1 || i == seatsPerRow - 2)) {
                 seats.add(new Seat(rowLetter, i + 1, LOVE_SEAT));
 
             // any other seat with footrest

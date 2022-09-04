@@ -12,6 +12,11 @@ import com.example.myCinema.CheckEntity;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains methods to use endpoints and persist the movie entity.
+ * 
+ * <p>Extends CheckEntity for checking objects and collections.
+ */
 @Service
 @AllArgsConstructor
 public class MovieService extends CheckEntity {
@@ -19,11 +24,20 @@ public class MovieService extends CheckEntity {
     private final MovieRepository movieRepository;
 
 
+    /**
+     * Saves new movie to the database if it's valid and one with the same title and version does not already exist.
+     * 
+     * @param movie to add.
+     * @return saved movie.
+     */
     @Transactional
     public Movie addNew(Movie movie) {
 
         // checking movie data
         movieValid(movie);
+
+        // null or empty strings
+        hasNullValue(movie);
         
         // checking if movie already exists
         if (exists(movie.getTitle(), movie.getVersion())) 
@@ -33,14 +47,20 @@ public class MovieService extends CheckEntity {
     }
     
 
+    /**
+     * Updates existing movie. Gets movie from db by id and uses all not null values from movieContainer as replacement for 
+     * the existing movies fields.
+     * 
+     * @param movieContainer contains new fields, may contain null values.
+     * @return updated movie.
+     */
     public Movie update(Movie movieContainer) {
         
         // checking if id is null
         if (movieContainer.getId() == null) 
             throw new IllegalStateException("Id of movieContainer must not be null.");
         
-        
-        // getting movie with given id from repo
+            // getting movie with given id from repo
         Movie movieToUpdate = getById(movieContainer.getId());
         
         // title
@@ -67,13 +87,13 @@ public class MovieService extends CheckEntity {
         if (!iterableNullOrEmpty(movieContainer.getGenres())) movieToUpdate.setGenres(movieContainer.getGenres());
         // trailerLink
         if (!objectNullOrEmpty(movieContainer.getTrailerLink())) movieToUpdate.setTrailerLink(movieContainer.getTrailerLink());
-        
-        // checking date chronology 
-        checkReleaseAndFinishingDates(movieToUpdate);
 
+        // checking movieContainer
+        movieValid(movieToUpdate);
+        
         return save(movieToUpdate);
     }
-
+    
 
     public Movie getById(Long id) {
 
@@ -145,24 +165,21 @@ public class MovieService extends CheckEntity {
     }
     
     
+    /**
+     * Checks a few fields for correct input.
+     * 
+     * @param movie with fields to check.
+     * @return true if all checks were successfull.
+     */
     private boolean movieValid(Movie movie) {
 
-        return 
-            // null or empty strings
-            !hasNullValue(movie) &&
-
-            // dates in order
-            checkReleaseAndFinishingDates(movie);
+        // checking if dates are in order
+        return checkReleaseAndFinishingDates(movie);
     }
 
 
     /**
-     * Checks for illegal values: 
-     * <p>null
-     * <p>is an empty string ("")
-     * <p>iterable empty
-     * <p>iterable contains null
-     * <p>iterable contains emtpy string ("")
+     * Checks fields of movie for null values and empty strings.
      * 
      * @param movie the movie to check.
      * @return true if at least one of the movies fields has an illegal value.
@@ -201,6 +218,12 @@ public class MovieService extends CheckEntity {
     }
 
 
+    /**
+     * Release date should be before finishing date.
+     * 
+     * @param movie to check.
+     * @return true if release date is before finishing date.
+     */
     private boolean checkReleaseAndFinishingDates(Movie movie) {
         
         if (movie.getLocalReleaseDate().isAfter(movie.getLocalFinishingDate())) 
@@ -219,8 +242,9 @@ public class MovieService extends CheckEntity {
      * 
      * <p>ExistingList = {1, 2, 3}; ListWithNewData = {1, null, 4, 5, 6};
      * <p>newList = {1, 2, 4, 5, 6};
-     * @param movieContainer
-     * @param movieToUpdate
+     * 
+     * @param movieContainer movie with new list of cast members.
+     * @param movieToUpdate exiting movie to be updated.
      */
     private void updateCast(Movie movieContainer, Movie movieToUpdate) {
 

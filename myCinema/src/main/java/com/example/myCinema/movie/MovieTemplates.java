@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Controller for admins. Contains endpoints to alter movies, delete or add one. Methods work with thymeleaf templates.
+ * Can only be accessed by user with role 'ADMIN'.
+ */
 @Controller
 @RequestMapping("/admin/movie")
 // @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -23,8 +27,8 @@ public class MovieTemplates {
     
     private final MovieService movieService;
     
-    /** used for update method */
-    private Long appUserId;
+    /** Used for {@link #update(Model)}. */
+    private Long movieId;
 
 
 // addNew
@@ -43,6 +47,15 @@ public class MovieTemplates {
     }
 
 
+    /**
+     * Tries to add the movie and passes confirmation boolean to page if successfull.
+     * In any other case the exception is caught and displayed on the same page.
+     * 
+     * @param movie to add.
+     * @param movieWrapper for helping the html page.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/addNew")
     public String addNew(Movie movie, MovieWrapper movieWrapper, Model model) {
 
@@ -72,8 +85,8 @@ public class MovieTemplates {
     
 // update
 
-    
-    @GetMapping("/update")
+
+@GetMapping("/update")
     public String update(Model model) {
 
         // passing movie to thymeleaf
@@ -85,6 +98,15 @@ public class MovieTemplates {
     }
     
 
+    /**
+     * If movie exists the user is redirected to the update page. {@link #movieId} is set for the update method.
+     * In any other case the exception is caught and displayed on the same page.
+     * 
+     * @param movieContainer contains title and version of movie to be updated.
+     * @param movieWrapper for helping the html page.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/update_getByTitleAndVersion")
     public String checkMovieExists(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
         
@@ -96,7 +118,7 @@ public class MovieTemplates {
 
         try {
             // checking if movie exists and setting appUserId
-            appUserId = movieService.getByTitleAndVersion(movieContainer.getTitle(), movieContainer.getVersion()).getId();
+            movieId = movieService.getByTitleAndVersion(movieContainer.getTitle(), movieContainer.getVersion()).getId();
 
         } catch (Exception e) {
             // passing exception message to thymeleaf
@@ -109,12 +131,21 @@ public class MovieTemplates {
     }
     
     
+    /**
+     * Actually tries to update the movie and passes confirmation boolean to page if successfull.
+     * In any other case the exception is caught and displayed on the same page.
+     * 
+     * @param movieContainer contains new data that should be used as replacment.
+     * @param movieWrapper for helping the html page.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/update")
     public String upadte(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
 
         try {
             // setting id
-            movieContainer.setId(appUserId);
+            movieContainer.setId(movieId);
 
             // setting genres set with 'toggledGenres' property of MovieWrapper
             movieContainer.setGenres(iterateToggledGenres(movieWrapper));
@@ -144,6 +175,12 @@ public class MovieTemplates {
 //// helper functions
 
 
+    /**
+     * Iterates toggled genres. If true value is found the genre at the same index in genresArr is added to the genres set.
+     * 
+     * @param movieWrapper contains array with booleans representing which genres were checked.
+     * @return set with actual genres that were selected.
+     */
     private Set<Genre> iterateToggledGenres(MovieWrapper movieWrapper) {
 
         Genre[] genresArr = movieWrapper.getGenres();

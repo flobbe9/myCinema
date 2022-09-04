@@ -23,6 +23,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Contains all information the website has to know about a movie playing in cinema.
+ */
 @Entity
 @Getter
 @Setter
@@ -39,7 +42,7 @@ public class Movie {
     @Column(nullable = false)
     private String title;
 
-    /**in minutes */
+    /** Duration in minutes. */
     @Column(nullable = false)
     private Integer duration; 
 
@@ -62,6 +65,7 @@ public class Movie {
     @Column(nullable = false)
     private MovieVersion version;
 
+    /** Represents a basic price which is adjusted in certain cases. */
     @Column(nullable = false)
     private Double price;
 
@@ -120,6 +124,10 @@ public class Movie {
 }
 
 
+/**
+ * Wrapper class for html pages that need lists of the enums related to the movie entity. 
+ * Also serves as container for cast and genres because thymeleaf works better with arrays but the api doesn't.
+ */
 @Getter
 @Setter
 class MovieWrapper {
@@ -130,6 +138,7 @@ class MovieWrapper {
 
     private Genre[] genres = Genre.values();
 
+    /** A true value stands for the toggled genre at the same index in the genres array. */
     private boolean[] toggledGenres = new boolean[genres.length];
 
     private String[] movieCast = new String[3];

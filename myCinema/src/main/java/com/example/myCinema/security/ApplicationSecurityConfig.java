@@ -9,6 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Configuring security of the api like login and logout behavior and protected url paths.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

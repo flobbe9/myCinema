@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Contains neccessary seat data and the corresponding row object.
+ */
 @Entity
 @Table(name = "theatre_seats")
 @Getter

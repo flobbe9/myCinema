@@ -21,6 +21,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * For user account validation. Contains random string token to identify. 
+ * Is confirmed by user via email.
+ */
 @Entity
 @Getter
 @Setter

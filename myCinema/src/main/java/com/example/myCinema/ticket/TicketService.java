@@ -23,6 +23,11 @@ import com.example.myCinema.user.AppUserService;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains methods to use endpoints and persist the ticket entity.
+ * 
+ * <p>Extends CheckEntity for checking objects and collections.
+ */
 @Service
 @AllArgsConstructor
 public class TicketService extends CheckEntity {
@@ -33,10 +38,20 @@ public class TicketService extends CheckEntity {
     private final MovieService movieService;
     
 
+    /**
+     * Adds new ticket to db. Checks all fields and sets seat as taken. Should also send an email 
+     * to the user with all neccessary information.
+     * 
+     * @param ticket to add.
+     * @return saved ticket.
+     */
     public Ticket addNew(Ticket ticket) {
 
         // check ticket data
         ticketValid(ticket);
+                
+        // checking null values
+        hasNullValue(ticket);
 
         // setting ticketData
         setTicketData(ticket);
@@ -89,6 +104,12 @@ public class TicketService extends CheckEntity {
 /// helper functions
 
 
+    /**
+     * Checks some ticket fields. Throws exception if any check is unsuccessful.
+     * 
+     * @param ticket to check.
+     * @return true if nothing wrong with ticket.
+     */
     private boolean ticketValid(Ticket ticket) {
 
         // checking if seat is taken
@@ -106,13 +127,16 @@ public class TicketService extends CheckEntity {
         // checking if movie exists
         movieService.getByTitle(ticket.getMovieTitle());
         
-        // checking null values
-        hasNullValue(ticket);
-
         return true;
     }
 
 
+    /**
+     * Checking if ticket fields contain null values or empty strings. Throws exception if one is found.
+     * 
+     * @param ticket to check.
+     * @return false if no null value or empty string is found.
+     */
     private boolean hasNullValue(Ticket ticket) {
 
         if (// email
@@ -140,6 +164,11 @@ public class TicketService extends CheckEntity {
     }
 
 
+    /**
+     * Setting some fields that can only be set by getting the movie of the ticket.
+     * 
+     * @param ticket to set fields for.
+     */
     private void setTicketData(Ticket ticket) {
 
         // getting seat and row objects with ticket data
@@ -177,12 +206,15 @@ public class TicketService extends CheckEntity {
 
 
     /**
-     * 3D:  +2.0$.  
-     * RowRank box: +1.5$.  
-     * SeatType loveSeat: +1.0$.  
-     * Discount student: -1.0.  
-     * Discount child: -1.5.  
-     * @param ticket whick needs a price.
+     * Adjusting price depending on the following parameters:
+     * 
+     * <p>3D:  +2.0$.  
+     * <p>RowRank box: +1.5$.  
+     * <p>SeatType loveSeat: +1.0$.  
+     * <p>Discount student: -1.0$.  
+     * <p>Discount child: -1.5$.  
+     * 
+     * @param ticket which needs a price.
      */
     private void setPrice(Ticket ticket, Row row, Seat seat) {
 

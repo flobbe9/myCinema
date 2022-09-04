@@ -16,6 +16,11 @@ import com.example.myCinema.exception.ExceptionService;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Controller for general pages that can be accessed without permission.
+ * 
+ * <p>Implements ErrorController.
+ */
 @Controller
 @AllArgsConstructor
 public class GeneralTemplates implements ErrorController {
@@ -44,6 +49,13 @@ public class GeneralTemplates implements ErrorController {
     }
 
 
+    /**
+     * Handles whitelabel errors, catches them automatically. Redirects to errorPage using {@link #exceptionService} methods.
+     * 
+     * @param request object containing the error.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template of errorPage.
+     */
     @GetMapping("/error")
     public String getErrorPage(HttpServletRequest request, Model model) {
         

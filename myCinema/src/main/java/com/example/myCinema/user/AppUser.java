@@ -23,6 +23,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Contains user data and some account status fields. Implements UserDetails for neccessary account methods.
+ * 
+ * <p>Implements UserDetails.
+ */
 @Entity
 @Getter
 @Setter
@@ -41,6 +46,7 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
+    /** Serves as username. */
     @Column(nullable = false, unique = true)
     @EqualsAndHashCode.Include
     private String email;
@@ -68,10 +74,13 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private AppUserRole role;
 
+    /** Subscription or similar could expire. */
     private boolean isExpired = false;
 
+    /** Account can be locked e.g. for safety reasons. */
     private boolean isLocked = false;
     
+    /** Account has to be enabled after registering. Login impossible otherwise. */
     private boolean isEnabled = false;
 
 
@@ -153,11 +162,15 @@ public class AppUser implements UserDetails {
 }
 
 
+/**
+ * Wrapper class for some enums helping thymeleaf to pass data to api.
+ */
 @Getter
 class AppUserWrapper {
     
     private AppUserPermission[] permissions = AppUserPermission.values();
 
+    /** True value means the permission with the same index in permissions array will be granted. */
     private boolean[] granted = new boolean[permissions.length];
 
     private AppUserRole[] roles = AppUserRole.values();

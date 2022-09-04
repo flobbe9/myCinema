@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Represents a cinema. Contains general information you would find on the
+ * 'about' page of the website.
+ */
 @Entity
 @Getter
 @Setter

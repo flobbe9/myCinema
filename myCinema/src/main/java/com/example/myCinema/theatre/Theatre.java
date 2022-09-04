@@ -26,6 +26,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * Contains theatre information and some static variables that help deciding how to size theatres.
+ */
 @Entity
 @Getter
 @Setter
@@ -64,14 +67,23 @@ public class Theatre {
     @EqualsAndHashCode.Exclude
     private List<Row> rows;
     
+    /** Maximum number of rows in a theatre. */
     public static final Integer MAX_ROWS = 26;
 
-    public static final Integer NUM_ROWS_FOR_BIG_CINEMA = 15;   
+    /** Minimum number of rows in a theatre so it is considered as 'big'. */
+    public static final Integer NUM_ROWS_BIG_THEATRE = 15;   
 
-    public static final Integer NUM_SEATS_PER_ROW_NORMAL_CINEMA = 15;
+    /** Number of seats per row in a 'normal' sized cinema. 
+     * @see #NUM_ROWS_BIG_THEATRE
+    */
+    public static final Integer NUM_SEATS_PER_ROW_NORMAL_THEATRE = 15;
     
-    public static final Integer NUM_SEATS_PER_ROW_BIG_CINEMA = 20;
+    /** Number of seats per row in 'big' sized cinema.
+     * @see #NUM_ROWS_BIG_THEATRE
+     */
+    public static final Integer NUM_SEATS_PER_ROW_BIG_THEATRE = 20;
     
+    /** Basic price for each ticket. */
     public static final Double BASIC_PRICE = 10.0;
 
 
@@ -88,11 +100,12 @@ public class Theatre {
     }
 
 
+    /** Setting row list and some fields according to information from constructor. */
     public void setFieldVariables() {
 
         this.seatsPerRow = calculateSeatsPerRow();
         this.seatsTotal = rowsTotal * seatsPerRow;
-        this.hasLoveSeats = rowsTotal >= NUM_ROWS_FOR_BIG_CINEMA;
+        this.hasLoveSeats = rowsTotal >= NUM_ROWS_BIG_THEATRE;
         this.rows = generateAllRows(rowsTotal);
     }
 
@@ -107,6 +120,13 @@ public class Theatre {
 /// helper functions
 
 
+    /**
+     * Generates all rows for theatre according to the size.
+     * 
+     * @see #NUM_ROWS_BIG_THEATRE
+     * @param rowsTotal total number of rows in the cinema.
+     * @return list with all row objects.
+     */
     private List<Row> generateAllRows(int rowsTotal) {
 
         List <Row> rows = new LinkedList<Row>();
@@ -116,7 +136,7 @@ public class Theatre {
             boolean frontRow = (i == rowsTotal - 1);
 
             // small theatre
-            if (rowsTotal < NUM_ROWS_FOR_BIG_CINEMA) { 
+            if (rowsTotal < NUM_ROWS_BIG_THEATRE) { 
                 generateRowsSmallTheatre(i, frontRow, rows);
 
             // big theatre
@@ -129,6 +149,17 @@ public class Theatre {
     }
 
 
+    /**
+     * A small theatre has one box section in the back (lower characters) and one parquet section 
+     * in the front (higher characters). 
+     * 
+     * <p>Each section gets halve of the seats (rounding down so in case 
+     * of an odd number of rows there's one parquet row more).
+     * 
+     * @param i index of the for loop in {@link #generateAllRows(int)}.
+     * @param frontRow true if row is the front row.
+     * @param rows list with row objects.
+     */
     private void generateRowsSmallTheatre(int i, boolean frontRow, List<Row> rows) {
         
         // lower row numbers
@@ -144,6 +175,16 @@ public class Theatre {
     }
 
 
+    /**
+     * A big theatre has two sections with parquet rows, one in the back and one in the front. The box section
+     * is in between those two.
+     * 
+     * <p>Each section gets a third of the total rows.
+     * 
+     * @param i index of the for loop in {@link #generateAllRows(int)}.
+     * @param frontRow true if row is the front row.
+     * @param rows list with row objects.
+     */
     private void generateRowsBigTheatre(int i, boolean frontRow, List<Row> rows) {
 
         // highest row numbers
@@ -166,6 +207,6 @@ public class Theatre {
 
     private int calculateSeatsPerRow() {
 
-        return (rowsTotal < NUM_ROWS_FOR_BIG_CINEMA) ? NUM_SEATS_PER_ROW_NORMAL_CINEMA : NUM_SEATS_PER_ROW_BIG_CINEMA;
+        return (rowsTotal < NUM_ROWS_BIG_THEATRE) ? NUM_SEATS_PER_ROW_NORMAL_THEATRE : NUM_SEATS_PER_ROW_BIG_THEATRE;
     }
 }

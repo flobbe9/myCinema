@@ -13,9 +13,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 
+/**
+ * Handles some exceptions thrown by the api and recirects to errorPage for more detail.
+ */
 @ControllerAdvice
 public class ExceptionService {
 
+    /**
+     * Passes exception message and http status to thymeleaf. 
+     * Uses exception to generate correct http status. Reirects to errorPage.
+     * 
+     * @param e exception that was thrown.
+     * @param model for passing objects to thymeleaf.
+     * @return errorPage html page.
+     */
     public String passExceptionToThymeleaf(Exception e, Model model) {
 
         // getting correct http status code for exception
@@ -29,10 +40,18 @@ public class ExceptionService {
     }
 
 
+    /**
+     * Passes exception message and http status to thymeleaf. 
+     * Uses http status to generate correct exception message. Reirects to errorPage.
+     * 
+     * @param status httpStatus that has occurred.
+     * @param model for passing objects to thymeleaf.
+     * @return errorPage html page.
+     */
     public String passExceptionToThymeleaf(HttpStatus status, Model model) {
 
         // getting appropriate error message
-        String message = decideErrorMessage(status, model);
+        String message = decideErrorMessage(status);
 
         // passing thymeleaf the httpStatus and the exception
         model.addAttribute("httpStatus", status);
@@ -45,6 +64,12 @@ public class ExceptionService {
 //// helper functions
 
 
+    /**
+     * Assigns http status for each exception. Uses INTERNAL_SERVER_ERROR as default.
+     * 
+     * @param e exception that was thrown.
+     * @return correct httpStatus or httpStatus.INTERNAL_SERVER_ERROR.
+     */
     private HttpStatus decideHttpStatus(Exception e) {
 
         // 401 unauthorized
@@ -61,7 +86,13 @@ public class ExceptionService {
     }
 
 
-    private String decideErrorMessage(HttpStatus status, Model model) {
+    /**
+     * Assigns correct error message according to the http status.
+     * 
+     * @param status http status.
+     * @return String with error message
+     */
+    private String decideErrorMessage(HttpStatus status) {
 
         // getting status code 
         int statusCode = status.value();

@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 
 
+/**
+ * Contains enpoint mappings for CinemaInformation. For testing purposes.
+ * Can only be used by a User with role 'ADMIN'.
+ */
 @RestController
 @RequestMapping("/test/cinemaInformation")
 // @PreAuthorize("hasRole('ROLE_ADMIN')")

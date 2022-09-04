@@ -12,6 +12,10 @@ import com.example.myCinema.exception.ExceptionService;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Controller for admins. Contains endpoints to alter theatres, delete or add one. Methods work with thymeleaf templates.
+ * Can only be accessed by user with role 'ADMIN'.
+ */
 @Controller
 @RequestMapping("/admin/theatre")
 // @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -19,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class TheatreTemplates extends ExceptionService {
     
     private final TheatreService theatreService;
+    
+    /** Theatre id for {@link #update(Model)}. */
     private Long theatreId;
 
 
@@ -35,6 +41,14 @@ public class TheatreTemplates extends ExceptionService {
     }
 
 
+    /** 
+     * Tries to add the theatre and passes confirmation boolean to page if successfull.
+     * In any other case the exception is caught and displayed on the same page.
+     * 
+     * @param theatre to add.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/addNew")
     public String addTheatre(Theatre theatre, Model model) {
 
@@ -67,6 +81,14 @@ public class TheatreTemplates extends ExceptionService {
     }
 
 
+    /**
+     * If theatre exists the user is redirected to the update page. {@link #theatreId} is set for the update method.
+     * In any other case the exception is caught and displayed on the same page.
+     * 
+     * @param theatreContainer contains number of theatre to be updated.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @GetMapping("/update_getByNumber")
     public String udpate(Theatre theatreContainer, Model model) {
 
@@ -91,15 +113,24 @@ public class TheatreTemplates extends ExceptionService {
     }
 
 
+    /**
+     * Actually tries to update the theatre and passes confirmation boolean to page if successfull.
+     * In any other case the exception is caught and displayed on the same page.
+     * 
+     * @param theatreContainer contains new data that should be used as replacment.
+     * @param movieWrapper for helping the html page.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/update")
-    public String update(Theatre theatre, Model model) {
+    public String update(Theatre theatreContainer, Model model) {
 
         try {
             // setting id of theatre
-            theatre.setId(theatreId);
+            theatreContainer.setId(theatreId);
 
             // updating theatre
-            theatreService.update(theatre);
+            theatreService.update(theatreContainer);
 
             // telling thymeleaf it worked
             model.addAttribute("ok", true);
@@ -126,12 +157,19 @@ public class TheatreTemplates extends ExceptionService {
     }
 
 
+    /**
+     * Deleting theatre if exists. 
+     * 
+     * @param theatreContainer with number of theatre to delete.
+     * @param model for passing objects to thymeleaf.
+     * @return String with html template.
+     */
     @PostMapping("/delete")
-    public String delete(Theatre theatre, Model model) {
+    public String delete(Theatre theatreContainer, Model model) {
 
         try {
             // getting theatre number from theatre 
-            int number = theatre.getNumber();
+            int number = theatreContainer.getNumber();
 
             // deleting theatre
             theatreService.delete(number);
