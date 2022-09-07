@@ -49,7 +49,7 @@ public class AppUserTemplates {
         // initialising permissions wrapper object
         model.addAttribute("appUserWrapper", new AppUserWrapper());
 
-        return "/admin/appUser/addNew";
+        return "admin/appUser/addNew";
     }
     
     
@@ -82,7 +82,7 @@ public class AppUserTemplates {
             model.addAttribute("errorMessage", e.getMessage());
         }
 
-        return "/admin/appUser/addNew";
+        return "admin/appUser/addNew";
     }
 
 
@@ -115,7 +115,7 @@ public class AppUserTemplates {
             return exceptionService.passExceptionToThymeleaf(e, model);
         }
 
-        return "/login";
+        return "login";
     }
 
 
@@ -128,7 +128,7 @@ public class AppUserTemplates {
         // adding appUser for thymeleaf
         model.addAttribute("appUser", new AppUser());
 
-        return "/admin/appUser/delete";
+        return "admin/appUser/delete";
     }
 
 
@@ -158,7 +158,7 @@ public class AppUserTemplates {
             model.addAttribute("errorMessage", e.getMessage());
         }
             
-        return "/admin/appUser/delete";
+        return "admin/appUser/delete";
     }
 
 

@@ -36,7 +36,7 @@ public class ExceptionService {
         model.addAttribute("httpStatus", httpStatus);
         model.addAttribute("exception", e);
 
-        return "/exception/errorPage";
+        return "exception/errorPage";
     }
 
 
@@ -57,7 +57,7 @@ public class ExceptionService {
         model.addAttribute("httpStatus", status);
         model.addAttribute("exception", new Exception(message));
 
-        return "/exception/errorPage";
+        return "exception/errorPage";
     }
 
 

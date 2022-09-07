@@ -43,7 +43,7 @@ public class MovieTemplates {
         // passing MovieWrapper to thymeleaf
         model.addAttribute("movieWrapper", new MovieWrapper());
 
-        return "/admin/movie/addNew";
+        return "admin/movie/addNew";
     }
 
 
@@ -79,7 +79,7 @@ public class MovieTemplates {
 
         model.addAttribute("movieWrapper", new MovieWrapper());
 
-        return "/admin/movie/addNew";
+        return "admin/movie/addNew";
     }
     
     
@@ -94,7 +94,7 @@ public class MovieTemplates {
 
         model.addAttribute("movieWrapper", new MovieWrapper());
 
-        return "/admin/movie/update_getByTitleAndVersion";
+        return "admin/movie/update_getByTitleAndVersion";
     }
     
 
@@ -127,7 +127,7 @@ public class MovieTemplates {
             return "/admin/movie/update_getByTitleAndVersion";
         }
         
-        return "/admin/movie/update";
+        return "admin/movie/update";
     }
     
     
@@ -168,7 +168,7 @@ public class MovieTemplates {
 
         model.addAttribute("movieWrapper", new MovieWrapper());
 
-        return "/admin/movie/update";
+        return "admin/movie/update";
     }
 
 

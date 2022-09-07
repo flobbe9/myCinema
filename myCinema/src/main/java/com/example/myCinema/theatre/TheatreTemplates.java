@@ -77,7 +77,7 @@ public class TheatreTemplates extends ExceptionService {
         // passing thymeleaf the theatre
         model.addAttribute("theatre", new Theatre());
 
-        return "/admin/theatre/update_getByNumber";
+        return "admin/theatre/update_getByNumber";
     }
 
 
@@ -106,10 +106,10 @@ public class TheatreTemplates extends ExceptionService {
             // passing error message to thymeleaf
             model.addAttribute("errorMessage", e.getMessage());
 
-            return "/admin/theatre/update_getByNumber";
+            return "admin/theatre/update_getByNumber";
         }
 
-        return "/admin/theatre/update";
+        return "admin/theatre/update";
     }
 
 
@@ -153,7 +153,7 @@ public class TheatreTemplates extends ExceptionService {
         // passing theatre to thymeleaf
         model.addAttribute("theatre", new Theatre());
 
-        return "/admin/theatre/delete";
+        return "admin/theatre/delete";
     }
 
 
