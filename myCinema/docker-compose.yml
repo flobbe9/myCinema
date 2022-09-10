@@ -6,7 +6,7 @@ services:
     image: mycinema:1
     container_name: mycinema-api
     ports:
-      - "4001:4001"
+      - "4001"
     depends_on:
       - postgres
     environment:
@@ -19,7 +19,7 @@ services:
     image: postgres:latest
     container_name: mycinema-postgres
     ports:
-      - "5432:5432"
+      - "5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
