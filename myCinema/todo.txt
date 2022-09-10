@@ -1,9 +1,0 @@
--let error controller catch 'forbidden' etc and not spring security login as successer url
--redirect to same page if login required
--think about data structures(e.g. set or list...)
--use authorization in security and not every signle file
-
--Dockerfile
--test everything
--write Readme in git
--try accessing repo
