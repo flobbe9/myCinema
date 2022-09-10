@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinemaAdmin | deleteAppUser</title>
+    </head>
+
+
+    <body>
+        <h2>Delete User</h2>
+
+        <span id="successfullStatus" th:if="${gone}" style="color: green;">User deleted.</span>
+        <br th:if="${gone}"><br th:if="${gone}">
+
+        <span id="errorMessage" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
+        <form id="formDelete" method="post" action="" th:action="@{/admin/appUser/delete}" th:object="${appUser}">
+            <input id="userName" name="userName" type="text" placeholder="Username*" th:field="${appUser.email}" required>
+            <br><br>
+            
+            <input type="submit" value="Delete User">
+        </form>
+        <br><br>
+    </body>
+</html>

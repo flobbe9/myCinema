@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinemaAdmin | addAppUser</title>
+    </head>
+    
+    
+    <body>
+        <h2>Add new User</h2>
+
+        <span id="successfullStatus" th:if="${created}" style="color: green;">User created.</span>
+        <br th:if="${created}"><br th:if="${created}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
+        <form id="formAddNew" method="post" action="" th:action="@{/admin/appUser/addNew}" th:object="${appUser}" onsubmit="checkPasswordMatch(event);">
+            <input type="text" id="firstName" name="firstName" placeholder="First name*" th:field="*{firstName}" required>
+            <br><br>    
+
+            <input type="text" id="lastName" name="lastName" placeholder="Last name*" th:field="*{lastName}" required>
+            <br><br>
+
+            <input type="text" id="email" name="email" placeholder="E-Mail*" th:field="*{email}" required>
+            <br><br>
+
+            <input type="password" id="password" name="password" placeholder="Password*" th:field="*{password}" required>
+            <br><br>
+
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password*" required>
+            <br><br>
+
+            <input type="text" id="adress" name="adress" placeholder="Adress*" th:field="*{adress}" required>
+            <br><br>
+
+            <input type="number" min="10000" max="99999" id="zipCode" name="zipCode" placeholder="Zip code*" th:field="*{zipCode}" required>
+            <br><br>
+
+            <input type="text" id="city" name="city" placeholder="City*" th:field="*{city}" required>
+            <br><br>
+            
+            <input type="text" id="birthday" name="birthday" placeholder="Birthday*" onfocus="(this.type='date')" required>
+            <br><br>
+
+            <select type="text" id="role" name="role" required>
+                <option th:value="null">Select Role...</option>
+                <span th:each="role : ${appUserWrapper.roles}">
+                    <option th:text="${role}" th:value="${role}" th:field="*{role}">User</option>
+                </span>
+            </select>       
+            <br><br>
+
+            <label for="permissions">Permissions (optional): </label>
+            <br>
+            <span id="permissions" name="permissions" th:each="permission, iter : ${appUserWrapper.permissions}">
+                <input type="checkbox" th:text="${permission}" th:field="${appUserWrapper.granted[__${iter.index}__]}">
+                <br>
+            </span>
+            <br><br>
+
+            <input type="submit" id="saveNewUser" value="Add User">
+            <br><br>
+
+        </form>
+
+    </body>
+    
+
+    <script>
+    // if passwords don't match
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const status = document.getElementById('errorStatus');
+        
+        // Writes a message if 'password' field and 'confirmPassord' field are not the same. 
+        function checkPasswordMatch(event) {
+            if (password.value != confirmPassword.value) {
+                event.preventDefault();
+
+                status.style.color = 'red';
+                status.innerHTML = 'Passwords do not match.';
+            }
+        }
+    </script>
+</html>

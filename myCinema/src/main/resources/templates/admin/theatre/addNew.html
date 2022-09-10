@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinemaAdmin | addTheatre</title>
+    </head>
+
+
+    <body>
+        <h2>Add Theatre</h2>
+
+        <span id="successfullStatus" th:if="${created}" style="color: green;">Theatre created.</span>
+        <br th:if="${created}"><br th:if="${created}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
+        <form method="post" action="" th:action="@{/admin/theatre/addNew}" th:object="${theatre}">
+            <input id="theatreNumber" type="number" name="theatreNumber" placeholder="Theatre number*" th:field="*{number}" required>
+            <br><br>
+            
+            <label for="threeD">3D: </label>
+            <input id="threeD" type="checkbox" name="threeD" th:field="*{threeD}">
+            <br><br>
+
+            <input id="threeD" type="number" name="rowsTotal" placeholder="Rows total*" th:field="*{rowsTotal}" required>
+            <br><br><br>
+            
+            <button type="submit">Add Theatre</button>
+            <br><br>
+            
+        </form>
+    </body>
+</html>

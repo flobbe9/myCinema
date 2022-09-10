@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>myCinemaAdmin | deleteTheatre</title>
+        <meta charset="utf-8">
+    </head>
+    
+    <body>
+        <h2>Delete Theatre</h2>
+
+        <span id="successfullStatus" th:if="${gone}" style="color: green;">Theatre deleted.</span>
+        <br th:if="${gone}"><br th:if="${gone}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
+
+        <form method="post" action="" th:action="@{/admin/theatre/delete}" th:object="${theatre}">
+            <input type="number" class="theatreNumber" name="theatreNumber" min="1" placeholder="Theatre number*" th:field="*{number}" required>
+            <br><br>
+
+            <input type="submit" id="submitDelete" value="Delete This Theatre">
+            <br><br>
+        </form>
+    </body>
+</html>

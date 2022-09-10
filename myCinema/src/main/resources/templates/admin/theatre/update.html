@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>myCinemaAdmin | updateTheatre</title>
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+        <h2>Update Theatre</h2>
+
+        <span id="successfullStatus" th:if="${ok}" style="color: green;">Theatre updated.</span>
+        <br th:if="${ok}"><br th:if="${ok}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
+        <form method="post" action="" th:action="@{/admin/theatre/update}" th:object="${theatre}">
+            <label for="threeD">3D: </label>
+            <input type="checkbox" id="threeD" name="threeD" th:field="*{threeD}">
+            <br><br>
+
+            <input type="number" id="rowsTotal" name="rowsTotal" placeholder="Rows total" th:field="*{rowsTotal}">
+            <br><br>
+
+            <input type="submit" id="submitUpdate" value="Update Theatre">
+            <br><br>
+        </form>
+    </body>
+</html>

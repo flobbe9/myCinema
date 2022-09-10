@@ -1,0 +1,3 @@
+FROM openjdk:18
+COPY myCinema/myCinema-0.0.1-SNAPSHOT.jar app.jar
+ENTRYPOINT [ "java", "-jar", "/app.jar" ]
