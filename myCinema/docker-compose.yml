@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   spring-api:
-    build: https://github.com/flobbe9/Florin.git
+    build: https://github.com/flobbe9/FlorinSchikarski.git
     image: mycinema:1
     container_name: mycinema-api
     ports:
