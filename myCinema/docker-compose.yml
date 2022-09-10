@@ -2,8 +2,7 @@ version: "3.9"
 
 services:
   spring-api:
-    build: https://raw.githubusercontent.com/flobbe9/FlorinSchikarski/main/myCinema/Dockerfile
-    image: mycinema:1
+    image: mycinema:latest
     container_name: mycinema-api
     ports:
       - "4001"
