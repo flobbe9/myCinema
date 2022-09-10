@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   spring-api:
-    build: https://raw.githubusercontent.com/flobbe9/Florin/myProjects/myCinema/Dockerfile?token=GHSAT0AAAAAABYQRQAFZRRVZ3MJXJLTBCIOYY4QBDQ
+    build: https://raw.githubusercontent.com/flobbe9/Florin/myProjects/myCinema/Dockerfile?token=GHSAT0AAAAAABYQRQAEZHD4K3PFCBXOIGFQYY4QQOQ
     image: mycinema:1
     container_name: mycinema-api
     ports:
