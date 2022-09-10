@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequestMapping("/admin/movie")
-// @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class MovieTemplates {
     

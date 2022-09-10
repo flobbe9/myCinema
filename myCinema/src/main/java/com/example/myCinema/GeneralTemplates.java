@@ -37,11 +37,11 @@ public class GeneralTemplates implements ErrorController {
 
     @GetMapping("/start") 
     public String getStartPage() {
-
+        
         return "start";
     }
-
-
+    
+    
     @GetMapping("/login")
     public String getLoginPage() {
         

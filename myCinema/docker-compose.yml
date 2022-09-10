@@ -2,6 +2,8 @@ version: "3.9"
 
 services:
   spring-api:
+    build: 
+      context: https://github.com/flobbe9/FlorinSchikarski.git
     image: mycinema:1
     container_name: mycinema-api
     ports:
@@ -15,7 +17,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
 
   postgres:
-    image: 'postgres:latest'
+    image: postgres:latest
     container_name: mycinema-postgres
     ports:
       - "5432:5432"

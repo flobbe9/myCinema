@@ -1,6 +1,5 @@
 package com.example.myCinema.theatre;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequestMapping("/admin/theatre")
-// @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequiredArgsConstructor
 public class TheatreTemplates extends ExceptionService {
     

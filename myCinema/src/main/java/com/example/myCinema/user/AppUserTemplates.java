@@ -3,7 +3,6 @@ package com.example.myCinema.user;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,7 +27,6 @@ import lombok.AllArgsConstructor;
 @Controller
 @RequestMapping("/admin/appUser")
 @CrossOrigin("http://localhost:1080")
-// @PreAuthorize("hasRole('ROLE_ADMIN')")
 @AllArgsConstructor
 public class AppUserTemplates {
     
