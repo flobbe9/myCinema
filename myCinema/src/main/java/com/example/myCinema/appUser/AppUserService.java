@@ -1,5 +1,8 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
@@ -65,8 +68,9 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
 
         // sending confirmation email
         String token = confirmationToken.getToken();
-        // String email = mailService.createConfirmTokenEmail(Path.of("./src/main/java/com/example/myCinema/mail/confirmationEmail.html"), appUser.getFirstName(), token);
-        // mailService.send(appUser.getEmail(), email);
+        // TODO: does this work for a .jar file in docker?
+        String email = mailService.createConfirmationEmail(Path.of("./src/main/java/com/example/myCinema/appUser/confirmationEmail.html"), appUser.getFirstName(), token);
+        mailService.send(appUser.getEmail(), email);
 
         return save(appUser);
     }

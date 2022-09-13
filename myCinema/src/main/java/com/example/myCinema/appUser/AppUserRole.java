@@ -1,9 +1,9 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
-import static com.example.myCinema.user.AppUserPermission.ADMIN_READ;
-import static com.example.myCinema.user.AppUserPermission.ADMIN_WRITE;
-import static com.example.myCinema.user.AppUserPermission.USER_READ;
-import static com.example.myCinema.user.AppUserPermission.USER_WRITE;
+import static com.example.myCinema.appUser.AppUserPermission.ADMIN_READ;
+import static com.example.myCinema.appUser.AppUserPermission.ADMIN_WRITE;
+import static com.example.myCinema.appUser.AppUserPermission.USER_READ;
+import static com.example.myCinema.appUser.AppUserPermission.USER_WRITE;
 
 import java.util.Set;
 import java.util.stream.Collectors;

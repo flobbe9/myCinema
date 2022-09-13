@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.myCinema.user.AppUser;
+import com.example.myCinema.appUser.AppUser;
 
 
 @Repository

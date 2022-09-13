@@ -14,7 +14,7 @@ import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.example.myCinema.user.AppUser;
+import com.example.myCinema.appUser.AppUser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

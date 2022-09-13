@@ -44,7 +44,7 @@ public class MailService {
             // setting subject
             mimeMessageHelper.setSubject("myCinema | Confirm your account.");
             // setting mail adress from sender
-            mimeMessageHelper.setFrom("example@domain.com");
+            mimeMessageHelper.setFrom("myCinema@gmail.com");
             // setting actual content
             mimeMessageHelper.setText(email, true);
 
@@ -64,7 +64,7 @@ public class MailService {
      * @param name of appUser.
      * @param token confirmation token of appUser to confirm.
      */
-    public String createConfirmTokenEmail(Path emailPath, String name, String token) {
+    public String createConfirmationEmail(Path emailPath, String name, String token) {
 
         try {
             // reading mail content from html file from emailPath

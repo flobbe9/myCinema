@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinema | Register New Account</title>
+    </head>
+
+    <body>
+        <h2>Create New Account</h2>
+
+        <span id="successfullStatus" th:if="${created}" style="color: green;">
+            Registration successful. Please check your emails to confirm your new account.
+        </span>
+        <br th:if="${created}"><br th:if="${created}">
+
+        <span id="errorStatus" th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+
+        <form id="registerForm" method="post" action="" th:action="@{/appUser/register}" th:object="${appUser}" onsubmit="checkPasswordMatch(event);">
+            <input type="text" id="firstName" name="firstName" placeholder="First name*" th:field="*{firstName}" required>
+            <br><br>    
+
+            <input type="text" id="lastName" name="lastName" placeholder="Last name*" th:field="*{lastName}" required>
+            <br><br>
+
+            <input type="text" id="email" name="email" placeholder="E-Mail*" th:field="*{email}" required>
+            <br><br>
+
+            <input type="password" id="password" name="password" placeholder="Password*" th:field="*{password}" required>
+            <br><br>
+
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password*" required>
+            <br><br>
+
+            <input type="text" id="adress" name="adress" placeholder="Adress*" th:field="*{adress}" required>
+            <br><br>
+
+            <input type="number" min="10000" max="99999" id="zipCode" name="zipCode" placeholder="Zip code*" th:field="*{zipCode}" required>
+            <br><br>
+
+            <input type="text" id="city" name="city" placeholder="City*" th:field="*{city}" required>
+            <br><br>
+            
+            <input type="text" id="birthday" name="birthday" placeholder="Birthday*" onfocus="(this.type='date')" required>
+            <br><br>
+
+            <input type="submit" id="saveNewUser" value="Submit">
+            <br><br>
+        </form>
+    </body>
+
+    <script>
+        // if passwords don't match
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            const status = document.getElementById('errorStatus');
+            
+            // Writes a message if 'password' field and 'confirmPassord' field are not the same. 
+            function checkPasswordMatch(event) {
+                if (password.value != confirmPassword.value) {
+                    event.preventDefault();
+    
+                    status.style.color = 'red';
+                    status.innerHTML = 'Passwords do not match.';
+                }
+            }
+        </script>
+</html>

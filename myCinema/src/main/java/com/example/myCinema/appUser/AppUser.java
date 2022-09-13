@@ -1,4 +1,4 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.example.myCinema.user.AppUser;
+import com.example.myCinema.appUser.AppUser;
 
 import lombok.AllArgsConstructor;
 

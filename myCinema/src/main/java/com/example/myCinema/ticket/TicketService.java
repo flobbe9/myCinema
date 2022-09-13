@@ -13,12 +13,12 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import com.example.myCinema.CheckEntity;
+import com.example.myCinema.appUser.AppUserService;
 import com.example.myCinema.movie.Movie;
 import com.example.myCinema.movie.MovieService;
 import com.example.myCinema.theatre.TheatreService;
 import com.example.myCinema.theatre.row.Row;
 import com.example.myCinema.theatre.seat.Seat;
-import com.example.myCinema.user.AppUserService;
 
 import lombok.AllArgsConstructor;
 
@@ -61,8 +61,6 @@ public class TicketService extends CheckEntity {
                                            ticket.getRowLetter(), 
                                            ticket.getSeatNumber());
         theatreService.setSeatTaken(seat, true);
-
-        // TODO: send email with pdf ticket to appUser
 
         return ticketRepository.save(ticket);
     }

@@ -39,6 +39,3 @@ build/
 
 ### curl files for requests ###
 .http
-
-### maildev server ###
-maildev-master/

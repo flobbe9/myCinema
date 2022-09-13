@@ -23,7 +23,7 @@ import lombok.AllArgsConstructor;
  */
 @Controller
 @AllArgsConstructor
-public class GeneralTemplates implements ErrorController {
+public class GeneralController implements ErrorController {
     
     private final ExceptionService exceptionService;
 

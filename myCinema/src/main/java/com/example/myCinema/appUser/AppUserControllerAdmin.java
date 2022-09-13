@@ -1,4 +1,4 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/admin/appUser")
 @CrossOrigin("http://localhost:1080")
 @AllArgsConstructor
-public class AppUserTemplates {
+public class AppUserControllerAdmin {
     
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
@@ -157,6 +157,13 @@ public class AppUserTemplates {
         }
             
         return "admin/appUser/delete";
+    }
+    
+
+    @GetMapping("/getConfirmationEmail")
+    public String getConfirmationEmail() {
+
+        return "confirmationEmail";
     }
 
 
