@@ -1,9 +1,6 @@
 package com.example.myCinema.appUser;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
@@ -44,8 +41,10 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
      * 
      * @param appUser to add.
      * @return saved appUser.
+     * @throws IOException
      */
     public AppUser addNew(AppUser appUser) {
+        // TODO: split this method into smaller ones
 
         // checking appUser
         appUserValid(appUser);
@@ -55,7 +54,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         
         // checking if appUser does already exist
         if (exists(appUser.getEmail())) 
-            throw new IllegalStateException("App user with username \"" + appUser.getEmail() + "\" does already exist.");
+            throw new IllegalStateException("User with username \"" + appUser.getEmail() + "\" does already exist.");
         
         // setting age
         setAge(appUser);
@@ -67,11 +66,9 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
 
         // sending confirmation email
-        String token = confirmationToken.getToken();
-        // TODO: does this work for a .jar file in docker?
-        String email = mailService.createConfirmationEmail(Path.of("./src/main/java/com/example/myCinema/appUser/confirmationEmail.html"), appUser.getFirstName(), token);
-        mailService.send(appUser.getEmail(), email);
-
+        String email = mailService.createConfirmationEmail("/html/confirmationEmail.html", appUser.getFirstName(), confirmationToken.getToken());
+        mailService.send(appUser.getEmail(), email);    
+        
         return save(appUser);
     }
     

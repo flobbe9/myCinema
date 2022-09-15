@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
  */
 @Controller
 @RequestMapping("/appUser")
-@CrossOrigin("http://localhost:1080")
+@CrossOrigin
 @AllArgsConstructor
 public class AppUserControllerUser {
     

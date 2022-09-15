@@ -26,7 +26,7 @@ import lombok.AllArgsConstructor;
  */
 @Controller
 @RequestMapping("/admin/appUser")
-@CrossOrigin("http://localhost:1080")
+@CrossOrigin
 @AllArgsConstructor
 public class AppUserControllerAdmin {
     
@@ -87,6 +87,13 @@ public class AppUserControllerAdmin {
 // confirm token
 
 
+    @GetMapping("/getConfirmationEmail")
+    public String getConfirmationEmail() {
+
+        return "admin/appUser/confirmationEmail";
+    }
+
+
     /**
      * Directs user to login page if successful or to errorPage if not. Confirms token that is 
      * passed through pathvariable and enables appUser.
@@ -115,7 +122,7 @@ public class AppUserControllerAdmin {
 
         return "login";
     }
-
+    
 
 // deleteAppuser
     
@@ -157,13 +164,6 @@ public class AppUserControllerAdmin {
         }
             
         return "admin/appUser/delete";
-    }
-    
-
-    @GetMapping("/getConfirmationEmail")
-    public String getConfirmationEmail() {
-
-        return "confirmationEmail";
     }
 
 
