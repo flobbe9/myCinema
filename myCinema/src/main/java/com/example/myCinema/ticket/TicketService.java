@@ -7,10 +7,19 @@ import static com.example.myCinema.theatre.seat.SeatType.LOVE_SEAT;
 import static com.example.myCinema.ticket.Discount.CHILD;
 import static com.example.myCinema.ticket.Discount.STUDENT;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
+import org.xhtmlrenderer.layout.SharedContext;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.example.myCinema.CheckEntity;
 import com.example.myCinema.appUser.AppUserService;
@@ -46,6 +55,13 @@ public class TicketService extends CheckEntity {
      * @return saved ticket.
      */
     public Ticket addNew(Ticket ticket) {
+        
+        try {
+            getTicketAsPdf();
+            
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
 
         // check ticket data
         ticketValid(ticket);
@@ -235,5 +251,54 @@ public class TicketService extends CheckEntity {
         if (ticket.getDiscount() == CHILD) price -= 1.5;
 
         ticket.setPrice(price);
+    }
+
+
+    /**
+     * Converts the html ticket template to a pdf and exports it.
+     * 
+     * @throws IOException if the ticket.html file or the xhtml path are not found.
+     */
+    private void getTicketAsPdf() throws IOException {
+        // TODO: make path work for .jar file
+
+        // getting Ticket html
+        File htmlFile = new File("./src/main/java/com/example/myCinema/ticket/html/Ticket.html");
+
+        // getting html as xhtml 
+        Document xhtmlFile = convertHTMLToXHTML(htmlFile);
+
+        convertXHTMLToPDF(xhtmlFile, "pdfTickets/Ticket.pdf");
+    }
+
+
+    private Document convertHTMLToXHTML(File htmlFile) throws IOException {
+
+        Document document = Jsoup.parse(htmlFile, "UTF-8");
+        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+
+        return document;
+    }
+
+
+    /**
+     * Converting XHTML file into a pdf and exporting it.
+     * 
+     * @param xhtmlFile to convert.
+     * @param fileName for the pdf file. Also contains the folder where the file is exported.
+     * @throws FileNotFoundException if xhtml file is not found.
+     * @throws IOException if folder to export pdf to is not found.
+     */
+    private void convertXHTMLToPDF(Document xhtmlFile, String fileName) throws FileNotFoundException, IOException {
+
+        try (OutputStream outputStream = new FileOutputStream(fileName)) {
+            ITextRenderer renderer = new ITextRenderer();
+            SharedContext sharedContext = renderer.getSharedContext();
+            sharedContext.setPrint(true);
+            sharedContext.setInteractive(false);
+            renderer.setDocumentFromString(xhtmlFile.html());
+            renderer.layout();
+            renderer.createPDF(outputStream);
+        }
     }
 }

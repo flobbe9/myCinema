@@ -1,6 +1,7 @@
 package com.example.myCinema.mail;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
@@ -27,13 +28,15 @@ public class MailService {
 
     
     /**
-     * Sets subject sender, target adress and text of email. Sends actual email.
+     * Sets subject sender, target adress and text of email. 
+     * Sends actual email.
      * 
      * @param to target email adress.
-     * @param email text in html form.
+     * @param attachmentFilePath path to file, which to send. May be null if no attachment is wanted.
+     * @param email content in html form.
      */
     @Async
-    public void send(String to, String email) {
+    public void send(String to, File file, String email) {
 
         try {
             // creating mimeMessage to send with javaMailSender
@@ -48,6 +51,9 @@ public class MailService {
             mimeMessageHelper.setFrom("myCinema@gmail.com");
             // setting actual content
             mimeMessageHelper.setText(email, true);
+            // setting attachment if not null
+            if (file != null) 
+                mimeMessageHelper.addAttachment(file.getName(), file);
 
             // send mail
             javaMailSender.send(mailMessage);
@@ -67,6 +73,7 @@ public class MailService {
      * @throws IOException
      */
     public String createConfirmationEmail(String path, String name, String token) {
+
         // streaming html file 
         InputStream is = getClass().getResourceAsStream(path);
         InputStreamReader isr = new InputStreamReader(is);
