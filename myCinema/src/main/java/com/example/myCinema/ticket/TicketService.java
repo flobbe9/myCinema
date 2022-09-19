@@ -23,6 +23,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.example.myCinema.CheckEntity;
 import com.example.myCinema.appUser.AppUserService;
+import com.example.myCinema.mail.MailService;
 import com.example.myCinema.movie.Movie;
 import com.example.myCinema.movie.MovieService;
 import com.example.myCinema.theatre.TheatreService;
@@ -45,6 +46,7 @@ public class TicketService extends CheckEntity {
     private final AppUserService appUserService;
     private final TheatreService theatreService;
     private final MovieService movieService;
+    private final MailService mailService;
     
 
     /**
@@ -56,13 +58,6 @@ public class TicketService extends CheckEntity {
      */
     public Ticket addNew(Ticket ticket) {
         
-        try {
-            getTicketAsPdf();
-            
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
-
         // check ticket data
         ticketValid(ticket);
                 
@@ -74,9 +69,16 @@ public class TicketService extends CheckEntity {
 
         // set seat as taken
         Seat seat = theatreService.getSeat(ticket.getTheatreNumber(), 
-                                           ticket.getRowLetter(), 
-                                           ticket.getSeatNumber());
+        ticket.getRowLetter(), 
+        ticket.getSeatNumber());
         theatreService.setSeatTaken(seat, true);
+        
+        // sending ticket as pdf to user
+        // TODO: create email, make ticket.pdf template work for any ticket
+        createPdfTicket();
+
+        // TODO: wrong path (.jar)
+        mailService.send(ticket.getEmail(), new File("./pdfTickets/Ticket.pdf"), "email");
 
         return ticketRepository.save(ticket);
     }
@@ -255,20 +257,26 @@ public class TicketService extends CheckEntity {
 
 
     /**
-     * Converts the html ticket template to a pdf and exports it.
+     * Converts the html ticket template to a pdf and exports it. Throws IOException if some path is not found.
      * 
      * @throws IOException if the ticket.html file or the xhtml path are not found.
      */
-    private void getTicketAsPdf() throws IOException {
+    private void createPdfTicket() {
         // TODO: make path work for .jar file
 
-        // getting Ticket html
-        File htmlFile = new File("./src/main/java/com/example/myCinema/ticket/html/Ticket.html");
+        try {
 
-        // getting html as xhtml 
-        Document xhtmlFile = convertHTMLToXHTML(htmlFile);
-
-        convertXHTMLToPDF(xhtmlFile, "pdfTickets/Ticket.pdf");
+            // getting Ticket html
+            File htmlFile = new File("./src/main/java/com/example/myCinema/ticket/html/Ticket.html");
+            
+            // getting html as xhtml 
+            Document xhtmlFile = convertHTMLToXHTML(htmlFile);
+            
+            convertXHTMLToPDF(xhtmlFile, "pdfTickets/Ticket.pdf");
+        
+        } catch (IOException e) {
+            throw new NoSuchElementException(e.getMessage());
+        }
     }
 
 

@@ -15,6 +15,7 @@ import com.example.myCinema.confirmationToken.ConfirmationToken;
 import com.example.myCinema.confirmationToken.ConfirmationTokenService;
 import com.example.myCinema.mail.EmailValidator;
 import com.example.myCinema.mail.MailService;
+import com.google.common.collect.Lists;
 
 import lombok.AllArgsConstructor;
 
@@ -44,7 +45,6 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
      * @throws IOException
      */
     public AppUser addNew(AppUser appUser) {
-        // TODO: split this method into smaller ones
 
         // checking appUser
         appUserValid(appUser);
@@ -66,8 +66,12 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
 
         // sending confirmation email
-        String email = mailService.createConfirmationEmail("/html/confirmationEmail.html", appUser.getFirstName(), confirmationToken.getToken());
-        mailService.send(appUser.getEmail(), null, email);    
+        String path = "./html/confirmationEmail.html";
+        mailService.send(path,
+                         Lists.newArrayList(appUser.getFirstName(), 
+                         confirmationToken.getToken()), 
+                         appUser.getEmail(), 
+                        null);
         
         return save(appUser);
     }
