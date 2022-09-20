@@ -7,7 +7,6 @@ target/
 mvnw.cmd
 mvnw
 todo.txt
-pdfTickets/
 
 ### STS ###
 .apt_generated

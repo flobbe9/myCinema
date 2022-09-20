@@ -77,23 +77,25 @@ public class MailService extends CheckEntity {
      * @param to target email adress.
      * @param attachment path to attachment. May be null if no attachment is needed.
      */
-    public void send(String path, List<String> fillInList, String to, File attachment) {
+    public void send(String emailPath, List<String> fillInList, String to, String attachmentPath) {
 
         // getting email from html file
         String email;
+        File attachment = null;
         try {
-            email = readHtmlToString(path);
+            // reading html file to String
+            email = readHtmlToString(emailPath);
+
+            // getting attachment as File
+            if (attachmentPath != null) attachment = new File(attachmentPath);
             
         } catch (IOException e) {
-            System.out.println("ioException");
             throw new IllegalStateException(e.getMessage());
 
         } catch (InterruptedException e) {
-            System.out.println("interruptedException");
             throw new IllegalStateException(e.getMessage());
 
         } catch (NullPointerException e) {
-            System.out.println("nullPointerException");
             throw new IllegalStateException(e.getMessage());
         }
 
@@ -114,14 +116,14 @@ public class MailService extends CheckEntity {
      * @throws IOException
      * @throws InterruptedException
      */
-    public String readHtmlToString(String path) throws IOException, InterruptedException {
+    public String readHtmlToString(String htmlPath) throws IOException, InterruptedException {
         
         // checking path
-        if (objectNullOrEmpty(path)) 
+        if (objectNullOrEmpty(htmlPath)) 
             throw new IllegalStateException("Path of html file can neither be null nor empty.");
         
         // streaming and reading html file to a String
-        try (InputStream is = getClass().getResourceAsStream(path); 
+        try (InputStream is = getClass().getResourceAsStream(htmlPath); 
              InputStreamReader isr = new InputStreamReader(is); 
              BufferedReader br = new BufferedReader(isr)) {
 
@@ -175,9 +177,9 @@ public class MailService extends CheckEntity {
      * <p> which would be formatted and could be returned like so:
      * <p> {@code [My name is Max,  and I am 30,  years old.]}
      * 
-     * @param email
-     * @param fillInList
-     * @return
+     * @param str string to format.
+     * @param fillInList list with filler strings to replace '%s' symbols.
+     * @return list of sub strings, each containing a '%s' symbol at the end (except the last sub string).
      */
     private List<String> splitStringForFormatting(String str, List<String> fillInList) {
 

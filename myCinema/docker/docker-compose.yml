@@ -10,7 +10,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.19.0.2:5432/myCinema
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://172.18.0.2:5432/myCinema
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create

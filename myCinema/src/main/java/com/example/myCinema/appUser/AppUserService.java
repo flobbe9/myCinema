@@ -2,6 +2,7 @@ package com.example.myCinema.appUser;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,6 +41,8 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
      * Tries to add new appUser, checks fields and creates confirmationToken for appUser.
      * Sends confirmation email including the token.
      * 
+     * <p> All paths are relative to the 'mail' folder, not to the 'appUser' folder.
+     * 
      * @param appUser to add.
      * @return saved appUser.
      * @throws IOException
@@ -66,10 +69,9 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
 
         // sending confirmation email
-        String path = "./html/confirmationEmail.html";
+        String path = "./html/accountConfirmationEmail.html";
         mailService.send(path,
-                         Lists.newArrayList(appUser.getFirstName(), 
-                         confirmationToken.getToken()), 
+                         getAccountConfirmationEmailFillInList(confirmationToken), 
                          appUser.getEmail(), 
                         null);
         
@@ -244,5 +246,23 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     private void setAndEncodePassword(AppUser appUser, String password) {
 
         appUser.setPassword(passwordEncoder.encode(password));
+    }
+
+
+    /**
+     * Creating list with string variables the account confirmation email should be formatted with.
+     * 
+     * @param confirmationToken contains data for the email.
+     * @return list with string variables for the email.
+     */
+    private List<String> getAccountConfirmationEmailFillInList(ConfirmationToken confirmationToken) {
+        
+        // getting first name
+        String firstName = confirmationToken.getAppUser().getFirstName();
+
+        // getting token
+        String token = confirmationToken.getToken();
+
+        return Lists.newArrayList(firstName, token);
     }
 }

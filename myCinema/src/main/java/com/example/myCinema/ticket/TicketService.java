@@ -7,21 +7,13 @@ import static com.example.myCinema.theatre.seat.SeatType.LOVE_SEAT;
 import static com.example.myCinema.ticket.Discount.CHILD;
 import static com.example.myCinema.ticket.Discount.STUDENT;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
-import org.xhtmlrenderer.layout.SharedContext;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.example.myCinema.CheckEntity;
+import com.example.myCinema.appUser.AppUser;
 import com.example.myCinema.appUser.AppUserService;
 import com.example.myCinema.mail.MailService;
 import com.example.myCinema.movie.Movie;
@@ -29,6 +21,7 @@ import com.example.myCinema.movie.MovieService;
 import com.example.myCinema.theatre.TheatreService;
 import com.example.myCinema.theatre.row.Row;
 import com.example.myCinema.theatre.seat.Seat;
+import com.google.common.collect.Lists;
 
 import lombok.AllArgsConstructor;
 
@@ -53,6 +46,8 @@ public class TicketService extends CheckEntity {
      * Adds new ticket to db. Checks all fields and sets seat as taken. Should also send an email 
      * to the user with all neccessary information.
      * 
+     * <p> All paths are relative to the 'mail' folder, not to the 'ticket' folder.
+     * 
      * @param ticket to add.
      * @return saved ticket.
      */
@@ -68,17 +63,17 @@ public class TicketService extends CheckEntity {
         setTicketData(ticket);
 
         // set seat as taken
-        Seat seat = theatreService.getSeat(ticket.getTheatreNumber(), 
-        ticket.getRowLetter(), 
-        ticket.getSeatNumber());
+        Seat seat = theatreService.getSeat(ticket.getTheatreNumber(), ticket.getRowLetter(), ticket.getSeatNumber());
         theatreService.setSeatTaken(seat, true);
-        
-        // sending ticket as pdf to user
-        // TODO: create email, make ticket.pdf template work for any ticket
-        createPdfTicket();
 
-        // TODO: wrong path (.jar)
-        mailService.send(ticket.getEmail(), new File("./pdfTickets/Ticket.pdf"), "email");
+        // getting email text from html file
+        String emailPath = "./html/ticketConfirmationEmail.html";
+
+        // sending ticket confirmation email with ticket pdf
+        mailService.send(emailPath, 
+                         getTicketConfirmationEmailFillInList(ticket),
+                         ticket.getEmail(), 
+                         null); // TODO: send request to different api to create Ticket.pdf from ./html/Ticket.html
 
         return ticketRepository.save(ticket);
     }
@@ -117,7 +112,7 @@ public class TicketService extends CheckEntity {
     }
 
 
-/// helper functions
+//// helper functions
 
 
     /**
@@ -257,56 +252,19 @@ public class TicketService extends CheckEntity {
 
 
     /**
-     * Converts the html ticket template to a pdf and exports it. Throws IOException if some path is not found.
+     * Creating list with string variables the ticket confirmation email should be formatted with.
      * 
-     * @throws IOException if the ticket.html file or the xhtml path are not found.
+     * @param ticket contains data for the email.
+     * @return list with string variables for the email.
      */
-    private void createPdfTicket() {
-        // TODO: make path work for .jar file
+    private List<String> getTicketConfirmationEmailFillInList(Ticket ticket) {
 
-        try {
+        // getting appUser firstName
+        AppUser appUser = appUserService.getByEmail(ticket.getEmail());
+        String firstName = appUser.getFirstName();
 
-            // getting Ticket html
-            File htmlFile = new File("./src/main/java/com/example/myCinema/ticket/html/Ticket.html");
-            
-            // getting html as xhtml 
-            Document xhtmlFile = convertHTMLToXHTML(htmlFile);
-            
-            convertXHTMLToPDF(xhtmlFile, "pdfTickets/Ticket.pdf");
+        //...
         
-        } catch (IOException e) {
-            throw new NoSuchElementException(e.getMessage());
-        }
-    }
-
-
-    private Document convertHTMLToXHTML(File htmlFile) throws IOException {
-
-        Document document = Jsoup.parse(htmlFile, "UTF-8");
-        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-
-        return document;
-    }
-
-
-    /**
-     * Converting XHTML file into a pdf and exporting it.
-     * 
-     * @param xhtmlFile to convert.
-     * @param fileName for the pdf file. Also contains the folder where the file is exported.
-     * @throws FileNotFoundException if xhtml file is not found.
-     * @throws IOException if folder to export pdf to is not found.
-     */
-    private void convertXHTMLToPDF(Document xhtmlFile, String fileName) throws FileNotFoundException, IOException {
-
-        try (OutputStream outputStream = new FileOutputStream(fileName)) {
-            ITextRenderer renderer = new ITextRenderer();
-            SharedContext sharedContext = renderer.getSharedContext();
-            sharedContext.setPrint(true);
-            sharedContext.setInteractive(false);
-            renderer.setDocumentFromString(xhtmlFile.html());
-            renderer.layout();
-            renderer.createPDF(outputStream);
-        }
+        return Lists.newArrayList(firstName); // TODO: fill list
     }
 }
