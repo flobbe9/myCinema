@@ -10,11 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.example.myCinema.user.AppUser;
+import com.example.myCinema.appUser.AppUser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +31,7 @@ import lombok.Setter;
 public class ConfirmationToken {
 
     @Id
-    @GeneratedValue(generator = "_confiramtionToken_id_sequence", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "_confirmationToken_id_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

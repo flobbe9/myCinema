@@ -1,5 +1,7 @@
 package com.example.myCinema.ticket;
 
+import java.time.LocalDate;
+
 import static com.example.myCinema.movie.MovieVersion._3D;
 import static com.example.myCinema.theatre.Theatre.BASIC_PRICE;
 import static com.example.myCinema.theatre.row.RowRank.BOX;
@@ -13,12 +15,15 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import com.example.myCinema.CheckEntity;
+import com.example.myCinema.appUser.AppUser;
+import com.example.myCinema.appUser.AppUserService;
+import com.example.myCinema.mail.MailService;
 import com.example.myCinema.movie.Movie;
 import com.example.myCinema.movie.MovieService;
 import com.example.myCinema.theatre.TheatreService;
 import com.example.myCinema.theatre.row.Row;
 import com.example.myCinema.theatre.seat.Seat;
-import com.example.myCinema.user.AppUserService;
+import com.google.common.collect.Lists;
 
 import lombok.AllArgsConstructor;
 
@@ -36,17 +41,20 @@ public class TicketService extends CheckEntity {
     private final AppUserService appUserService;
     private final TheatreService theatreService;
     private final MovieService movieService;
+    private final MailService mailService;
     
 
     /**
      * Adds new ticket to db. Checks all fields and sets seat as taken. Should also send an email 
      * to the user with all neccessary information.
      * 
+     * <p> All paths are relative to the 'mail' folder, not to the 'ticket' folder.
+     * 
      * @param ticket to add.
      * @return saved ticket.
      */
     public Ticket addNew(Ticket ticket) {
-
+        
         // check ticket data
         ticketValid(ticket);
                 
@@ -57,12 +65,17 @@ public class TicketService extends CheckEntity {
         setTicketData(ticket);
 
         // set seat as taken
-        Seat seat = theatreService.getSeat(ticket.getTheatreNumber(), 
-                                           ticket.getRowLetter(), 
-                                           ticket.getSeatNumber());
+        Seat seat = theatreService.getSeat(ticket.getTheatreNumber(), ticket.getRowLetter(), ticket.getSeatNumber());
         theatreService.setSeatTaken(seat, true);
 
-        // TODO: send email with pdf ticket to appUser
+        // getting email text from html file
+        String emailPath = "./html/ticketConfirmationEmail.html";
+
+        // sending ticket confirmation email with ticket pdf
+        mailService.send(emailPath, 
+                         getTicketConfirmationEmailFillInList(ticket),
+                         ticket.getEmail(), 
+                         null); // TODO: send request to different api to create Ticket.pdf from ./html/Ticket.html
 
         return ticketRepository.save(ticket);
     }
@@ -101,7 +114,7 @@ public class TicketService extends CheckEntity {
     }
 
 
-/// helper functions
+//// helper functions
 
 
     /**
@@ -111,6 +124,9 @@ public class TicketService extends CheckEntity {
      * @return true if nothing wrong with ticket.
      */
     private boolean ticketValid(Ticket ticket) {
+
+        // checking if movie plays on this date
+        checkDate(ticket);
 
         // checking if seat is taken
         Seat seat = theatreService.getSeat(ticket.getTheatreNumber(),
@@ -237,5 +253,44 @@ public class TicketService extends CheckEntity {
         if (ticket.getDiscount() == CHILD) price -= 1.5;
 
         ticket.setPrice(price);
+    }
+
+
+    /**
+     * Checks if the date on the ticket is between local release and local finishing date of the movie.
+     * 
+     * @param ticket to check the date of.
+     * @return true if the movie plays at this date.
+     */
+    private boolean checkDate(Ticket ticket) {
+
+        // getting data from movie
+        Movie movie = movieService.getByTitleAndVersion(ticket.getMovieTitle(), ticket.getMovieVersion());
+        LocalDate localReleaseDate = movie.getLocalReleaseDate();
+        LocalDate localFinishingDate = movie.getLocalFinishingDate();
+
+        // checking date
+        if (ticket.getDate().isBefore(localReleaseDate) || ticket.getDate().isAfter(localFinishingDate))
+            throw new IllegalStateException("This movie is currently not in cinemas. Check the date on the ticket.");
+
+        return true;
+    }
+
+
+    /**
+     * Creating list with string variables the ticket confirmation email should be formatted with.
+     * 
+     * @param ticket contains data for the email.
+     * @return list with string variables for the email.
+     */
+    private List<String> getTicketConfirmationEmailFillInList(Ticket ticket) {
+
+        // getting appUser firstName
+        AppUser appUser = appUserService.getByEmail(ticket.getEmail());
+        String firstName = appUser.getFirstName();
+
+        //...
+        
+        return Lists.newArrayList(firstName); // TODO: fill list
     }
 }

@@ -15,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 
 import com.example.myCinema.theatre.row.Row;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -37,8 +36,7 @@ import lombok.Setter;
 public class Theatre {
 
     @Id
-    @GeneratedValue(generator = "_theatre_id_sequence", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "_theatre_id_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Long id;
 
@@ -51,13 +49,10 @@ public class Theatre {
     @Column(nullable = false)
     private Integer rowsTotal; 
 
-    @Column(nullable = false)
     private Integer seatsTotal;
 
-    @Column(nullable = false)
     private Integer seatsPerRow;
     
-    @Column(nullable = false)
     private Boolean hasLoveSeats; 
     
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

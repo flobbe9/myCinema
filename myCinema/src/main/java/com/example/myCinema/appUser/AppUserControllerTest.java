@@ -1,4 +1,4 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/test/appUser")
 @AllArgsConstructor
-public class AppUserController {
+public class AppUserControllerTest {
 
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;

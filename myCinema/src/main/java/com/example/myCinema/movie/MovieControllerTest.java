@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/test/movie")
 @AllArgsConstructor
-public class MovieController {
+public class MovieControllerTest {
 
     private final MovieService movieService;
 

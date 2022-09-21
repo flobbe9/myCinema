@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/admin/movie")
 @RequiredArgsConstructor
-public class MovieTemplates {
+public class MovieControllerAdmin {
     
     private final MovieService movieService;
     

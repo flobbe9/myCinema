@@ -1,7 +1,8 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
-import java.nio.file.Path;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import com.example.myCinema.confirmationToken.ConfirmationToken;
 import com.example.myCinema.confirmationToken.ConfirmationTokenService;
 import com.example.myCinema.mail.EmailValidator;
 import com.example.myCinema.mail.MailService;
+import com.google.common.collect.Lists;
 
 import lombok.AllArgsConstructor;
 
@@ -39,8 +41,11 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
      * Tries to add new appUser, checks fields and creates confirmationToken for appUser.
      * Sends confirmation email including the token.
      * 
+     * <p> All paths are relative to the 'mail' folder, not to the 'appUser' folder.
+     * 
      * @param appUser to add.
      * @return saved appUser.
+     * @throws IOException
      */
     public AppUser addNew(AppUser appUser) {
 
@@ -52,7 +57,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         
         // checking if appUser does already exist
         if (exists(appUser.getEmail())) 
-            throw new IllegalStateException("App user with username \"" + appUser.getEmail() + "\" does already exist.");
+            throw new IllegalStateException("User with username \"" + appUser.getEmail() + "\" does already exist.");
         
         // setting age
         setAge(appUser);
@@ -64,10 +69,12 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
         ConfirmationToken confirmationToken = confirmationTokenService.create(appUser);
 
         // sending confirmation email
-        String token = confirmationToken.getToken();
-        // String email = mailService.createConfirmTokenEmail(Path.of("./src/main/java/com/example/myCinema/mail/confirmationEmail.html"), appUser.getFirstName(), token);
-        // mailService.send(appUser.getEmail(), email);
-
+        String path = "./html/accountConfirmationEmail.html";
+        mailService.send(path,
+                         getAccountConfirmationEmailFillInList(confirmationToken), 
+                         appUser.getEmail(), 
+                        null);
+        
         return save(appUser);
     }
     
@@ -239,5 +246,23 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
     private void setAndEncodePassword(AppUser appUser, String password) {
 
         appUser.setPassword(passwordEncoder.encode(password));
+    }
+
+
+    /**
+     * Creating list with string variables the account confirmation email should be formatted with.
+     * 
+     * @param confirmationToken contains data for the email.
+     * @return list with string variables for the email.
+     */
+    private List<String> getAccountConfirmationEmailFillInList(ConfirmationToken confirmationToken) {
+        
+        // getting first name
+        String firstName = confirmationToken.getAppUser().getFirstName();
+
+        // getting token
+        String token = confirmationToken.getToken();
+
+        return Lists.newArrayList(firstName, token);
     }
 }

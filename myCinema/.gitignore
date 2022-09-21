@@ -7,6 +7,7 @@ target/
 mvnw.cmd
 mvnw
 todo.txt
+.env
 
 ### STS ###
 .apt_generated
@@ -39,6 +40,3 @@ build/
 
 ### curl files for requests ###
 .http
-
-### maildev server ###
-maildev-master/

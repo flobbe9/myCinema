@@ -1,11 +1,10 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,14 +20,11 @@ import lombok.AllArgsConstructor;
 /**
  * Controller for admins. Contains endpoints to alter appUsers, delete or add one. Methods work with thymeleaf templates.
  * Can only be accessed by user with role 'ADMIN'. 
- * 
- * <p>{@code @CrossOrigin} allows the mail server to access this controller.
  */
 @Controller
 @RequestMapping("/admin/appUser")
-@CrossOrigin("http://localhost:1080")
 @AllArgsConstructor
-public class AppUserTemplates {
+public class AppUserControllerAdmin {
     
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
@@ -95,7 +91,7 @@ public class AppUserTemplates {
      * @param model for passing objects to thymeleaf.
      * @return String with html template.
      */
-    @GetMapping("/confirmToken/{token}") 
+    @GetMapping("/confirmToken/{token}")
     public String confirmToken(@PathVariable("token") String token, Model model) {
 
         try {
@@ -115,7 +111,7 @@ public class AppUserTemplates {
 
         return "login";
     }
-
+    
 
 // deleteAppuser
     

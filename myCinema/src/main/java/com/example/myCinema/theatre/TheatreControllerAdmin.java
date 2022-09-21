@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/admin/theatre")
 @RequiredArgsConstructor
-public class TheatreTemplates extends ExceptionService {
+public class TheatreControllerAdmin extends ExceptionService {
     
     private final TheatreService theatreService;
     

@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/test/theatre")
 @AllArgsConstructor
-public class TheatreController {
+public class TheatreControllerTest {
 
     private final TheatreService theatreService;
 

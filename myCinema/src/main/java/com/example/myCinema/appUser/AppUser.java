@@ -1,4 +1,4 @@
-package com.example.myCinema.user;
+package com.example.myCinema.appUser;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -11,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,8 +35,7 @@ import lombok.Setter;
 public class AppUser implements UserDetails {
 
     @Id
-    @GeneratedValue(generator = "_appUser_id_sequence", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "_appUser_id_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -67,7 +65,6 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private LocalDate birthday;
 
-    @Column(nullable = false)
     private Long age;
         
     @Enumerated(EnumType.STRING)

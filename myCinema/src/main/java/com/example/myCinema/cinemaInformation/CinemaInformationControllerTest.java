@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/test/cinemaInformation")
 @AllArgsConstructor
-public class CinemaInformationController {
+public class CinemaInformationControllerTest {
     
     private final CinemaInformationService cinemaInformationService;
 

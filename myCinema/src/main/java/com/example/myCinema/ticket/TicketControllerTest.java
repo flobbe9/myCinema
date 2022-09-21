@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/test/ticket")
 @AllArgsConstructor
-public class TicketController {
+public class TicketControllerTest {
 
     private final TicketService ticketService;
 

@@ -10,7 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,8 +34,7 @@ import lombok.Setter;
 public class Ticket {
     
     @Id
-    @GeneratedValue(generator = "_ticket_id_sequnce", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "_ticket_id_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Long id;
     
