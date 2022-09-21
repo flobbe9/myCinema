@@ -2,7 +2,6 @@ package com.example.myCinema.appUser;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +12,9 @@ import lombok.AllArgsConstructor;
 /**
  * Controller for users. Contains endpoints for actions with user permission. Methods work with thymeleaf templates.
  * Can be accessed by a user with role 'USER' or 'ADMIN'. 
- * 
- * <p>{@code @CrossOrigin} allows the mail server to access this controller.
  */
 @Controller
 @RequestMapping("/appUser")
-@CrossOrigin
 @AllArgsConstructor
 public class AppUserControllerUser {
     
