@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.example.myCinema.theatre.row.Row;
@@ -34,8 +33,7 @@ import lombok.Setter;
 public class Seat {
 
     @Id
-    @GeneratedValue(generator = "_seat_id_sequence", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "_seat_id_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Long id;
 

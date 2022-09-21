@@ -1,5 +1,7 @@
 package com.example.myCinema.ticket;
 
+import java.time.LocalDate;
+
 import static com.example.myCinema.movie.MovieVersion._3D;
 import static com.example.myCinema.theatre.Theatre.BASIC_PRICE;
 import static com.example.myCinema.theatre.row.RowRank.BOX;
@@ -122,6 +124,9 @@ public class TicketService extends CheckEntity {
      * @return true if nothing wrong with ticket.
      */
     private boolean ticketValid(Ticket ticket) {
+
+        // checking if movie plays on this date
+        checkDate(ticket);
 
         // checking if seat is taken
         Seat seat = theatreService.getSeat(ticket.getTheatreNumber(),
@@ -248,6 +253,27 @@ public class TicketService extends CheckEntity {
         if (ticket.getDiscount() == CHILD) price -= 1.5;
 
         ticket.setPrice(price);
+    }
+
+
+    /**
+     * Checks if the date on the ticket is between local release and local finishing date of the movie.
+     * 
+     * @param ticket to check the date of.
+     * @return true if the movie plays at this date.
+     */
+    private boolean checkDate(Ticket ticket) {
+
+        // getting data from movie
+        Movie movie = movieService.getByTitleAndVersion(ticket.getMovieTitle(), ticket.getMovieVersion());
+        LocalDate localReleaseDate = movie.getLocalReleaseDate();
+        LocalDate localFinishingDate = movie.getLocalFinishingDate();
+
+        // checking date
+        if (ticket.getDate().isBefore(localReleaseDate) || ticket.getDate().isAfter(localFinishingDate))
+            throw new IllegalStateException("This movie is currently not in cinemas. Check the date on the ticket.");
+
+        return true;
     }
 
 

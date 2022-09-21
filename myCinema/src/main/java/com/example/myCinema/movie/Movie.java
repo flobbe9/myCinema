@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,8 +33,9 @@ import lombok.Setter;
 public class Movie {
     
     @Id
-    @GeneratedValue(generator = "_movie_id_sequence", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "_movie_id_sequence", allocationSize = 1) 
+    // @GeneratedValue(generator = "_movie_id_sequence", strategy = GenerationType.SEQUENCE)
+    // @SequenceGenerator(name = "_movie_id_sequence", allocationSize = 1) 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Long id;
 
@@ -73,7 +73,7 @@ public class Movie {
     private String director;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @Column(name = "castMember")
+    @Column(name = "cast_member")
     @EqualsAndHashCode.Exclude
     private List<String> cast;
 
