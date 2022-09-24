@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>myCinemaAdmin | updateTheatre</title>
+        <meta charset="utf-8">
+    </head>
+    
+    
+    <body>
+        <h2>Update Movie</h2>
+        
+        <h4>Enter the title of the movie you want to update:</h4>
+
+        <span th:text="${errorMessage} ?: ${errorMessage}" style="color: red;"></span>
+        <br th:if="${errorMessage}"><br th:if="${errorMessage}">
+        
+        <form method="post" action="" th:action="@{/admin/movie/update_getByTitle}" th:object="${movieContainer}">
+            <input type="text" id="title" name="title" placeholder="Title*" th:field="*{title}" required>
+            <br><br>
+
+            <button type="submit">Get Movie</button>
+            <br><br>
+        </form>
+    </body>
+</html>

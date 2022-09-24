@@ -9,7 +9,7 @@
     <body>
         <h2 th:text="'Update: ' + ${movieContainer.title}"></h2>
         
-        <h4>Enter data you want to change:</h4>
+        <h4>Enter the data you want to change:</h4>
 
         <span class="successfullStatus" th:if="${ok}" style="color: green;">Movie updated.</span>
         <br th:if="${ok}"><br th:if="${ok}">
@@ -35,19 +35,17 @@
             <br><br>
 
             <select id="fsk" name="fsk">
-                <option th:value="null" th:field="*{fsk}">Select...</option>
+                <option th:value="null" th:field="*{fsk}">FSK...</option>
                 <span th:each="fsk : ${movieWrapper.fsk}">
                     <option th:text="${fsk}" th:value="${fsk}" th:field="*{fsk}"></option>
                 </span>
             </select>
             <br><br>
 
-            <select id="version" name="version">
-                <option th:value="null" th:field="*{version}">Select...</option>
-                <span th:each="version : ${movieWrapper.version}">
-                    <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>
-                </span>
-            </select>
+            <span>Versions available:</span>
+            <span th:each="version, iter : ${movieWrapper.versions}">
+                <input type="checkbox" class="versions" name="versions" th:text="${version}" th:field="${movieWrapper.toggledVersions[__${iter.index}__]}">
+            </span>
             <br><br>
 
             <input type="number" id="price" name="price" placeholder="Price" th:field="*{price}">
@@ -57,7 +55,7 @@
             <br><br>
 
             <span th:each="member, iter : ${movieWrapper.movieCast}">
-                <input type="text" class="cast" name="cast" th:placeholder="${iter.index + 1 + '. ' + 'Cast member'}" th:field="${movieWrapper.movieCast[__${iter.index}__]}">
+                <input type="text" class="cast" name="cast" th:placeholder="${member}" th:field="${movieWrapper.movieCast[__${iter.index}__]}">
                 <br>
             </span>
             <br>
