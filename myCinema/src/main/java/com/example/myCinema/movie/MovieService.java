@@ -275,9 +275,4 @@ public class MovieService extends CheckEntity {
             }
         }
     }
-
-
-    private void updateVersions(Movie movieContainer, Movie movieToUpdate) {
-        // TODO: implement
-    }
 }

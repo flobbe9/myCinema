@@ -54,7 +54,6 @@ public class MovieControllerUser {
 
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage());
-            // TODO: how to handle exceptions?
         }
 
         return "user/movie/getByTitle";

@@ -291,6 +291,6 @@ public class TicketService extends CheckEntity {
 
         //...
         
-        return Lists.newArrayList(firstName); // TODO: fill list
+        return Lists.newArrayList(firstName); // TODO: fill list for ticket
     }
 }

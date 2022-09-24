@@ -87,7 +87,7 @@ public class MovieControllerAdmin {
 // update
 
 
-@GetMapping("/update")
+    @GetMapping("/update")
     public String update(Model model) {
 
         // passing movie to thymeleaf

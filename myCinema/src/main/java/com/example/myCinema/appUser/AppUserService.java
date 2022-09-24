@@ -74,7 +74,7 @@ public class AppUserService extends CheckEntity implements UserDetailsService {
                          getAccountConfirmationEmailFillInList(confirmationToken), 
                          appUser.getEmail(), 
                         null);
-        
+
         return save(appUser);
     }
     
