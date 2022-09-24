@@ -44,7 +44,7 @@ public class MovieControllerTest {
 
 
     @GetMapping("/getByTitle")
-    public List<Movie> getByTitle(@RequestParam("title") String title) {
+    public Movie getByTitle(@RequestParam("title") String title) {
 
         return movieService.getByTitle(title);
     }
@@ -58,9 +58,9 @@ public class MovieControllerTest {
 
 
     @DeleteMapping("/delete") 
-    public void delete(@RequestParam("title") String title, @RequestParam("version") MovieVersion version) {
+    public void delete(@RequestParam("title") String title) {
 
-        movieService.delete(title, version);
+        movieService.delete(title);
     }
 
 

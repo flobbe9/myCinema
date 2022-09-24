@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinema | movie details</title>
+    </head>
+
+    <body>
+        <form action="" th:object="${movie}">
+            <h2 th:text="*{title}"></h2>
+
+            <p th:text="*{synopsis}"></p><br>
+
+            <a th:href="*{trailerLink}" target="_blank">Watch the trailer here</a>
+
+            <p th:text="*{duration} + ' minutes'"></p>
+
+            <span th:each="genre : *{genres}">
+                <span th:text="${genre}"></span>
+            </span>
+
+            <p>starting time</p>
+
+            <span>Pick the version:</span>
+            <select id="version" name="version">
+                <span th:each="version : *{versions}">
+                    <option th:value="${version}" th:text="${version}"></option>
+                </span>
+            </select><br><br>
+            
+            <span>Discount:</span>
+            <select name="discount" id="discount">
+                <option th:value="NONE">Select...</option>
+                <span th:each="discount : ${movieWrapper.discounts}">
+                    <option th:value="${discount}" th:text="${discount}"></option>
+                </span>
+            </select><br><br>
+
+            <input type="button" value="Get your ticket">
+        </form>
+    </body>
+</html>

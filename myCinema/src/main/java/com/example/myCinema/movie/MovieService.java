@@ -40,8 +40,8 @@ public class MovieService extends CheckEntity {
         hasNullValue(movie);
         
         // checking if movie already exists
-        if (exists(movie.getTitle(), movie.getVersion())) 
-            throw new IllegalStateException("Movie with title \"" + movie.getTitle() + "\" in version \"" + movie.getVersion() + "\" does already exist.");
+        if (exists(movie.getTitle())) 
+            throw new IllegalStateException("Movie with title \"" + movie.getTitle() + "\" does already exist.");
         
         return save(movie);
     }
@@ -76,7 +76,7 @@ public class MovieService extends CheckEntity {
         // fsk
         if (!objectNullOrEmpty(movieContainer.getFsk())) movieToUpdate.setFsk(movieContainer.getFsk());
         // version
-        if (!objectNullOrEmpty(movieContainer.getVersion())) movieToUpdate.setVersion(movieContainer.getVersion());
+        if (!iterableNullOrEmpty(movieContainer.getVersions())) movieToUpdate.setVersions(movieContainer.getVersions());
         // price
         if (!objectNullOrEmpty(movieContainer.getPrice())) movieToUpdate.setPrice(movieContainer.getPrice());
         // director
@@ -102,19 +102,10 @@ public class MovieService extends CheckEntity {
     }
     
     
-    public List<Movie> getByTitle(String title) {
+    public Movie getByTitle(String title) {
 
-        List<Movie> list = movieRepository.findByTitle(title);
-        if (list.isEmpty()) throw new NoSuchElementException("Could not find movies with title \"" + title + "\".");
-
-        return list;
-    }
-    
-    
-    public Movie getByTitleAndVersion(String title, MovieVersion version) {
-
-        return movieRepository.findByTitleAndVersion(title, version).orElseThrow(() -> 
-            new NoSuchElementException("Could not find movie with title \"" + title + "\" and version \"" + version + "\"."));
+        return movieRepository.findByTitle(title).orElseThrow(() -> 
+            new NoSuchElementException("Could not find movie with title \"" + title + "\"."));
     }
     
     
@@ -124,10 +115,10 @@ public class MovieService extends CheckEntity {
     }
 
 
-    public Long getTotalWeeksInCinema(String title, MovieVersion version) {
+    public Long getTotalWeeksInCinema(String title) {
 
         // getting movie by title from repo
-        Movie movie = getByTitleAndVersion(title, version);
+        Movie movie = getByTitle(title);
 
         // calculating time between release and finish
         Long runtimeInMonths = movie.getLocalReleaseDate().until(movie.getLocalFinishingDate(), ChronoUnit.WEEKS);
@@ -136,10 +127,10 @@ public class MovieService extends CheckEntity {
     }
     
 
-    public void delete(String title, MovieVersion version) {
+    public void delete(String title) {
 
         // find by title and version
-        Movie movie = getByTitleAndVersion(title, version);
+        Movie movie = getByTitle(title);
         
         movieRepository.delete(movie);
     }
@@ -151,9 +142,9 @@ public class MovieService extends CheckEntity {
     }
 
 
-    public boolean exists(String title, MovieVersion version) {
+    public boolean exists(String title) {
 
-        return movieRepository.findByTitleAndVersion(title, version).isPresent();
+        return movieRepository.findByTitle(title).isPresent();
     }
 
 //// helper functions
@@ -173,8 +164,11 @@ public class MovieService extends CheckEntity {
      */
     private boolean movieValid(Movie movie) {
 
-        // checking if dates are in order
-        return checkReleaseAndFinishingDates(movie);
+               // checking if dates are in order 
+        return checkReleaseAndFinishingDates(movie) &&
+
+               // checking that cast size is at least 3
+               checkCastSize(movie);
     }
 
 
@@ -200,7 +194,7 @@ public class MovieService extends CheckEntity {
             // fsk
             objectNullOrEmpty(movie.getFsk()) ||
             // version
-            objectNullOrEmpty(movie.getVersion()) ||
+            iterableNullOrEmpty(movie.getVersions()) ||
             // price
             objectNullOrEmpty(movie.getPrice()) ||
             // director
@@ -228,6 +222,21 @@ public class MovieService extends CheckEntity {
         
         if (movie.getLocalReleaseDate().isAfter(movie.getLocalFinishingDate())) 
             throw new IllegalStateException("Local release date cannot be after local finishing date.");
+
+        return true;
+    }
+
+
+    /**
+     * At least 3 cast members of the movie should be listed.
+     * 
+     * @param movie to check the cast of.
+     * @return true if cast.size() is at least 3.
+     */
+    private boolean checkCastSize(Movie movie) {
+                
+        if (movie.getCast().size() < 3)
+            throw new IllegalStateException("At least 3 cast members have to be listed.");
 
         return true;
     }
@@ -265,5 +274,10 @@ public class MovieService extends CheckEntity {
                 }
             }
         }
+    }
+
+
+    private void updateVersions(Movie movieContainer, Movie movieToUpdate) {
+        // TODO: implement
     }
 }

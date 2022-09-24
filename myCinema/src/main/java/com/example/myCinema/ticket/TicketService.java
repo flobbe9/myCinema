@@ -196,7 +196,7 @@ public class TicketService extends CheckEntity {
         Row row = theatreService.getRow(theatreNumber, rowLetter);
 
         // getting movie object with ticket data
-        Movie movie = movieService.getByTitleAndVersion(ticket.getMovieTitle(), ticket.getMovieVersion());
+        Movie movie = movieService.getByTitle(ticket.getMovieTitle());
 
         // setting FSK
         setFSK(ticket, movie);
@@ -265,7 +265,7 @@ public class TicketService extends CheckEntity {
     private boolean checkDate(Ticket ticket) {
 
         // getting data from movie
-        Movie movie = movieService.getByTitleAndVersion(ticket.getMovieTitle(), ticket.getMovieVersion());
+        Movie movie = movieService.getByTitle(ticket.getMovieTitle());
         LocalDate localReleaseDate = movie.getLocalReleaseDate();
         LocalDate localFinishingDate = movie.getLocalFinishingDate();
 

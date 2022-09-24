@@ -7,17 +7,37 @@ INSERT INTO cinema_information (adress, city, email, name, phone_number, zip_cod
 
 
 -- movie
-INSERT INTO movie (director, duration, fsk, local_finishing_date, local_release_date, price, synopsis, title, trailer_link, version) VALUES ('Christopher Nolan', 152, 'FSK_16', TO_DATE('2008/09/20', 'YYYY/MM/DD'), TO_DATE('2008/07/20', 'YYYY/MM/DD'), 10.0, 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.', 'The Dark Knight', 'https://www.youtube.com/watch?v=_PZpmTj1Q8Q', 'OV');
+INSERT INTO movie (director, duration, fsk, local_finishing_date, local_release_date, price, synopsis, title, trailer_link) VALUES ('Christopher Nolan', 152, 'FSK_16', TO_DATE('2008/09/20', 'YYYY/MM/DD'), TO_DATE('2008/07/20', 'YYYY/MM/DD'), 10.0, 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.', 'The Dark Knight', 'https://www.youtube.com/watch?v=_PZpmTj1Q8Q');
+INSERT INTO movie (director, duration, fsk, local_finishing_date, local_release_date, price, synopsis, title, trailer_link) VALUES ('David Fincher', 139, 'FSK_18', TO_DATE('2000/01/11', 'YYYY/MM/DD'), TO_DATE('1999/11/11', 'YYYY/MM/DD'), 10.0, 'An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.', 'Fight Club', 'https://www.youtube.com/watch?v=qtRKdVHc-cE');
+INSERT INTO movie (director, duration, fsk, local_finishing_date, local_release_date, price, synopsis, title, trailer_link) VALUES ('David Fincher', , 'FSK_16', TO_DATE('2014/12/03', 'YYYY/MM/DD'), TO_DATE('2014/10/03', 'YYYY/MM/DD'), 10.0, 'With his wife's disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it's suspected that he may not be innocent.', 'Gone Girl', 'https://www.youtube.com/watch?v=2-_-1nJf8Vg');
+    
+    -- versions
+    INSERT INTO movie_versions VALUES (1, '_2D');
+    INSERT INTO movie_versions VALUES (1, 'OV');
+    INSERT INTO movie_versions VALUES (2, '_2D');
+    INSERT INTO movie_versions VALUES (2, 'OV');
+    INSERT INTO movie_versions VALUES (3, '_2D');
+    INSERT INTO movie_versions VALUES (3 'OV');
+
 
     -- cast
     INSERT INTO movie_cast VALUES (1, 'Heath Ledger');
     INSERT INTO movie_cast VALUES (1, 'Christian Bale');
     INSERT INTO movie_cast VALUES (1, 'Gary Oldman');
+    INSERT INTO movie_cast VALUES (2, 'Edward Norton');    
+    INSERT INTO movie_cast VALUES (2, 'Brad Pitt');
+    INSERT INTO movie_cast VALUES (2, 'Helena Bonham Carter');
+    INSERT INTO movie_cast VALUES (3, 'Ben Affleck');
+    INSERT INTO movie_cast VALUES (3, 'Rosamund Pike');
+    INSERT INTO movie_cast VALUES (3, 'Neil Patrick Harris');
     
-    --genres
+    -- genres
     INSERT INTO movie_genres VALUES (1, 'ACTION');
     INSERT INTO movie_genres VALUES (1, 'DRAMA');
     INSERT INTO movie_genres VALUES (1, 'THRILLER');
+    INSERT INTO movie_genres VALUES (2, 'DRAMA');
+    INSERT INTO movie_genres VALUES (3, 'DRAMA');
+    INSERT INTO movie_genres VALUES (3, 'THRILLER');
 
 
 -- theatre

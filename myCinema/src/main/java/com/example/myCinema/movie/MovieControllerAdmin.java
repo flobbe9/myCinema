@@ -58,11 +58,14 @@ public class MovieControllerAdmin {
     public String addNew(Movie movie, MovieWrapper movieWrapper, Model model) {
 
         try {
-            // setting genres array with 'toggledGenres' property of MovieWrapper
+            // setting genres array with 'toggledGenres' field of movieWrapper
             movie.setGenres(iterateToggledGenres(movieWrapper));
 
+            // setting versions array with 'toggledVersions' field of movieWrapper
+            movie.setVersions(iterateToggledVersions(movieWrapper));
+
             // setting cast and converting from array to Set
-            movie.setCast(new ArrayList<String>(Arrays.asList(movieWrapper.getMovieCast())));
+            movie.setCast(Arrays.asList(movieWrapper.getMovieCast()));
 
             // adding new movie
             movieService.addNew(movie);
@@ -92,7 +95,7 @@ public class MovieControllerAdmin {
 
         model.addAttribute("movieWrapper", new MovieWrapper());
 
-        return "admin/movie/update_getByTitleAndVersion";
+        return "admin/movie/update_getByTitle";
     }
     
 
@@ -100,29 +103,36 @@ public class MovieControllerAdmin {
      * If movie exists the user is redirected to the update page. {@link #movieId} is set for the update method.
      * In any other case the exception is caught and displayed on the same page.
      * 
-     * @param movieContainer contains title and version of movie to be updated.
+     * @param movieContainer contains title of movie to be updated.
      * @param movieWrapper for helping the html page.
      * @param model for passing objects to thymeleaf.
      * @return String with html template.
      */
-    @PostMapping("/update_getByTitleAndVersion")
-    public String checkMovieExists(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
+    @PostMapping("/update_getByTitle")
+    public String checkMovieExists(Movie movieContainer, Model model) {
         
-        // passing movieWrapper to thymeleaf
-        model.addAttribute("movieWrapper", new MovieWrapper());
-
-        // passing movie to thymeleaf
-        model.addAttribute("movieContainer", movieContainer);
-
         try {
-            // checking if movie exists and setting appUserId
-            movieId = movieService.getByTitleAndVersion(movieContainer.getTitle(), movieContainer.getVersion()).getId();
-
+            // checking if movie exists
+            Movie movie = movieService.getByTitle(movieContainer.getTitle());
+            
+            // setting movie id
+            movieId = movie.getId();
+            
+            // setting movie cast for thymeleaf placeholders
+            MovieWrapper movieWrapper = new MovieWrapper();
+            movieWrapper.setMovieCast(movie.getCast().toArray(movieWrapper.getMovieCast()));
+            
+            // passing movieWrapper to thymeleaf
+            model.addAttribute("movieWrapper", movieWrapper);
+            
+            // passing movie to thymeleaf
+            model.addAttribute("movieContainer", movieContainer);
+            
         } catch (Exception e) {
             // passing exception message to thymeleaf
             model.addAttribute("errorMessage", e.getMessage());
             
-            return "/admin/movie/update_getByTitleAndVersion";
+            return "/admin/movie/update_getByTitle";
         }
         
         return "admin/movie/update";
@@ -139,14 +149,17 @@ public class MovieControllerAdmin {
      * @return String with html template.
      */
     @PostMapping("/update")
-    public String upadte(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
+    public String update(Movie movieContainer, MovieWrapper movieWrapper, Model model) {
 
         try {
             // setting id
             movieContainer.setId(movieId);
 
-            // setting genres set with 'toggledGenres' property of MovieWrapper
+            // setting genres set with 'toggledGenres' field of MovieWrapper
             movieContainer.setGenres(iterateToggledGenres(movieWrapper));
+
+            // setting versions with 'toggledVersions' field of MovieWrapper
+            movieContainer.setVersions(iterateToggledVersions(movieWrapper));
 
             // setting cast and converting from array to list
             movieContainer.setCast(new ArrayList<String>(Arrays.asList(movieWrapper.getMovieCast())));
@@ -194,5 +207,29 @@ public class MovieControllerAdmin {
         }
 
         return genres;
+    }
+    
+
+    /**
+     * Iterates toggled versions. If true value is found the genre at the same index in versionsArr is added to the versions set.
+     * 
+     * @param movieWrapper contains array with booleans representing which versions were checked.
+     * @return set with actual versions that were selected.
+     */
+    private Set<MovieVersion> iterateToggledVersions(MovieWrapper movieWrapper) {
+
+        MovieVersion[] versionsArr = movieWrapper.getVersions();
+        boolean[] toggledVersions = movieWrapper.getToggledVersions();
+
+        Set<MovieVersion> versions = new HashSet<>();
+
+        for (int i = 0; i < versionsArr.length; i++) {
+            // if toggled, then add
+            if (toggledVersions[i]) {
+                versions.add(versionsArr[i]);
+            }
+        }
+
+        return versions;
     }
 }

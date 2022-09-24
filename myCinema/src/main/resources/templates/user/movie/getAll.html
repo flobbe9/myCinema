@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>myCinema | all movies</title>
+    </head>
+
+    <body>
+        <h2>Movies currently in cinema</h2><br>
+
+        <!-- listing every movie from the db -->
+        <span th:each="movie, iter : ${movieWrapper.movies}">
+            <form action="" th:action="@{/movie/getByTitle}" th:object="${movie}">
+                <section>
+                    <u><h3 th:text="*{title}"></h3></u>
+                    <p th:text="'with ' + *{cast[0]} + ', ' + *{cast[1]} + ' and ' + *{cast[2]}"></p>
+                    <p th:text="*{fsk}"></p>
+                </section>
+
+                <!-- hidden inputs for follow up method --> 
+                <input type="text" th:field="${movieWrapper.movies[__${iter.index}__].title}" hidden>
+                <input type="submit" id="goToMovieDetails" value="Details">
+            </form>
+        </span>
+
+    </body>
+</html>

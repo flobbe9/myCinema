@@ -33,19 +33,17 @@
             <br><br>
 
             <select id="fsk" name="fsk" required>
-                <option th:value="null">Select FSK...</option>
+                <option th:value="null">FSK...</option>
                 <span th:each="fsk : ${movieWrapper.fsk}">
                     <option th:text="${fsk}" th:value="${fsk}" th:field="*{fsk}"></option>
                 </span>
             </select>
             <br><br>
 
-            <select id="version" name="version" required>
-                <option th:value="null">Select Version...</option>
-                <span th:each="version : ${movieWrapper.version}">
-                    <option th:text="${version}" th:value="${version}" th:field="*{version}"></option>
-                </span>
-            </select>
+            <span>Versions available (at least one)*:</span>
+            <span id="version" name="version" required th:each="version, iter : ${movieWrapper.versions}">
+                <input type="checkbox" th:text="${version}" th:value="${version}" th:field="${movieWrapper.toggledVersions[__${iter.index}__]}">
+            </span>
             <br><br>
 
             <input type="number" id="price" name="price" placeholder="Price*" th:field="*{price}" required>
