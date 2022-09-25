@@ -1,5 +1,6 @@
 -- appUser
 INSERT INTO app_user (adress, age, birthday, city, email, first_name, is_enabled, is_expired, is_locked, last_name, password, role, zip_code) VALUES ('Musterstreet 1', 30, TO_DATE('1990/01/01', 'YYYY/MM/DD'), 'Berlin', 'florin.schikarski@gmail.com', 'Florin', true, false, false, 'Schikarski', '$2a$31$IOVLj67jCNeXEavzp15vqeFiNEYyGN3xPxx7EUCMoxD2O3S/rSqia', 'ADMIN', 10115);
+INSERT INTO app_user (adress, age, birthday, city, email, first_name, is_enabled, is_expired, is_locked, last_name, password, role, zip_code) VALUES ('Musterstreet 1', 30, TO_DATE('1990/01/01', 'YYYY/MM/DD'), 'Berlin', 'schikarski98@gmail.com', 'Florin', true, false, false, 'Schikarski', '$2a$31$Z6y/RzaprebbHsBleuHwo.qm7o90ppbil4JTdY7.K5eVtZBrUChB6', 'USER', 10115);
 
 
 -- cinemaInformation

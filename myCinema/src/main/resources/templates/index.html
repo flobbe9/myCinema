@@ -1,10 +1,45 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <meta charset="utf-8">
+        <title>myCinema</title>
     </head>
 
     <body>
         <h1>Index page</h1>
+
+        <article>
+            <p>Create a new account: </p>
+            <form action="https://localhost:4001/appUser/register">
+                <input type="submit" value="Register">
+            </form><br><br>
+
+            <p>Log in with your account: </p>
+            <form action="https://localhost:4001/login">
+                <input type="submit" value="Login">
+            </form><br><br>
+
+            <p>See all available movies: </p>
+            <form action="https://localhost:4001/movie/getAll">
+                <input type="submit" value="Movies available">
+            </form>
+        </article><br>
+
+        <p>
+            Feel free to try some of these links as well. Notice that all of them are permitted for an admin only.<br>
+            Use <u>user name:</u> florin.schikarski@gmail.com <br>
+            and <u>password:</u>  admin <br>
+            for login.
+        </p><br><br>
+
+        <section>
+            <a href="https://localhost:4001/admin/appUser/addNew">Add new user (role USER or ADMIN)</a><br><br>
+
+            <a href="https://localhost:4001/admin/movie/addNew">Add new movie</a><br><br>
+
+            <a href="https://localhost:4001/admin/movie/update">Update existing movie</a><br><br>
+
+            <a href="https://localhost:4001/admin/theatre/addNew">Add new theatre</a>
+        </section>
     </body>
 </html>
