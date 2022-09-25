@@ -8,7 +8,7 @@ To start the api, just get the /docker folder, it contains a .jar file with the 
 
 Once you bashed into the /docker folder, use ```docker-compose up``` and docker-compose will do the rest. 
 
-#### Login
+### Login
 There are 2 users pre registered for login:
 
 Role **USER**:
@@ -24,7 +24,7 @@ username: florin.schikarski@gmail.com
 
 password: admin
 
-#### A few endpoints to try:
+### A few endpoints to try:
 Start page: https://localhost:4001
 
 Get all movies: https://localhost:4001/movie/getAll
