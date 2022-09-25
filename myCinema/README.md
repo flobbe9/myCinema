@@ -13,16 +13,16 @@ There are 2 users pre registered for login:
 
 Role **USER**:
 
-username: schikarski98@gmail.com 
+    username: schikarski98@gmail.com 
 
-password: user
+    password: user
 
 
 Role **ADMIN**:
 
-username: florin.schikarski@gmail.com 
+    username: florin.schikarski@gmail.com 
 
-password: admin
+    password: admin
 
 ### A few endpoints to try:
 Start page: https://localhost:4001
