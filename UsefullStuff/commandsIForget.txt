@@ -23,16 +23,23 @@
         $> mvn package
 
 
-### Postgres 
+### PostgreSQL
     ## access bash
         $> psql -U username
 
+### MySQL
+    ## access bash
 
 ### Spring-boot
     ## run api (very first folder with src, pom.xml...)
         $> mvn spring-boot:run
-    
 
+### Node.js
+    ## transpile typescript (remember to set "esModuleInterop": true in tsconfig.json for modules and name *.mts instead of *.ts)
+        $> tsc.cmd
+        or the almighty one:
+        $> ts-node-esm <fileName>
+    
 ### SSL
     ## create self signed certificate
         $> keytool -genkeypair -alias <something> -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore <fileName>.p12 -validity 3650
