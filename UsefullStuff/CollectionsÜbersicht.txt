@@ -1,0 +1,8 @@
+LINKEDLIST
+    + insert
+    + delete
+
+
+ARRAYLIST (ARRAY, VECTOR, STACK(?))
+    + access
+    = only access, don't manipulate
