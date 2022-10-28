@@ -1,0 +1,37 @@
+### HashSet 
+    ## no douplicates, not ordered, fastest SET
+        + insert
+        + remove
+
+
+### ArrayDeque 
+    ## no null values, FIFO or LIFO, faster than STACK
+        + insert
+        + remove
+
+
+### LinkedList
+    ## only when iterating
+        + insert 
+        + remove
+
+
+### LinkedHashSet 
+    ## only when iterating, no douplicates
+        + insert 
+        + remove 
+
+
+### ArrayList, Array, Vector
+    ## only by index
+        + access
+
+
+### TreeSet 
+    ## no douplicates
+        + sorted
+
+
+### PriorityQueue
+    ## no null values, FIFO
+        + sorted

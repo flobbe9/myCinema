@@ -1,0 +1,15 @@
+### HashMap
+    ## not ordered, 
+
+
+### LinkedHashMap
+    ## 
+
+
+### HashTable
+    ## no null values, no null keys
+
+
+### TreeMap
+    ## no null keys
+        + sorted
