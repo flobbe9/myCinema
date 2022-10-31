@@ -1,7 +1,0 @@
-- check functions 
-    - any object
-    - any collection
-    - correct string obj if spaces in front
-
-- error page handler
-- get html from thymeleaf?
