@@ -1,15 +1,22 @@
 ### HashMap
-    ## not ordered, 
+    ## not ordered, keep in mind equals() and hashCode() 
+        + insert
+        + remove
+        + contains
 
 
 ### LinkedHashMap
-    ## 
+    ## keep in mind equals() and hashCode()
+        + insert
+        + remove
+        + contains
 
 
-### HashTable
-    ## no null values, no null keys
+### HashTable, ConcurrentHashMap
+    ## no null keys and values
+        + synchronized
 
 
 ### TreeMap
-    ## no null keys
+    ## no null keys, keys must be comparable
         + sorted
